@@ -305,48 +305,48 @@
           "type": "column",
           "settings": {
             "title": "",
-            "text": "<p>حقيبة ممتازة! المواد جداً متينة ومقاومة للماء، سفرتي الأخيرة كانت بدون مشاكل وملابسي وصلت سليمة.</p>",
-            "author": "<em><strong>نورة القحطاني</strong></em>"
+            "text": "<p>This product is amazing! It completely changes the atmosphere of the room and makes the air fresh and clean. Highly recommend!</p>",
+            "author": "<strong>Mohamed Al-Otaibi</strong>"
           }
         },
         "column_8wQEXP": {
           "type": "column",
           "settings": {
             "title": "",
-            "text": "<p>حقيبة الرحالة وفرت علي وقت كثير في السفر، ما أحتاج أنتظر الشنط بالمطار وأخذها معي بكل سهولة.</p>",
-            "author": "<em><strong>محمد العتيبي</strong></em>"
+            "text": "<p>Perfect size and very easy to use. I love the aromatherapy feature; it adds a refreshing and beautiful scent!</p>",
+            "author": "<strong>Fatima Al-Zahrani</strong>"
           }
         },
         "column_ccAEGY": {
           "type": "column",
           "settings": {
             "title": "",
-            "text": "<p>أحب حقيبة الرحالة، ساعدتني في توفير رسوم الأمتعة الزائدة وصارت رحلاتي أسهل.</p>",
-            "author": "<em><strong>سعود الغامدي</strong></em>"
+            "text": "<p>Excellent performance, but I wish there were more color options. Delivery was super fast.</p>",
+            "author": "<strong>Ahmed Al-Ghamdi</strong>"
           }
         },
         "column_xHJzW6": {
           "type": "column",
           "settings": {
             "title": "",
-            "text": "<p>التنظيم داخل الحقيبة مثالي، قدرت أحط كل أغراضي بشكل مرتب وسهل عليّ الوصول لكل شي بسرعة.</p>",
-            "author": "<em><strong>ريم الشمري</strong></em>"
+            "text": "<p>The design is elegant and lightweight. The air in my living room feels much cleaner now.</p>",
+            "author": "<strong>Sara Al-Qahtani</strong>"
           }
         },
         "column_EbnxNm": {
           "type": "column",
           "settings": {
             "title": "",
-            "text": "<p>الراحة في الحمل شيء مميز، الحزام المبطن يخلي حملها سهل ومريح حتى لو كانت مليانة.</p>",
-            "author": "<em><strong>عبدالله الحربي</strong></em>"
+            "text": "<p>Worth every penny! High quality and operates very quietly without any disturbance.</p>",
+            "author": "<strong>Khaled Al-Dosari</strong>"
           }
         },
         "column_N7AGHJ": {
           "type": "column",
           "settings": {
             "title": "",
-            "text": "<p>أفضل استثمار سويته للسفر، الحقيبة خفيفة وقوية وسهل تخزينها، ماعدت أحتاج لشنط كثيرة.</p>",
-            "author": "<em><strong>فاطمة الزهراني</strong></em>"
+            "text": "<p>Delivery was quick, and the service was great, but I wish there was a user manual in Arabic.</p>",
+            "author": "<strong>Reem Al-Harbi</strong>"
           }
         }
       },
@@ -361,7 +361,7 @@
       "settings": {
         "display_id": false,
         "visibility": "always-display",
-        "title": "أراء المسافرين فى حقيبة الرحالة",
+        "title": "Customer Reviews",
         "heading_size": "h1",
         "text": "",
         "color_scheme": "background-1",
