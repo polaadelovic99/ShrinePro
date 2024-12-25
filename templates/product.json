@@ -405,50 +405,60 @@
         "collapsible_row_qn83iL": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "هل يمكن استخدامها كحقيبة يد؟",
+            "heading": "What does Purilify™ do?",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>نعم! صممنا الحقيبة خصيصًا لتكون مناسبة كحقيبة يد على جميع شركات الطيران</p>",
+            "row_content": "<p>Purilify™ purifies the air using advanced H13 HEPA filtration, removes 99.97% of airborne particles, and offers aromatherapy to create a relaxing environment.</p>",
             "page": ""
           }
         },
         "collapsible_row_VCYrW9": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "هل تتسع لكل ملابسي؟",
+            "heading": "Is it safe for kids and pets?",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>بعد التحدث مع عملائنا، وجدنا أن حقيبة <strong>رحالة</strong> تتسع لحوالي ضعف كمية الملابس التي تستوعبها حقيبة بنفس الحجم</p>",
+            "row_content": "<p>Yes, Purilify™ is completely safe for children and pets, as it uses chemical-free purification methods.</p>",
             "page": ""
           }
         },
         "collapsible_row_YUeNxB": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "هل يمكن لهذه الحقيبة توفير المال؟",
+            "heading": "Is the device portable?",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>حسب CNBC، متوسط تكلفة حقيبة تسجيل للأمتعة للرحلة ذهابًا وإيابًا تتراوح بين 85-125 دولار في 2024. يعني ذلك أنك باستخدام حقيبة <strong>رحالة </strong>(المصنفة كحقيبة يد)، تحصل عليها مجانًا في أول رحلة تستخدمها فيها! الحقيبة مصممة لتدوم من 15-20 سنة، فإذا قمت برحلتين سنويًا بمتوسط تكلفة 100 دولار للأمتعة المسجلة، فإنك توفر بين 3000 إلى 4000 دولار!</p>",
+            "row_content": "<p>Yes, it’s lightweight and easy to move around, making it ideal for any room in your home.</p>",
             "page": ""
           }
         },
         "collapsible_row_PjHpQd": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "هل سيتآكل سطح الحقيبة؟",
+            "heading": "What are the dimensions?",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>بالطبع لا! اخترنا الجلد الصناعي PU عالي الجودة والمتين بدلًا من البدائل الأرخص. حقائبنا مصممة لتتحمل سنوات من السفر، ومقاومة للتآكل الناتج عن التعامل المتكرر، خاصة أثناء النقل بالطائرة أو الأمتعة</p>",
+            "row_content": "<p>Purilify™ measures 15 x 10 x 20 inches, compact yet powerful enough for large spaces.</p>",
             "page": ""
           }
         },
         "collapsible_row_6FyWMC": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "كمية الملابس التي يمكنني حزمها فيها؟",
+            "heading": "Does it have real-time air quality monitoring?",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>يمكنك بكل راحة حزم ما يصل إلى 14 يوم من الملابس اليومية، بالإضافة إلى 2 إلى 3 فساتين خالية من التجاعيد، مما يضمن أنك مستعد للإقامات الطويلة أو المناسبات المختلفة</p>",
+            "row_content": "<p>Yes, it comes with PM 2.5 sensors and a display to monitor air quality in real time.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_mdVFeC": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Can I use essential oils with it?",
+            "icon": "help",
+            "filled_icon": false,
+            "row_content": "<p>Absolutely! Purilify™ includes an aromatherapy feature that works with essential oils.</p>",
             "page": ""
           }
         }
@@ -458,7 +468,8 @@
         "collapsible_row_VCYrW9",
         "collapsible_row_YUeNxB",
         "collapsible_row_PjHpQd",
-        "collapsible_row_6FyWMC"
+        "collapsible_row_6FyWMC",
+        "collapsible_row_mdVFeC"
       ],
       "settings": {
         "display_id": false,
