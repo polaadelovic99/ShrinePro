@@ -965,6 +965,15 @@
             "modal_text": "<p>Modal Text</p>"
           }
         },
+        "video_pE79WW": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/videoplayback.mp4",
+            "video_url": "",
+            "modal_heading": "<h4>Modal Heading</h4>",
+            "modal_text": "<p>Modal Text</p>"
+          }
+        },
         "video_fTff76": {
           "type": "video",
           "settings": {
@@ -973,20 +982,12 @@
             "modal_heading": "<h4>Modal Heading</h4>",
             "modal_text": "<p>Modal Text</p>"
           }
-        },
-        "video_AFtmjn": {
-          "type": "video",
-          "settings": {
-            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
-            "modal_heading": "<h4>Modal Heading</h4>",
-            "modal_text": "<p>Modal Text</p>"
-          }
         }
       },
       "block_order": [
         "video_39wR9C",
-        "video_fTff76",
-        "video_AFtmjn"
+        "video_pE79WW",
+        "video_fTff76"
       ],
       "settings": {
         "videos_position": "below_buy",
