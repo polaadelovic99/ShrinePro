@@ -50,6 +50,35 @@
         "accessibility_info": "Slideshow about our brand"
       }
     },
+    "featured_collection_3tPamJ": {
+      "type": "featured-collection",
+      "settings": {
+        "display_id": false,
+        "visibility": "always-display",
+        "title": "Purilify™",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "subtitle",
+        "collection": "frontpage",
+        "products_to_show": 10,
+        "columns_desktop": 2,
+        "full_width": false,
+        "show_view_all": false,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "color_scheme": "background-1",
+        "image_ratio": "adapt",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": true,
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "comparison_table_bXYEHj": {
       "type": "comparison-table",
       "blocks": {
@@ -643,6 +672,7 @@
   },
   "order": [
     "cfca4268-6358-426c-98ab-d292aeef11e5",
+    "featured_collection_3tPamJ",
     "comparison_table_bXYEHj",
     "featured_product_XEdQkp",
     "content_tabs_KRW4FA",

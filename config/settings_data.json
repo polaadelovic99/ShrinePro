@@ -40,7 +40,7 @@
     "sale_badge_text": "خصم [percentage] الان",
     "sold_out_badge_color_scheme": "inverse",
     "accent_icons": "text",
-    "page_width": 1400,
+    "page_width": 1000,
     "spacing_sections": 0,
     "spacing_grid_horizontal": 40,
     "spacing_grid_vertical": 40,
