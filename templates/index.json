@@ -252,9 +252,9 @@
             "show_dynamic_checkout": false,
             "skip_cart": false,
             "uppercase_text": true,
-            "display_price": false,
-            "enable_custom_color": false,
-            "custom_color": "#dd1d1d",
+            "display_price": true,
+            "enable_custom_color": true,
+            "custom_color": "#3bb0f3",
             "margin_top": 24,
             "margin_bottom": 24
           }
