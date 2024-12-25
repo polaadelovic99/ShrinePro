@@ -40,9 +40,9 @@
             "show_dynamic_checkout": false,
             "skip_cart": false,
             "uppercase_text": true,
-            "display_price": false,
-            "enable_custom_color": false,
-            "custom_color": "#53af01",
+            "display_price": true,
+            "enable_custom_color": true,
+            "custom_color": "#1688c9",
             "margin_top": 24,
             "margin_bottom": 24
           }
