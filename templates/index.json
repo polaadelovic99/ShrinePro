@@ -165,6 +165,7 @@
         },
         "variant_picker_QcRdhq": {
           "type": "variant_picker",
+          "disabled": true,
           "settings": {
             "picker_types": "pills, pills, pills",
             "custom_labels": "",
