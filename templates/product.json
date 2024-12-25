@@ -171,7 +171,7 @@
             "filled_icon": false,
             "collapse_icon": "carret",
             "display_top_border": true,
-            "content": "<p>نضمن لك استرجاع كامل المبلغ فى حالة عدم رضاك.</p>",
+            "content": "<p><strong>Can I return the product if I’m not satisfied?</strong></p><p>Absolutely! We offer a 30-day money-back guarantee if you’re not completely satisfied.</p><p><strong>How do I initiate a refund?</strong></p><p>Contact our customer support team with your order details, and we’ll guide you through the process.</p>",
             "page": "",
             "margin_top": 0,
             "margin_bottom": 0
