@@ -1,0 +1,181 @@
+{% style %}
+  .music-player-{{ section.id }} {
+    --offset-x: {{ section.settings.offset_x | divided_by: 10.0 }}rem;
+    --offset-y: {{ section.settings.offset_y | divided_by: 10.0 }}rem;
+  }
+  @media screen and (max-width: 749px) {
+    .music-player-{{ section.id }} {
+      --offset-x: {{ section.settings.offset_x | times: 0.75 | divided_by: 10.0 }}rem;
+      --offset-y: {{ section.settings.offset_y | times: 0.75 | divided_by: 10.0 }}rem;
+    }
+  }
+{% endstyle %}
+
+{% if section.settings.enabled %}
+  <div class="floating-btn music-player music-player-{{ section.settings.position }} music-player-{{ section.id }}">
+    <audio
+      loop
+      volume="{{ section.settings.volume | divided_by: 100.00 }}"
+      class="music-player__audio"
+      src="{{ section.settings.audio_src}}"
+    ></audio>
+    <button
+      onclick="handleMusicPlayer2(event)"
+      class="music-player__btn music-player__btn--paused{% if section.settings.btn_animation %} ripple-animation{% endif %} color-{{ section.settings.color_scheme }}"
+      {% if section.settings.audio_src == blank %}
+        disabled
+      {% endif %}
+    >
+      <svg
+        class="music-player__btn__playing-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 384 512"
+        fill="currentColor"
+      >
+        <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/>
+      </svg>
+
+      <svg
+        class="music-player__btn__paused-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 320 512"
+        fill="currentColor"
+      >
+        <path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"/>
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    let music2Playing = false;
+    function handleMusicPlayer2(e) {
+      const musicPlayerBtn = e.target;
+      const musicPlayer = musicPlayerBtn.closest('.music-player');
+      const musicPlayerAudio = musicPlayer.querySelector('.music-player__audio');
+      if (music2Playing) {
+          music2Playing = false;
+          musicPlayerAudio.pause();
+          musicPlayerBtn.classList.remove('music-player__btn--playing');
+          musicPlayerBtn.classList.add('music-player__btn--paused');
+      } else {
+          musicPlayerAudio.play();
+          music2Playing = true;
+          musicPlayerBtn.classList.remove('music-player__btn--paused');
+          musicPlayerBtn.classList.add('music-player__btn--playing');
+      }
+    }
+  </script>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Global Music Player",
+    "limit": 1,
+    "disabled_on": {
+        "groups": ["header", "footer"]
+    },
+    "settings": [
+        {
+          "type": "paragraph",
+          "content": "NOTE: This is a global music player that is displayed on your whole store. If you wish to only have it on certain pages/play different songs on each page disable this and click on Add section > Music Player."
+        },
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Enable global music player",
+          "default": false
+        },
+        {
+            "type": "text",
+            "id": "audio_src",
+            "label": "Audio source",
+            "info": "Go to Shopify admin > Content > Files > Upload an mp3 file, copy the link and paste it in the field above"
+        },
+        {
+            "type": "range",
+            "id": "volume",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "Volume",
+            "default": 10
+        },
+        {
+          "type": "select",
+          "id": "position",
+          "options": [
+            {
+              "value": "bottom-left",
+              "label": "Bottom left"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom center"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom right"
+            }
+          ],
+          "default": "bottom-left",
+          "label": "Position"
+        },
+        {
+          "type": "range",
+          "id": "offset_x",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "label": "Offset X",
+          "default": 20,
+          "info": "Not applied when the button is centered"
+        },
+        {
+          "type": "range",
+          "id": "offset_y",
+          "min": 0,
+          "max": 150,
+          "step": 5,
+          "unit": "px",
+          "label": "Offset Y",
+          "default": 20
+        },
+        {
+          "type": "checkbox",
+          "id": "btn_animation",
+          "label": "Display ripple animation",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "color_scheme",
+          "options": [
+            {
+              "value": "accent-1",
+              "label": "t:sections.all.colors.accent_1.label"
+            },
+            {
+              "value": "accent-2",
+              "label": "t:sections.all.colors.accent_2.label"
+            },
+            {
+              "value": "background-1",
+              "label": "t:sections.all.colors.background_1.label"
+            },
+            {
+              "value": "background-2",
+              "label": "t:sections.all.colors.background_2.label"
+            },
+            {
+              "value": "inverse",
+              "label": "t:sections.all.colors.inverse.label"
+            }
+          ],
+          "default": "accent-1",
+          "label": "t:sections.all.colors.label"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,94 @@
+{% liquid
+  if block.settings.enable_goal_1
+    assign highest_goal = block.settings.goal_1_amount | times: 100.00
+  endif
+  if block.settings.enable_goal_2
+    assign highest_goal = block.settings.goal_2_amount | times: 100.00
+  endif
+  if block.settings.enable_goal_3
+    assign highest_goal = block.settings.goal_3_amount | times: 100.00
+  endif
+    
+  assign bar_progress = cart.items_subtotal_price | divided_by: highest_goal | times: 100.00
+  assign all_goals_reached = false
+  if bar_progress > 100.00
+    assign all_goals_reached = true
+    assign bar_progress = 100
+  endif
+
+  assign next_goal_text = nil
+  if block.settings.enable_goal_1
+    assign goal_1_position = block.settings.goal_1_amount | divided_by: highest_goal | times: 10000.00
+    if goal_1_position > bar_progress and next_goal_text == nil
+      assign next_goal_text = block.settings.goal_1_text
+      assign next_goal = block.settings.goal_1_amount | times: 100.00
+    endif
+  endif
+  if block.settings.enable_goal_2
+    assign goal_2_position = block.settings.goal_2_amount | divided_by: highest_goal | times: 10000.00
+    if goal_2_position > bar_progress and next_goal_text == nil
+      assign next_goal_text = block.settings.goal_2_text
+      assign next_goal = block.settings.goal_2_amount | times: 100.00
+    endif
+  endif
+  if block.settings.enable_goal_3
+    assign goal_3_position = block.settings.goal_3_amount | divided_by: highest_goal | times: 10000.00
+    if goal_3_position > bar_progress and next_goal_text == nil
+      assign next_goal_text = block.settings.goal_3_text
+      assign next_goal = block.settings.goal_3_amount | times: 100.00
+    endif
+  endif
+%}
+
+{% capture goal_difference_money %}
+    <span>{{ next_goal | minus: cart.items_subtotal_price | money_without_trailing_zeros }}</span>
+{% endcapture %}
+
+<div class="cart-progress cart-checkpoints accent-color-{{ block.settings.accent_color }}" style="--mobile-text-size: {{ block.settings.labels_mobile_text_size | divided_by: 10.0 }}rem;--desktop-text-size: {{ block.settings.labels_desktop_text_size | divided_by: 10.0 }}rem;--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;" {{ block.shopify_attributes }}>
+  <p class="cart-progress__text">
+    {% if all_goals_reached == false %}
+      {{ block.settings.progress_message | replace: '[amount]', goal_difference_money | replace: '[next_goal]', next_goal_text }}
+    {% else %}
+      {{ block.settings.success_message }}
+    {% endif %}
+  </p>
+  <div class="cart-progress__bar">
+    <div class="cart-progress__bar__progress" style="width: {{ bar_progress }}%;">&nbsp</div>
+    {% if block.settings.enable_goal_1 %}
+      <div class="cart-progress__bar__badge cart-checkpoints__icon" style="--position:{{ goal_1_position }}%;">
+        <span class="material-symbols-outlined{% if block.settings.goal_1_icon_filled %} filled{% endif %}">
+          {{ block.settings.goal_1_icon | strip | downcase | replace: ' ', '_' }}
+        </span>
+        {% if block.settings.goal_1_label != blank %}
+          <span class='cart-checkpoints__label custom-font-size'>
+            {{ block.settings.goal_1_label }}
+          </span>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if block.settings.enable_goal_2 %}
+      <div class="cart-progress__bar__badge cart-checkpoints__icon" style="--position:{{ goal_2_position }}%;">
+        <span class="material-symbols-outlined{% if block.settings.goal_2_icon_filled %} filled{% endif %}">
+          {{ block.settings.goal_2_icon | strip | downcase | replace: ' ', '_' }}
+        </span>
+        {% if block.settings.goal_2_label != blank %}
+          <span class='cart-checkpoints__label custom-font-size'>
+            {{ block.settings.goal_2_label }}
+          </span>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if block.settings.enable_goal_3 %}
+      <div class="cart-progress__bar__badge cart-checkpoints__icon" style="--position:{{ goal_3_position }}%;">
+        <span class="material-symbols-outlined{% if block.settings.goal_3_icon_filled %} filled{% endif %}">
+          {{ block.settings.goal_3_icon | strip | downcase | replace: ' ', '_' }}
+        </span>
+        {% if block.settings.goal_3_label != blank %}
+          <span class='cart-checkpoints__label custom-font-size'>
+            {{ block.settings.goal_3_label }}
+          </span>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>

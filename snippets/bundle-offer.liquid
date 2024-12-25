@@ -1,0 +1,480 @@
+{% liquid
+  assign item_count = 0
+  assign total_compare_price = 0
+  assign total_price = 0
+  assign total_percentage_left_multiplier = 100.0 | minus: block.settings.percentage_discount | divided_by: 100.0
+  assign total_fixed_discount = block.settings.fixed_amount_discount | times: 100.0
+  assign product_form_id = 'bundle-offer-' | append: section.id | append: block.id
+  if block.settings.type == 'main'
+    assign is_main = true
+    assign is_separate = false
+  else 
+    assign is_separate = true
+    assign is_main = false
+  endif
+%}
+<div 
+  class='bundle-offer accent-color-{{ block.settings.accent_color }}' 
+  style='
+    --image-size: {{ block.settings.images_size }}rem;
+    --image-border-radius: {{ block.settings.images_corner_radius | divided_by: 10.0 }}rem;
+    --title-font-size: {{ block.settings.title_size }}rem;
+    --desc-font-size: {{ block.settings.desc_size }}rem;
+    --price-font-size: {{ block.settings.price_size }}rem;
+    --border-color: var(--color-base-{{ block.settings.container_border_color }});
+    --border-thickness: {{ block.settings.container_border_thickness }}px;
+    --border-opacity: {{ block.settings.container_border_opacity | divided_by: 100.0 }};
+    --border-radius: {{ block.settings.border_radius | divided_by: 10.0 }}rem;
+    --divider-opacity: {{ block.settings.divider_opacity | divided_by: 100.0 }};
+    --plus-border-opacity: {{ block.settings.plus_border_opacity | divided_by: 100.0 }};
+    --margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;
+    --margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;
+  ' 
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.title_text != blank %}
+    <h3 class='mt-0 {{ block.settings.heading_size }} {{ block.settings.title_alignment }}'>
+      {{ block.settings.title_text }}
+    </h3>
+  {% endif %}
+  <{% if is_separate %}bundle-deals id="bundle-deals-{{ section.id }}-{{ block.id }}" data-section="{{ section.id }}-{{ block.id }}" data-percentage-left="{{ total_percentage_left_multiplier }}" data-fixed-discount="{{ total_fixed_discount }}" data-currency-symbol="{{ cart.currency.symbol }}" data-update-prices="{{ block.settings.enable_price_changes }}"{% else %}div{% endif %} class='bundle-offer-container custom-border custom-border-radius color-{{ block.settings.color_scheme }}'>
+    {% if block.settings.product_1 != blank %}
+      {% liquid
+        assign current_product = block.settings.product_1
+        assign item_index = item_count
+        assign item_count = item_count | plus: 1
+        assign percentage_left_multiplier = 100.0 | minus: block.settings.product_1_percentage_discount | divided_by: 100.0
+        assign fixed_discount = block.settings.product_1_fixed_amount_discount | times: 100.0
+        assign price = current_product.first_available_variant.price | times: percentage_left_multiplier | minus: fixed_discount
+        if current_product.first_available_variant.compare_at_price > current_product.first_available_variant.price
+          assign compare_price = current_product.first_available_variant.compare_at_price
+        else 
+          assign compare_price = current_product.first_available_variant.price
+        endif
+        assign total_price = total_price | plus: price
+        assign total_compare_price = total_compare_price | plus: compare_price
+      %}
+      <{% if is_main %}product-info-upsell{% else %}div{% endif %}
+        class='upsell{% if is_main %} main-offer-item-{{ section.id }}{% endif %}'
+        data-selected="true"
+        data-id="{{ current_product.first_available_variant.id }}"
+      >
+        <div class='upsell__container bundle-deals__product-js {{ block.settings.product_1_top_padding }} {{ block.settings.product_1_bottom_padding }}'>
+          <input
+            type="checkbox"
+            class="bundle-deals__checkbox-js visually-hidden"
+            data-id="{{ current_product.first_available_variant.id }}"
+            data-price="{{ price }}"
+            data-compare-price="{{ compare_price }} "
+            data-index="{{ item_index }}"
+            data-id-index="id_{{ item_index }}"
+            data-checked="true"
+            checked
+          >
+          {% if block.settings.show_images %}
+            {% liquid
+              if block.settings.displayed_image == 'variant' and current_product.first_available_variant.featured_image != blank
+                assign featured_image = current_product.first_available_variant.featured_image
+              else
+                assign featured_image = current_product.featured_image
+              endif
+            %}
+            {% if featured_image != blank %}
+              <div class='upsell__image bundle-deals__media-item-container-js'>
+                <img
+                  src="{{ featured_image | image_url: width: 500 }}"
+                  alt="{{ featured_image.alt | escape }}"
+                  class="upsell__image__img bundle-deals__media-item-img-js"
+                  loading="lazy"
+                  width="auto"
+                  height="auto"
+                >
+              </div>
+            {% endif %}
+          {% endif %}
+          <div class='upsell__content{% if block.settings.hide_compare_price %} hide-compare-price{% endif %}'>
+            <div class='upsell__title'>
+              <h3>
+                {{ current_product.title }}
+              </h3>
+              {% if block.settings.price_position == 'next_to_title' %}
+                <div class='upsell__price'>
+                  <span class='bundle-deals__compare-price-js compare-price'>{% if compare_price > price %}{{ compare_price | money }}{% endif %}</span>
+                  <span class='bundle-deals__price-js regular-price'>
+                    {% if price == 0 and block.settings.displayed_free_price == 'text' %}
+                      {{ block.settings.displayed_free_price_text }}
+                    {% else %}
+                      {{ price | money }}
+                    {% endif %}
+                  </span>
+                </div>
+              {% endif %}
+            </div>
+            {%- unless block.settings.product_1_desc == blank -%}
+              <p class="upsell__desc">
+                {{ block.settings.product_1_desc }}
+              </p>
+            {%- endunless -%}
+            {%- unless current_product.has_only_default_variant -%}
+              {% if block.settings.show_variant_picker %}
+                <div class='upsell__variant-picker bundle-deals__variant-selects-js' data-index="{{ item_index }}" data-id-index="id_{{ item_index }}">
+                  {%- for option in current_product.options_with_values -%}
+                    <div class="upsell__select select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+                      <select class="select__select variant-dropdown">
+                        {% for value in option.values %}
+                          <option
+                            value="{{ value | escape }}"
+                          >
+                            {{- value -}}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      {% render 'icon-caret' %}
+                    </div>
+                  {%- endfor -%}
+                  <script type="application/json">
+                    {{ current_product.variants | json }}
+                  </script>
+                </div>
+              {% endif %}
+            {% endunless %}
+            {% if block.settings.price_position == 'separate' %}
+              <div class='upsell__price upsell__price--separate'>
+                <span class='bundle-deals__compare-price-js compare-price'>{% if compare_price > price %}{{ compare_price | money }}{% endif %}</span>
+                <span class='bundle-deals__price-js regular-price'>
+                  {% if price == 0 and block.settings.displayed_free_price == 'text' %}
+                    {{ block.settings.displayed_free_price_text }}
+                  {% else %}
+                    {{ price | money }}
+                  {% endif %}
+                </span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </{% if is_main %}product-info-upsell{% else %}div{% endif %}>
+    {% endif %}
+    {% if block.settings.product_2 != blank %}
+      {% liquid
+        assign current_product = block.settings.product_2
+        assign item_index = item_count
+        assign item_count = item_count | plus: 1
+        assign percentage_left_multiplier = 100.0 | minus: block.settings.product_2_percentage_discount | divided_by: 100.0
+        assign fixed_discount = block.settings.product_2_fixed_amount_discount | times: 100.0
+        assign price = current_product.first_available_variant.price | times: percentage_left_multiplier | minus: fixed_discount
+        if current_product.first_available_variant.compare_at_price > current_product.first_available_variant.price
+          assign compare_price = current_product.first_available_variant.compare_at_price
+        else 
+          assign compare_price = current_product.first_available_variant.price
+        endif
+        assign total_price = total_price | plus: price
+        assign total_compare_price = total_compare_price | plus: compare_price
+      %}
+      <{% if is_main %}product-info-upsell{% else %}div{% endif %}
+        class='upsell{% if is_main %} main-offer-item-{{ section.id }}{% endif %}'
+        data-selected="true"
+        data-id="{{ current_product.first_available_variant.id }}"
+      >
+        <div class='bundle-offer__divider flex-center'>
+          <span>&nbsp</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path fill='currentColor' d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+          </svg>
+          <span>&nbsp</span>
+        </div>
+        <div class='upsell__container bundle-deals__product-js {{ block.settings.product_2_top_padding }} {{ block.settings.product_2_bottom_padding }}'>
+          <input
+            type="checkbox"
+            class="bundle-deals__checkbox-js visually-hidden"
+            data-id="{{ current_product.first_available_variant.id }}"
+            data-price="{{ price }}"
+            data-compare-price="{{ compare_price }} "
+            data-index="{{ item_index }}"
+            data-id-index="id_{{ item_index }}"
+            data-checked="true"
+            checked
+          >
+          {% if block.settings.show_images %}
+            {% liquid
+              if block.settings.displayed_image == 'variant' and current_product.first_available_variant.featured_image != blank
+                assign featured_image = current_product.first_available_variant.featured_image
+              else
+                assign featured_image = current_product.featured_image
+              endif
+            %}
+            {% if featured_image != blank %}
+              <div class='upsell__image bundle-deals__media-item-container-js'>
+                <img
+                  src="{{ featured_image | image_url: width: 500 }}"
+                  alt="{{ featured_image.alt | escape }}"
+                  class="upsell__image__img bundle-deals__media-item-img-js"
+                  loading="lazy"
+                  width="auto"
+                  height="auto"
+                >
+              </div>
+            {% endif %}
+          {% endif %}
+          <div class='upsell__content{% if block.settings.hide_compare_price %} hide-compare-price{% endif %}'>
+            <div class='upsell__title'>
+              <h3>
+                {{ current_product.title }}
+              </h3>
+              {% if block.settings.price_position == 'next_to_title' %}
+                <div class='upsell__price'>
+                  <span class='bundle-deals__compare-price-js compare-price'>{% if compare_price > price %}{{ compare_price | money }}{% endif %}</span>
+                  <span class='bundle-deals__price-js regular-price'>
+                    {% if price == 0 and block.settings.displayed_free_price == 'text' %}
+                      {{ block.settings.displayed_free_price_text }}
+                    {% else %}
+                      {{ price | money }}
+                    {% endif %}
+                  </span>
+                </div>
+              {% endif %}
+            </div>
+            {%- unless block.settings.product_2_desc == blank -%}
+              <p class="upsell__desc">
+                {{ block.settings.product_2_desc }}
+              </p>
+            {%- endunless -%}
+            {%- unless current_product.has_only_default_variant -%}
+              {% if block.settings.show_variant_picker %}
+                <div class='upsell__variant-picker bundle-deals__variant-selects-js' data-index="{{ item_index }}" data-id-index="id_{{ item_index }}">
+                  {%- for option in current_product.options_with_values -%}
+                    <div class="upsell__select select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+                      <select class="select__select variant-dropdown">
+                        {% for value in option.values %}
+                          <option
+                            value="{{ value | escape }}"
+                          >
+                            {{- value -}}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      {% render 'icon-caret' %}
+                    </div>
+                  {%- endfor -%}
+                  <script type="application/json">
+                    {{ current_product.variants | json }}
+                  </script>
+                </div>
+              {% endif %}
+            {% endunless %}
+            {% if block.settings.price_position == 'separate' %}
+              <div class='upsell__price upsell__price--separate'>
+                <span class='bundle-deals__compare-price-js compare-price'>{% if compare_price > price %}{{ compare_price | money }}{% endif %}</span>
+                <span class='bundle-deals__price-js regular-price'>
+                  {% if price == 0 and block.settings.displayed_free_price == 'text' %}
+                    {{ block.settings.displayed_free_price_text }}
+                  {% else %}
+                    {{ price | money }}
+                  {% endif %}
+                </span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </{% if is_main %}product-info-upsell{% else %}div{% endif %}>
+    {% endif %}
+    {% if block.settings.product_3 != blank %}
+      {% liquid
+        assign current_product = block.settings.product_3
+        assign item_index = item_count
+        assign item_count = item_count | plus: 1
+        assign percentage_left_multiplier = 100.0 | minus: block.settings.product_3_percentage_discount | divided_by: 100.0
+        assign fixed_discount = block.settings.product_3_fixed_amount_discount | times: 100.0
+        assign price = current_product.first_available_variant.price | times: percentage_left_multiplier | minus: fixed_discount
+        if current_product.first_available_variant.compare_at_price > current_product.first_available_variant.price
+          assign compare_price = current_product.first_available_variant.compare_at_price
+        else 
+          assign compare_price = current_product.first_available_variant.price
+        endif
+        assign total_price = total_price | plus: price
+        assign total_compare_price = total_compare_price | plus: compare_price
+      %}
+      <{% if is_main %}product-info-upsell{% else %}div{% endif %}
+        class='upsell{% if is_main %} main-offer-item-{{ section.id }}{% endif %}'
+        data-selected="true"
+        data-id="{{ current_product.first_available_variant.id }}"
+      >
+        <div class='bundle-offer__divider flex-center'>
+          <span>&nbsp</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path fill='currentColor' d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+          </svg>
+          <span>&nbsp</span>
+        </div>
+        <div class='upsell__container bundle-deals__product-js {{ block.settings.product_3_top_padding }} {{ block.settings.product_3_bottom_padding }}'>
+          <input
+            type="checkbox"
+            class="bundle-deals__checkbox-js visually-hidden"
+            data-id="{{ current_product.first_available_variant.id }}"
+            data-price="{{ price }}"
+            data-compare-price="{{ compare_price }} "
+            data-index="{{ item_index }}"
+            data-id-index="id_{{ item_index }}"
+            data-checked="true"
+            checked
+          >
+          {% if block.settings.show_images %}
+            {% liquid
+              if block.settings.displayed_image == 'variant' and current_product.first_available_variant.featured_image != blank
+                assign featured_image = current_product.first_available_variant.featured_image
+              else
+                assign featured_image = current_product.featured_image
+              endif
+            %}
+            {% if featured_image != blank %}
+              <div class='upsell__image bundle-deals__media-item-container-js'>
+                <img
+                  src="{{ featured_image | image_url: width: 500 }}"
+                  alt="{{ featured_image.alt | escape }}"
+                  class="upsell__image__img bundle-deals__media-item-img-js"
+                  loading="lazy"
+                  width="auto"
+                  height="auto"
+                >
+              </div>
+            {% endif %}
+          {% endif %}
+          <div class='upsell__content{% if block.settings.hide_compare_price %} hide-compare-price{% endif %}'>
+            <div class='upsell__title'>
+              <h3>
+                {{ current_product.title }}
+              </h3>
+              {% if block.settings.price_position == 'next_to_title' %}
+                <div class='upsell__price'>
+                  <span class='bundle-deals__compare-price-js compare-price'>{% if compare_price > price %}{{ compare_price | money }}{% endif %}</span>
+                  <span class='bundle-deals__price-js regular-price'>
+                    {% if price == 0 and block.settings.displayed_free_price == 'text' %}
+                      {{ block.settings.displayed_free_price_text }}
+                    {% else %}
+                      {{ price | money }}
+                    {% endif %}
+                  </span>
+                </div>
+              {% endif %}
+            </div>
+            {%- unless block.settings.product_3_desc == blank -%}
+              <p class="upsell__desc">
+                {{ block.settings.product_3_desc }}
+              </p>
+            {%- endunless -%}
+            {%- unless current_product.has_only_default_variant -%}
+              {% if block.settings.show_variant_picker %}
+                <div class='upsell__variant-picker bundle-deals__variant-selects-js' data-index="{{ item_index }}" data-id-index="id_{{ item_index }}">
+                  {%- for option in current_product.options_with_values -%}
+                    <div class="upsell__select select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+                      <select class="select__select variant-dropdown">
+                        {% for value in option.values %}
+                          <option
+                            value="{{ value | escape }}"
+                          >
+                            {{- value -}}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      {% render 'icon-caret' %}
+                    </div>
+                  {%- endfor -%}
+                  <script type="application/json">
+                    {{ current_product.variants | json }}
+                  </script>
+                </div>
+              {% endif %}
+            {% endunless %}
+            {% if block.settings.price_position == 'separate' %}
+              <div class='upsell__price upsell__price--separate'>
+                <span class='bundle-deals__compare-price-js compare-price'>{% if compare_price > price %}{{ compare_price | money }}{% endif %}</span>
+                <span class='bundle-deals__price-js regular-price'>
+                  {% if price == 0 and block.settings.displayed_free_price == 'text' %}
+                    {{ block.settings.displayed_free_price_text }}
+                  {% else %}
+                    {{ price | money }}
+                  {% endif %}
+                </span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </{% if is_main %}product-info-upsell{% else %}div{% endif %}>
+    {% endif %}
+    {% if is_separate or block.settings.show_footer %}
+      <div class="bundle-offer__footer flex-space-between">
+        <span class='bundle-offer__footer__total-text'>{{ block.settings.total_price_text }}</span>
+        <div class='bundle-offer__totals right'>
+          {% if block.settings.total_price_benefit %}
+            <p class='bundle-offer__footer__benefit text-color-{{ block.settings.benefit_color }}'>
+              {{ block.settings.total_price_benefit }}
+            </p>
+          {% endif %}
+          {% assign total_price = total_price | times: total_percentage_left_multiplier | minus: total_fixed_discount %}
+          <p class='bundle-offer__footer__prices'>
+            <span class="bundle-deals__total-compare-price-js compare-price">{%- if total_compare_price > total_price %}{{ total_compare_price | money }}{% endif -%}</span>
+            <span class="bundle-deals__total-price-js regular-price">{{ total_price | money }}</span>
+          </p>
+        </div>
+      </div>
+    {% endif %}
+  </{% if is_separate %}bundle-deals{% else %}div{% endif %}>
+  {% if is_separate %}
+    <product-form class="product-form" data-section="{{ section.id }}-{{ block.id }}">
+      <div class="product-form__error-message-wrapper" role="alert" hidden>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          class="icon icon-error"
+          viewBox="0 0 13 13"
+        >
+          <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+          <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+          <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+          <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+        </svg>
+        <span class="product-form__error-message"></span>
+      </div>
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <div class="product-form__variants"></div>
+        <input
+          type="hidden"
+          name="id"
+          value=""
+          disabled
+          class="product-variant-id"
+          {% if section.settings.skip_cart %}
+            data-skip-cart="true"
+          {% endif %}
+        >
+        <div class="product-form__buttons">
+          <button
+            type="submit"
+            name="add"
+            class="atc-button product-form__submit button button--full-width"
+          >
+            <span>
+              {{ block.settings.button_label }}
+            </span>
+            <div class="loading-overlay__spinner hidden">
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="spinner"
+                viewBox="0 0 66 66"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+              </svg>
+            </div>
+          </button>
+        </div>
+      {%- endform -%}
+    </product-form>
+  {% endif %}
+</div>

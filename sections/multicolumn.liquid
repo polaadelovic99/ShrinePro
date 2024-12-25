@@ -1,0 +1,867 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="multicolumn animate-section animate--hidden color-{{ section.settings.color_scheme }} gradient{% if section.settings.title == blank %} no-heading{% endif %} content-for-grouping {{ section.settings.visibility }}" data-mobile-columns="{{ section.settings.columns_mobile }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  {%- liquid
+    assign has_mobile_slider = false
+    assign has_desktop_slider = false
+    if section.settings.slider_mobile
+      assign has_mobile_slider = true
+      if section.settings.mobile_dots_position == 'under' or section.settings.mobile_arrows_position == 'under'
+        assign has_mobile_controls = true
+      endif
+    endif
+    if section.settings.slider_desktop
+      assign has_desktop_slider = true
+      if section.settings.desktop_dots_position == 'under' or section.settings.desktop_arrows_position == 'under'
+        assign has_desktop_controls = true
+      endif
+    endif
+  
+    assign highest_ratio = 0
+    for block in section.blocks
+      if block.settings.video.aspect_ratio > highest_ratio
+        assign highest_ratio = block.settings.video.aspect_ratio
+      elsif block.settings.image.aspect_ratio > highest_ratio
+        assign highest_ratio = block.settings.image.aspect_ratio
+      endif
+    endfor
+    assign bg_diff_class = ' multicolumn--same-bgs'
+    unless section.settings.color_scheme == section.settings.cards_color_scheme
+      assign bg_diff_class = ' multicolumn--diff-bgs'
+    endunless
+  -%}
+  <div class="page-width{% if section.settings.desktop_full_page %} desktop-full-page{% endif %}{% if has_mobile_slider %} mobile-full-page{% endif %} section-{{ section.id }}-padding isolate" style="--columns-desktop: {{ section.settings.columns_desktop }};--columns-mobile: {{ section.settings.columns_mobile }};--gap-desktop:{{ section.settings.desktop_spacing }}px;--gap-mobile:{{ section.settings.mobile_spacing }}px;">
+    {% assign content_index = 0 %}
+    {%- unless section.settings.title == blank -%}
+      {% assign content_index = 1 %}
+      <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin animate-item animate-item--child index-0">
+        <h2 class="title {{ section.settings.heading_size }}">
+          {{ section.settings.title | escape }}
+        </h2>
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link }}" class="link underlined-link{% unless has_mobile_controls %} mobile-hidden{% endunless %}{% unless has_desktop_controls %} desktop-hidden{% endunless %}">
+            {{- section.settings.button_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endunless -%}
+    {% if has_mobile_slider or has_desktop_slider %}
+      <splide-component
+        data-type='{{ section.settings.type }}'
+        data-autoplay='{{ section.settings.autoplay }}'
+        data-autoplay-speed='{{ section.settings.autoplay_speed }}'
+        data-arrows-color="{{ section.settings.arrows_color_scheme }}"
+        data-dots-color="{{ section.settings.dots_color_scheme }}"
+        data-slides-desktop="{{ section.settings.columns_desktop }}"
+        data-per-move-desktop='{{ section.settings.per_move_desktop }}'
+        data-gap-desktop='{{ section.settings.desktop_spacing }}'
+        data-side-padding-desktop='{{ section.settings.desktop_side_padding }}'
+        data-padding-calc-desktop='{{ section.settings.desktop_padding_calc }}'
+        data-slides-mobile="{{ section.settings.columns_mobile }}"
+        data-gap-mobile='15'
+        {% if section.settings.enable_mobile_preview %}
+          data-side-padding-mobile='24'
+        {% else %}
+          data-side-padding-mobile='15'
+        {% endif %}
+        {% if has_desktop_slider == false %}
+          data-destroy-desktop="true"
+        {% elsif has_mobile_slider == false %}
+          data-destroy-mobile="true"
+        {% endif %}
+      >
+    {% endif %}
+      <div 
+        class='splide splide--desktop-dots-{{ section.settings.desktop_dots_position }} splide--mobile-dots-{{ section.settings.mobile_dots_position }} splide--desktop-arrows-{{ section.settings.desktop_arrows_position }} splide--desktop-arrows-outside splide--mobile-arrows-{{ section.settings.mobile_arrows_position }}{% if section.settings.transparent_arrows %} splide--transparent-arrows{% endif %}{% if section.settings.vertical-alignment == 'center' %} splide--vertically-centered{% endif %}{% if has_desktop_slider == false %} splide--destroy-desktop{% endif %}{% if has_mobile_slider == false %} splide--destroy-mobile{% endif %}' 
+        {% if section.settings.desktop_adaptive_height and section.settings.slides_desktop == 1 and has_desktop_slider %}
+          data-desktop-adaptive-height="true"
+        {% endif %}
+        {% if section.settings.mobile_adaptive_height and has_mobile_slider %}
+          data-mobile-adaptive-height="true"
+        {% endif %}
+      >
+        <div class="splide__track">
+          <ul class="splide__list">
+            {%- for block in section.blocks -%}
+              {%- assign empty_content = '' -%}
+              {%- if block.settings.title == blank
+                and block.settings.text == blank
+                and block.settings.link_label == blank
+              -%}
+                {%- assign empty_content = ' hidden' -%}
+              {%- endif -%}
+              <li class="splide__slide">
+                <div class="splide__slide__container" style="--index:{{ forloop.index0 | plus: content_index }};" {{ block.shopify_attributes }}>
+                  <div class="multicolumn-card content-container color-{{ section.settings.cards_color_scheme }}{{ bg_diff_class }}{% if section.settings.column_alignment == 'center' %} center{% endif %} animate-item animate-item--child">
+                    {%- if block.settings.image != blank or block.settings.video != blank -%}
+                      {% if section.settings.image_ratio == 'adapt' or section.settings.image_ratio == 'circle' %}
+                        {% assign spaced_image = true %}
+                      {% endif %}
+                      <div class="multicolumn-card__image-wrapper multicolumn-card__image-wrapper--{{ section.settings.image_width }}-width{% if section.settings.image_width != 'full' or spaced_image %} multicolumn-card-spacing{% endif %}">
+                        <div
+                          class="media media--transparent media--{{ section.settings.image_ratio }}"
+                          {% if section.settings.image_ratio == 'adapt' %}
+                            style="padding-bottom: {{ 1 | divided_by: highest_ratio | times: 100 }}%;"
+                          {% endif %}
+                        >
+                          {% if block.settings.video == blank %}
+                            {%- capture sizes -%}
+                              (min-width: 990px) {% if section.blocks.size <= 2 %}710px{% else %}550px{% endif %}, (min-width:
+                              750px) {% if section.blocks.size == 1 %}710px{% else %}550px{% endif %}, calc(100vw - 30px)
+                            {%- endcapture -%}
+                            {{
+                              block.settings.image
+                              | image_url: width: 1420
+                              | image_tag:
+                                loading: 'lazy',
+                                sizes: sizes,
+                                widths: '275, 550, 710, 1420',
+                                class: 'multicolumn-card__image'
+                            }}
+                          {% else %}
+                            <internal-video class="internal-video" data-autoplay="{{ block.settings.muted_autoplay }}">
+                              {% liquid
+                                if block.settings.video_thumbnail != blank
+                                  assign thumbnail = block.settings.video_thumbnail
+                                else
+                                  assign thumbnail = block.settings.video.preview_image
+                                endif
+                              %}
+                              <video 
+                                width="100%" 
+                                height="auto" 
+                                preload='metadata'
+                                poster="{{ thumbnail | image_url }}"
+                                {% if block.settings.muted_autoplay %}
+                                  muted autoplay loop
+                                {% endif %}
+                                playsinline disablepictureinpicture
+                              >
+                                {% for source in block.settings.video.sources %}
+                                  <source 
+                                    {% if block.settings.muted_autoplay %}data-{% endif %}src="{{ source.url }}" 
+                                    type="{{ source.mime_type }}"
+                                  >
+                                {% endfor %}
+                              </video>
+                              {% unless block.settings.muted_autoplay %}
+                                <button class="internal-video__play">
+                                  <div class="play-button color-accent-1">
+                                    {%- render 'icon-play' -%}
+                                  </div>
+                                </button>
+                                <div class='internal-video__timeline'>&nbsp</div>
+                              {% endunless %}
+                            </internal-video>
+                          {% endif %}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                    <div class="multicolumn-card__info{{ empty_content }}">
+                      {%- if block.settings.title != blank -%}
+                        <h3>{{ block.settings.title | escape }}</h3>
+                      {%- endif -%}
+                      {%- if block.settings.text != blank -%}
+                        <div class="rte">{{ block.settings.text }}</div>
+                      {%- endif -%}
+                      {%- if block.settings.link_label != blank -%}
+                        <a
+                          class="link animate-arrow"
+                          {% if block.settings.link == blank %}
+                            role="link" aria-disabled="true"
+                          {% else %}
+                            href="{{ block.settings.link }}"
+                          {% endif %}
+                        >
+                          {{- block.settings.link_label | escape -}}
+                          <span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span></a
+                        >
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <div class='splide__dots-and-arrows'>
+          <ul class="splide__pagination"></ul>
+          <div class="splide__arrows"></div>
+        </div>
+      </div>
+    {% if has_mobile_slider or has_desktop_slider %}
+      </splide-component>
+    {% endif %}
+    <div class="center{% if has_mobile_controls %} mobile-hidden{% endif %}{% if has_desktop_controls %} desktop-hidden{% endif %} animate-item animate-item--child index-{{ content_index | plus: 1 }}">
+      {%- if section.settings.button_label != blank -%}
+        <a
+          class="button button--primary"
+          {% if section.settings.button_link == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ section.settings.button_link }}"
+          {% endif %}
+        >
+          {{ section.settings.button_label | escape }}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.atc_button_label != blank -%}
+        {% if section.settings.atc_product == blank %}
+          <button
+            id="SectionAtcBtn-{{ section.id }}"
+            type="button"
+            class="button main-product-atc button--has-spinner"
+            {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+              disabled
+            {% endif %}
+          >
+            {{ section.settings.atc_button_label | escape }}
+            <div class="loading-overlay__spinner">
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="spinner"
+                viewBox="0 0 66 66"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+              </svg>
+            </div>
+          </button>
+        {% else %}
+          {% assign product_form_id = 'section-product-form-'
+            | append: section.id
+          %}
+          {% render 'separate-atc-btn',
+            product: section.settings.atc_product,
+            product_form_id: product_form_id,
+            label: section.settings.atc_button_label
+          %}
+        {% endif %}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.multicolumn.name",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Multicolumn",
+      "label": "t:sections.multicolumn.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.multicolumn.settings.button_label.label",
+      "info": "Visible next to title when slider controls are under the slider."
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.multicolumn.settings.button_link.label"
+    },
+    {
+      "type": "text",
+      "id": "atc_button_label",
+      "label": "Add to Cart button label",
+      "info": "Visible next to title when slider controls are under the slider."
+    },
+    {
+      "type": "product",
+      "id": "atc_product",
+      "label": "ATC Custom product",
+      "info": "IMPORTANT: If empty, the button will add the main product FROM THE PRODUCT PAGE to cart (INCLUDING the selected variant/quantity, upsells etc.)"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Columns"
+    },
+    {
+      "type": "select",
+      "id": "image_width",
+      "options": [
+        {
+          "value": "third",
+          "label": "One-third width of column"
+        },
+        {
+          "value": "half",
+          "label": "Half width of column"
+        },
+        {
+          "value": "full",
+          "label": "Full width of column"
+        }
+      ],
+      "default": "full",
+      "label": "Media width"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to media"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "circle",
+          "label": "Circle"
+        }
+      ],
+      "default": "square",
+      "label": "Media ratio"
+    },
+    {
+      "type": "select",
+      "id": "column_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.multicolumn.settings.column_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.multicolumn.settings.column_alignment.options__2.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.multicolumn.settings.column_alignment.label"
+    },
+    {
+      "type": "select",
+      "id": "cards_color_scheme",
+      "options": [
+        {
+          "value": "bg-overlay",
+          "label": "Light overlay"
+        },
+        {
+          "value": "accent-1",
+          "label": "Accent 1"
+        },
+        {
+          "value": "accent-2",
+          "label": "Accent 2"
+        },
+        {
+          "value": "background-1",
+          "label": "Background 1"
+        },
+        {
+          "value": "background-2",
+          "label": "Background 2"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        }
+      ],
+      "default": "bg-overlay",
+      "label": "Cards color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "paragraph",
+      "content": "ATTENTION: ONLY in the theme editor, pagination dots might duplicate after changing section settings. To overcome this, simply click Save. This has NO EFFECT on the published website."
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "options": [
+        {
+          "value": "slide",
+          "label": "Classic"
+        },
+        {
+          "value": "loop",
+          "label": "Infinite"
+        }
+      ],
+      "default": "slide",
+      "label": "Type"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 1,
+      "max": 15,
+      "step": 0.5,
+      "default": 5,
+      "unit": "sec",
+      "label": "Autoplay speed"
+    },
+    {
+      "type": "select",
+      "id": "arrows_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "inverse",
+      "label": "Arrows color scheme"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_arrows",
+      "label": "Transparent arrows",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "dots_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "inverse",
+      "label": "Dots color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_full_page",
+      "label": "Full page width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "label": "Columns desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_desktop",
+      "label": "Enable desktop slider",
+      "default": false,
+      "info": "The settings bellow are applied if this option is checked"
+    },
+    {
+      "type": "range",
+      "id": "per_move_desktop",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 1,
+      "label": "Slides to scroll on one move"
+    },
+    {
+      "type": "range",
+      "id": "desktop_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_side_padding",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Preview of prev & next slide",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_padding_calc",
+      "label": "Disable empty preview on first & last slide",
+      "default": true,
+      "info": "Moves the first slide to the left edge adn last one to the right if Preview value is enabled. Visible if type is set to Slider."
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_adaptive_height",
+      "label": "Adaptive height",
+      "default": false,
+      "info": "Only available if Slides per page is set to 1."
+    },
+    {
+      "type": "select",
+      "id": "desktop_dots_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        }
+      ],
+      "default": "under",
+      "label": "Dots position"
+    },
+    {
+      "type": "select",
+      "id": "desktop_arrows_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        },
+        {
+          "value": "sides",
+          "label": "On sides of the slider"
+        }
+      ],
+      "default": "sides",
+      "label": "Arrows position"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.multicolumn.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.multicolumn.settings.columns_mobile.options__2.label"
+        }
+      ],
+      "default": "1",
+      "label": "t:sections.multicolumn.settings.columns_mobile.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_mobile",
+      "label": "Enable mobile slider",
+      "default": true,
+      "info": "The settings bellow are applied if this option is checked"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mobile_preview",
+      "label": "Preview of prev & next slides",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_adaptive_height",
+      "label": "Adaptive height",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_dots_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        }
+      ],
+      "default": "under",
+      "label": "Dots position"
+    },
+    {
+      "type": "select",
+      "id": "mobile_arrows_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        },
+        {
+          "value": "sides",
+          "label": "On sides of the slider"
+        }
+      ],
+      "default": "under",
+      "label": "Arrows position"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "t:sections.multicolumn.blocks.column.name",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Media",
+          "info": "NOTE: Media is only available if Style is set to Cards"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "header",
+          "content": "or"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "image_picker",
+          "id": "video_thumbnail",
+          "label": "Video thumbnail",
+          "info": "If empty, the first frame of the video will be displayed."
+        },
+        {
+          "type": "checkbox",
+          "id": "muted_autoplay",
+          "label": "Muted autoplay",
+          "default": true,
+          "info": "Use this instead of GIFs & animated WEBPs."
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Column",
+          "label": "t:sections.multicolumn.blocks.column.settings.title.label"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Pair text with an image/video to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+          "label": "t:sections.multicolumn.blocks.column.settings.text.label"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "t:sections.multicolumn.blocks.column.settings.link_label.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.multicolumn.blocks.column.settings.link.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.multicolumn.presets.name",
+      "blocks": [
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

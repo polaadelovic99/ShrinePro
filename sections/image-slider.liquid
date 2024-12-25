@@ -1,0 +1,891 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  .section-{{ section.id }}-padding .image-slide {
+    border-radius: {{ section.settings.mobile_border_radius }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    .section-{{ section.id }}-padding .image-slide {
+      border-radius: {{ section.settings.desktop_border_radius }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} content-for-grouping animate-section animate--hidden {{ section.settings.visibility }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  {%- unless section.settings.title == blank -%}
+    <div class="page-width">
+      <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin animate-item animate-item--child index-0">
+        <h2 class="title inline-richtext {{ section.settings.heading_size }}">
+          {{ section.settings.title }}
+        </h2>
+      </div>
+    </div>
+  {%- endunless -%}
+  <div class="page-width{% if section.settings.desktop_full_page %} desktop-full-page desktop-full-page-no-padding{% endif %}{% if section.settings.mobile_full_page %} mobile-full-page{% endif %}">
+    <splide-component
+      data-type='{{ section.settings.type }}'
+      data-autoplay='{{ section.settings.autoplay }}'
+      data-autoplay-speed='{{ section.settings.autoplay_speed }}'
+      {% if section.settings.drag == 'disabled' %}
+        data-drag='false'
+      {% elsif section.settings.drag == 'free' %}
+        data-drag='free'
+      {% endif %}
+      {% if section.settings.type != 'fade' %}
+        data-omit-end="true"
+      {% endif %}
+      data-arrows-color="{{ section.settings.arrows_color_scheme }}"
+      data-dots-color="{{ section.settings.dots_color_scheme }}"
+      data-slides-desktop='{{ section.settings.slides_desktop }}'
+      data-per-move-desktop='{{ section.settings.per_move_desktop }}'
+      data-gap-desktop='{{ section.settings.desktop_spacing }}'
+      data-side-padding-desktop='{{ section.settings.desktop_side_padding }}'
+      data-padding-calc-desktop='{{ section.settings.desktop_padding_calc }}'
+      data-slides-mobile='{{ section.settings.slides_mobile }}'
+      data-per-move-mobile='{{ section.settings.per_move_mobile }}'
+      data-gap-mobile='{{ section.settings.mobile_spacing }}'
+      data-side-padding-mobile='{{ section.settings.mobile_side_padding }}'
+      data-padding-calc-mobile='{{ section.settings.mobile_padding_calc }}'
+      {% if section.settings.center_mode %}
+        data-focus='center'
+        data-trim-space='false'
+      {% endif %}
+      data-image-slider='true'
+      style='--columns-desktop:{{ section.settings.slides_desktop }};--columns-mobile:{{ section.settings.slides_mobile }};--gap-desktop:{{ section.settings.desktop_spacing }}px;--gap-mobile:{{ section.settings.mobile_spacing }}px;'
+    >
+      <div 
+        class='splide splide--precalc-width splide--desktop-dots-{{ section.settings.desktop_dots_position }} splide--mobile-dots-{{ section.settings.mobile_dots_position }} splide--desktop-arrows-{{ section.settings.desktop_arrows_position }} splide--mobile-arrows-{{ section.settings.mobile_arrows_position }}{% if section.settings.transparent_arrows %} splide--transparent-arrows{% endif %}'
+        {% if section.settings.desktop_adaptive_height and section.settings.slides_desktop == 1 and section.settings.drag != 'free' %}
+          data-desktop-adaptive-height="true"
+        {% endif %}
+        {% if section.settings.mobile_adaptive_height and section.settings.slides_mobile == 1 and section.settings.drag != 'free' %}
+          data-mobile-adaptive-height="true"
+        {% endif %}
+      >
+        <div class="splide__track">
+          <ul class="splide__list">
+            {%- for block in section.blocks -%}
+              <li class="splide__slide">
+                <div class="splide__slide__container">
+                  <div class="image-slide animate-item animate-item--child" style='--index: {{ forloop.index0 }};' {{ block.shopify_attributes }}>
+                    <div class="image-slide__image">
+                      {% if block.type == 'image_slide' %}
+                        {% if block.settings.image != blank %}
+                          {%- liquid
+                            assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+                            assign image_height = block.settings.image.width | divided_by: block.settings.image.aspect_ratio
+                          -%}
+                          {%- capture sizes -%}
+                            (min-width: {{ settings.page_width }}px)
+                            {% if section.settings.full_page -%}
+                              calc(100vw / {{ section.settings.slides_desktop }})
+                            {%- else -%}
+                              {{- settings.page_width | minus: 100 | divided_by: section.settings.slides_desktop | round }}px
+                            {%- endif -%}
+                            , (min-width: 768px)
+                              calc(100vw / {{ section.settings.slides_desktop }})
+                            , {% if section.settings.slides_mobile == 1 %} 100vw {% else %} calc(100vw / 2) {% endif %}
+                          {%- endcapture -%}
+                          {{
+                            block.settings.image
+                            | image_url: width: 3840
+                            | image_tag: loading: 'lazy', height: image_height, sizes: sizes, widths: widths
+                          }}
+                        {% else %}
+                          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                        {% endif %}
+                      {% else %}
+                        {% render 'video-player', block: block %}
+                      {% endif %}
+                    </div>
+                    {% if block.settings.description != blank %}
+                      <div class="image-slide__desc {{ block.settings.desc_alignment }} color-{{ block.settings.desc_color_scheme }}">
+                        {{ block.settings.description }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <div class='splide__dots-and-arrows'>
+          <ul class="splide__pagination"></ul>
+          <div class="splide__arrows"></div>
+        </div>
+      </div>
+    </splide-component>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image/Video Slider",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "default": "Image/Video Slider",
+      "label": "t:sections.multicolumn.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "paragraph",
+      "content": "ATTENTION: ONLY in the theme editor, pagination dots might duplicate after changing section settings. To overcome this, simply click Save. This has NO EFFECT on the published website."
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "options": [
+        {
+          "value": "slide",
+          "label": "Classic"
+        },
+        {
+          "value": "loop",
+          "label": "Infinite"
+        },
+        {
+          "value": "fade",
+          "label": "Fade"
+        }
+      ],
+      "default": "slide",
+      "label": "Type"
+    },
+    {
+      "type": "select",
+      "id": "drag",
+      "options": [
+        {
+          "value": "disabled",
+          "label": "Disabled"
+        },
+        {
+          "value": "enabled",
+          "label": "Enabled"
+        },
+        {
+          "value": "free",
+          "label": "Free"
+        }
+      ],
+      "default": "enabled",
+      "label": "Drag"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 1,
+      "max": 15,
+      "step": 0.5,
+      "default": 5,
+      "unit": "sec",
+      "label": "Autoplay speed"
+    },
+    {
+      "type": "checkbox",
+      "id": "center_mode",
+      "label": "Enable center mode",
+      "default": false,
+      "info": "If multiple slides are visible on the page, the middle on will be marked as active."
+    },
+    {
+      "type": "select",
+      "id": "arrows_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "inverse",
+      "label": "Arrows color scheme"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_arrows",
+      "label": "Transparent arrows",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "dots_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "inverse",
+      "label": "Dots color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_full_page",
+      "label": "Full page width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "desktop_border_radius",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Slides corner radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "slides_desktop",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "label": "Slides per page"
+    },
+    {
+      "type": "range",
+      "id": "per_move_desktop",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 1,
+      "label": "Slides to scroll on one move"
+    },
+    {
+      "type": "range",
+      "id": "desktop_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "desktop_side_padding",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Preview of prev & next slide",
+      "default": 0,
+      "info": "Only recommended if Type is set to Infinite"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_padding_calc",
+      "label": "Disable empty preview on first & last slide",
+      "default": true,
+      "info": "Moves the first slide to the left edge adn last one to the right if Preview value is enabled. Visible if type is set to Slider."
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_adaptive_height",
+      "label": "Adaptive height",
+      "default": false,
+      "info": "Only available if Slides per page is set to 1 and Drag is NOT set to Free."
+    },
+    {
+      "type": "select",
+      "id": "desktop_dots_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        },
+        {
+          "value": "over",
+          "label": "Over the slider"
+        }
+      ],
+      "default": "under",
+      "label": "Dots position"
+    },
+    {
+      "type": "select",
+      "id": "desktop_arrows_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        },
+        {
+          "value": "sides",
+          "label": "On sides of the slider"
+        }
+      ],
+      "default": "sides",
+      "label": "Arrows position"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_full_page",
+      "label": "Full page width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "mobile_border_radius",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Slides corner radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "slides_mobile",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "label": "Slides per page"
+    },
+    {
+      "type": "range",
+      "id": "per_move_mobile",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 1,
+      "label": "Slides to scroll on one move"
+    },
+    {
+      "type": "range",
+      "id": "mobile_spacing",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "mobile_side_padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Preview of prev & next slide",
+      "default": 0,
+      "info": "Only recommended if Type is set to Infinite"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_padding_calc",
+      "label": "Disable empty preview on first & last slide",
+      "default": true,
+      "info": "Moves the first slide to the left edge adn last one to the right if Preview value is enabled. Visible if type is set to Slider."
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_adaptive_height",
+      "label": "Adaptive height",
+      "default": false,
+      "info": "Only available if Slides per page is set to 1 and Drag is NOT set to Free."
+    },
+    {
+      "type": "select",
+      "id": "mobile_dots_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        },
+        {
+          "value": "over",
+          "label": "Over the slider"
+        }
+      ],
+      "default": "under",
+      "label": "Dots position"
+    },
+    {
+      "type": "select",
+      "id": "mobile_arrows_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        },
+        {
+          "value": "sides",
+          "label": "On sides of the slider"
+        }
+      ],
+      "default": "sides",
+      "label": "Arrows position"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_slide",
+      "name": "Image Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "select",
+          "id": "desc_alignment",
+          "label": "Description text alignment",
+          "options": [
+            {
+              "value": "",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "desc_color_scheme",
+          "options": [
+            {
+              "value": "accent-1",
+              "label": "t:sections.all.colors.accent_1.label"
+            },
+            {
+              "value": "accent-2",
+              "label": "t:sections.all.colors.accent_2.label"
+            },
+            {
+              "value": "background-1",
+              "label": "t:sections.all.colors.background_1.label"
+            },
+            {
+              "value": "background-2",
+              "label": "t:sections.all.colors.background_2.label"
+            },
+            {
+              "value": "inverse",
+              "label": "t:sections.all.colors.inverse.label"
+            }
+          ],
+          "default": "background-2",
+          "label": "Description color scheme"
+        }
+      ]
+    },
+    {
+      "type": "video_slide",
+      "name": "Video Slide",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "image_picker",
+          "id": "thumbnail",
+          "label": "Video Thumbnail",
+          "info": "If empty, the first frame of the video will be displayed."
+        },
+        {
+          "type": "checkbox",
+          "id": "loop",
+          "label": "Video looping",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "muted_autoplay",
+          "label": "Muted autoplay",
+          "default": true,
+          "info": "Use this instead of GIFs & animated WEBPs."
+        },
+        {
+          "type": "checkbox",
+          "id": "display_play_btn",
+          "label": "Enable play & pause on click",
+          "info": "Automatically enabled if autoplay is disabled.",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "btn_animation",
+          "label": "Enable button ripple animation",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "btn_color_scheme",
+          "options": [
+            {
+              "value": "accent-1",
+              "label": "t:sections.all.colors.accent_1.label"
+            },
+            {
+              "value": "accent-2",
+              "label": "t:sections.all.colors.accent_2.label"
+            },
+            {
+              "value": "background-1",
+              "label": "t:sections.all.colors.background_1.label"
+            },
+            {
+              "value": "background-2",
+              "label": "t:sections.all.colors.background_2.label"
+            },
+            {
+              "value": "inverse",
+              "label": "t:sections.all.colors.inverse.label"
+            }
+          ],
+          "default": "accent-1",
+          "label": "Play button color scheme"
+        },
+        {
+          "type": "checkbox",
+          "id": "display_sound_btn",
+          "label": "Display mute/unmute button",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "sound_btn_color_scheme",
+          "options": [
+            {
+              "value": "accent-1",
+              "label": "t:sections.all.colors.accent_1.label"
+            },
+            {
+              "value": "accent-2",
+              "label": "t:sections.all.colors.accent_2.label"
+            },
+            {
+              "value": "background-1",
+              "label": "t:sections.all.colors.background_1.label"
+            },
+            {
+              "value": "background-2",
+              "label": "t:sections.all.colors.background_2.label"
+            },
+            {
+              "value": "inverse",
+              "label": "t:sections.all.colors.inverse.label"
+            }
+          ],
+          "default": "inverse",
+          "label": "Sound button color scheme"
+        },
+        {
+          "type": "checkbox",
+          "id": "display_timeline",
+          "label": "Display timeline",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "timeline_color",
+          "options": [
+            {
+              "value": "accent-1",
+              "label": "t:sections.all.colors.accent_1.label"
+            },
+            {
+              "value": "accent-2",
+              "label": "t:sections.all.colors.accent_2.label"
+            },
+            {
+              "value": "background-1",
+              "label": "t:sections.all.colors.background_1.label"
+            },
+            {
+              "value": "background-2",
+              "label": "t:sections.all.colors.background_2.label"
+            },
+            {
+              "value": "inverse",
+              "label": "t:sections.all.colors.inverse.label"
+            }
+          ],
+          "default": "accent-1",
+          "label": "Timeline color"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "select",
+          "id": "desc_alignment",
+          "label": "Description text alignment",
+          "options": [
+            {
+              "value": "",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "desc_color_scheme",
+          "options": [
+            {
+              "value": "accent-1",
+              "label": "t:sections.all.colors.accent_1.label"
+            },
+            {
+              "value": "accent-2",
+              "label": "t:sections.all.colors.accent_2.label"
+            },
+            {
+              "value": "background-1",
+              "label": "t:sections.all.colors.background_1.label"
+            },
+            {
+              "value": "background-2",
+              "label": "t:sections.all.colors.background_2.label"
+            },
+            {
+              "value": "inverse",
+              "label": "t:sections.all.colors.inverse.label"
+            }
+          ],
+          "default": "background-2",
+          "label": "Description color scheme"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image/Video Slider",
+      "blocks": [
+        {
+          "type": "image_slide"
+        },
+        {
+          "type": "image_slide"
+        },
+        {
+          "type": "image_slide"
+        },
+        {
+          "type": "image_slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,633 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} content-for-grouping animate-section animate--hidden {{ section.settings.visibility }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="content-rte center animate-item animate-item--child index-0">
+      {% assign content_index = 0 %}
+      {% if section.settings.title != blank %}
+        {% assign content_index = 1 %}
+        <h2 class="{{ section.settings.heading_size }}">
+          {{ section.settings.title }}
+        </h2>
+      {% endif %}
+      {% if section.settings.text != blank %}
+        {% assign content_index = 1 %}
+        <div class="rte">
+          {{ section.settings.text }}
+        </div>
+      {% endif %}
+      {%- if section.settings.button_label != blank -%}
+        {% assign content_index = 1 %}
+        <a
+          {% if section.settings.link %}
+            href="{{ section.settings.link }}"
+          {% else %}
+            role="link" aria-disabled="true"
+          {% endif %}
+          class="button {% if section.settings.button_style_secondary %}button--secondary{% else %}button--primary{% endif %}"
+        >
+          {{- section.settings.button_label | escape -}}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.atc_button_label != blank -%}
+        {% assign content_index = 1 %}
+        <button
+          id="SectionAtcBtn-{{ section.id }}"
+          type="button"
+          class="button main-product-atc button--has-spinner"
+          {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+            disabled
+          {% endif %}
+        >
+          {{ section.settings.atc_button_label | escape }}
+          <div class="loading-overlay__spinner">
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              class="spinner"
+              viewBox="0 0 66 66"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+            </svg>
+          </div>
+        </button>
+      {%- endif -%}
+    </div>
+    
+    <insta-stories
+      class="insta-stories"
+      data-last-index="{{ section.blocks.size | minus: 1 }}"
+      data-section="{{ section.id }}"
+    >
+      <div class="insta-stories__open-buttons-and-arrows-container">
+        <div class="insta-stories__open-buttons-container">
+          <div class="insta-stories__open-buttons" id="insta-stories__open-buttons-{{ section.id }}">
+            {% for block in section.blocks %}
+              <button
+                class="insta-story-open-btn{% if block.settings.close_friends %} insta-story-open-btn--close-friends{% endif %} animate-item animate-item--child"
+                data-index="{{ forloop.index0 }}"
+                style="--index:{{ forloop.index0 | plus: content_index }};"
+                {{ block.shopify_attributes }}
+              >
+                <div class="insta-story-open-btn__pfp-ring">
+                  <div class="insta-story-open-btn__pfp-ring-offset">
+                    <div class="insta-story-open-btn__pfp">
+                      {% if block.settings.profile_picture != blank %}
+                        <img
+                          src="{{ block.settings.profile_picture | image_url: width: 400 }}"
+                          alt="{{ block.settings.username }}"
+                          width="auto"
+                          height="auto"
+                          loading="lazy"
+                        >
+                      {% else %}
+                        {% render 'material-icon', icon: 'person', filled: true %}
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <span class="insta-story-open-btn__username">{{ block.settings.username }}</span>
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+        <button class='insta-story__arrow insta-story__arrow--prev active-content insta-stories__open-btns-prev'>
+          {% render 'material-icon', icon: 'chevron_left' %}
+        </button>
+        <button class='insta-story__arrow insta-story__arrow--next active-content insta-stories__open-btns-next'>
+          {% render 'material-icon', icon: 'chevron_right' %}
+        </button>
+      </div>
+      <div
+        class="insta-stories__modal color-inverse"
+        data-open="false"
+      >
+        <button class='insta-stories__modal__close insta-stories__close-button mobile-hidden'>
+          {% render 'material-icon', icon: 'close' %}
+        </button>
+        <div class='insta-stories__slider-container'>
+          <div class='insta-stories__slider'>
+            {% for block in section.blocks %}
+              <div
+                class="insta-story"
+                data-index="{{ forloop.index0 }}"
+                data-active-media-index="0"
+                {{ block.shopify_attributes }}
+              >
+                <div class='insta-story__top active-content'>
+                  <div class='insta-story__progress'>
+                    <!-- <span class='insta-story__progress-item insta-story__progress-item--completed'></span>
+                    <span class='insta-story__progress-item insta-story__progress-item--active'></span>
+                    <span class='insta-story__progress-item'></span> -->
+                  </div>
+                  <div class='insta-story__info'>
+                    <div class='insta-story-open-btn__pfp insta-story__pfp'>
+                      {% if block.settings.profile_picture != blank %}
+                        <img
+                          src="{{ block.settings.profile_picture | image_url: width: 400 }}"
+                          alt="{{ block.settings.username }}"
+                          width="auto"
+                          height="auto"
+                          loading="lazy"
+                        >
+                      {% else %}
+                        {% render 'material-icon', icon: 'person', filled: true %}
+                      {% endif %}
+                    </div>
+                    <p class='insta-story__info__text'>
+                      <span class='insta-story__username'>
+                        {{ block.settings.username }}
+                      </span>
+                      {% if block.settings.verified %}
+                        {% render 'material-icon', icon: 'verified', filled: true %}
+                      {% endif %}
+                      <span class='insta-story__time-posted'></span>
+                    </p>
+                    <button class='insta-story__info__btn insta-story__pause-resume-btn' data-paused='false'>
+                      {% render 'material-icon', icon: 'pause', filled: true %}
+                      {% render 'material-icon', icon: 'play_arrow', filled: true %}
+                    </button>
+                    <button class='insta-story__info__btn insta-story__info__volume-btn insta-story__volume-btn' data-muted='true'>
+                      {% render 'material-icon', icon: 'volume_up', filled: true %}
+                      {% render 'material-icon', icon: 'volume_off', filled: true %}
+                    </button>
+                    <button class='insta-story__info__btn insta-story__info__close-btn insta-stories__close-button'>
+                      {% render 'material-icon', icon: 'close' %}
+                    </button>
+                  </div>
+                </div>
+                {% if block.settings.story_1_video != blank %}
+                  <div 
+                    class='insta-story__media' 
+                    data-type='video'
+                    data-duration="{{ block.settings.story_1_video.duration | divided_by: 1000.0 }}" 
+                    data-time-posted="{{ block.settings.story_1_time_posted }}"
+                    style="--background:{{ block.settings.story_1_bg }};--object-fit:{{ block.settings.story_1_media_fit }}"
+                  >
+                    {{
+                      block.settings.story_1_video
+                      | video_tag:
+                        image_size: '1000x',
+                        loop: false,
+                        muted: true,
+                        playsinline: '',
+                        autoplay: false
+                    }}
+                  </div>
+                {% elsif block.settings.story_1_image != blank %}
+                  <div 
+                    class='insta-story__media' 
+                    data-type='image' 
+                    data-duration="{{ section.settings.autoplay_speed }}" 
+                    data-time-posted="{{ block.settings.story_1_time_posted }}"
+                    style="--background:{{ block.settings.story_1_bg }};--object-fit:{{ block.settings.story_1_media_fit }}"
+                  >
+                    {{
+                      block.settings.story_1_image
+                      | image_url: width: 1500
+                      | image_tag: loading: 'lazy', widths: '165, 360, 535, 750, 1070, 1250, 1500'
+                    }}
+                  </div>
+                {% endif %}
+                {% if block.settings.story_2_video != blank %}
+                  <div 
+                    class='insta-story__media' 
+                    data-type='video' 
+                    data-duration="{{ block.settings.story_2_video.duration | divided_by: 1000.0 }}" 
+                    data-time-posted="{{ block.settings.story_2_time_posted }}"
+                    style="--background:{{ block.settings.story_2_bg }};--object-fit:{{ block.settings.story_2_media_fit }}"
+                  >
+                    {{
+                      block.settings.story_2_video
+                      | video_tag:
+                        image_size: '1000x',
+                        loop: false,
+                        muted: true,
+                        playsinline: '',
+                        autoplay: false
+                    }}
+                  </div>
+                {% elsif block.settings.story_2_image != blank %}
+                  <div 
+                    class='insta-story__media' 
+                    data-type='image' 
+                    data-duration="{{ section.settings.autoplay_speed }}" 
+                    data-time-posted="{{ block.settings.story_2_time_posted }}"
+                    style="--background:{{ block.settings.story_2_bg }};--object-fit:{{ block.settings.story_2_media_fit }}"
+                  >
+                    {{
+                      block.settings.story_2_image
+                      | image_url: width: 1500
+                      | image_tag: loading: 'lazy', widths: '165, 360, 535, 750, 1070, 1250, 1500'
+                    }}
+                  </div>
+                {% endif %}
+                {% if block.settings.story_3_video != blank %}
+                  <div 
+                    class='insta-story__media' 
+                    data-type='video' 
+                    data-duration="{{ block.settings.story_3_video.duration | divided_by: 1000.0 }}" 
+                    data-time-posted="{{ block.settings.story_3_time_posted }}"
+                    style="--background:{{ block.settings.story_3_bg }};--object-fit:{{ block.settings.story_3_media_fit }}"
+                  >
+                    {{
+                      block.settings.story_3_video
+                      | video_tag:
+                        image_size: '1000x',
+                        loop: false,
+                        muted: true,
+                        playsinline: '',
+                        autoplay: false
+                    }}
+                  </div>
+                {% elsif block.settings.story_3_image != blank %}
+                  <div 
+                    class='insta-story__media' 
+                    data-type='image' 
+                    data-duration="{{ section.settings.autoplay_speed }}" 
+                    data-time-posted="{{ block.settings.story_3_time_posted }}"
+                    style="--background:{{ block.settings.story_3_bg }};--object-fit:{{ block.settings.story_3_media_fit }}"
+                  >
+                    {{
+                      block.settings.story_3_image
+                      | image_url: width: 1500
+                      | image_tag: loading: 'lazy', widths: '165, 360, 535, 750, 1070, 1250, 1500'
+                    }}
+                  </div>
+                {% endif %}
+                <button class='insta-story__inactive-overlay inactive-content insta-story__slide-btn' data-index="{{ forloop.index0 }}">
+                  <div class="insta-story-open-btn__pfp-ring mobile-hidden">
+                    <div class="insta-story-open-btn__pfp-ring-offset">
+                      <div class="insta-story-open-btn__pfp">
+                        {% if block.settings.profile_picture != blank %}
+                          <img
+                            src="{{ block.settings.profile_picture | image_url: width: 400 }}"
+                            alt="{{ block.settings.username }}"
+                            width="auto"
+                            height="auto"
+                            loading="lazy"
+                          >
+                        {% else %}
+                          {% render 'material-icon', icon: 'person', filled: true %}
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <span class='insta-story__username mobile-hidden'>
+                    {{ block.settings.username }}
+                  </span>
+                </button>
+                <button class='insta-story__invisible-btn insta-story__invisible-btn--prev insta-story__prev active-content' data-index="{{ forloop.index0 }}">&nbsp</button>
+                <button class='insta-story__invisible-btn insta-story__invisible-btn--next insta-story__next active-content' data-index="{{ forloop.index0 }}">&nbsp</button>
+                <button class='insta-story__arrow insta-story__arrow--prev active-content insta-story__prev mobile-hidden' data-index="{{ forloop.index0 }}">
+                  {% render 'material-icon', icon: 'chevron_left' %}
+                </button>
+                <button class='insta-story__arrow insta-story__arrow--next active-content insta-story__next mobile-hidden' data-index="{{ forloop.index0 }}">
+                  {% render 'material-icon', icon: 'chevron_right' %}
+                </button>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </insta-stories>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Instagram stories",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Instagram stories",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Display images and testimonials in a format familiar to your customers."
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Stories"
+    },
+    {
+      "type": "paragraph",
+      "content": "NOTE: On touch devices, arrows on the slider for the story opener buttons are automatically changed to SWIPE/DRAG function for the best mobile experience. Swipe function to skip stories is also included."
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 5,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "label": "Image autoplay speed",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "user",
+      "name": "User post",
+      "settings": [
+        {
+          "type": "text",
+          "id": "username",
+          "label": "User name",
+          "default": "shrinetheme"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified account",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "profile_picture",
+          "label": "Profile picture"
+        },
+        {
+          "type": "checkbox",
+          "id": "close_friends",
+          "label": "Close friends story",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Story #1"
+        },
+        {
+          "type": "image_picker",
+          "id": "story_1_image",
+          "label": "Story #1 Image"
+        },
+        {
+          "type": "video",
+          "id": "story_1_video",
+          "label": "Story #1 Video"
+        },
+        {
+          "type": "select",
+          "id": "story_1_media_fit",
+          "options": [
+            {
+              "value": "contain",
+              "label": "Contain"
+            },
+            {
+              "value": "cover",
+              "label": "Cover"
+            }
+          ],
+          "default": "contain",
+          "label": "Story #1 Media fit",
+          "info": "Contain preserves media's aspect ratio, cover fills out the whole story box."
+        },
+        {
+          "type": "text",
+          "id": "story_1_time_posted",
+          "label": "Story #1 Time posted",
+          "default": "10m"
+        },
+        {
+          "type": "color",
+          "id": "story_1_bg",
+          "label": "Story #1 Background",
+          "default": "#282828",
+          "info": "Visible if Media fit is set to Contain"
+        },
+        {
+          "type": "header",
+          "content": "Story #2"
+        },
+        {
+          "type": "image_picker",
+          "id": "story_2_image",
+          "label": "Story #2 Image"
+        },
+        {
+          "type": "video",
+          "id": "story_2_video",
+          "label": "Story #2 Video"
+        },
+        {
+          "type": "select",
+          "id": "story_2_media_fit",
+          "options": [
+            {
+              "value": "contain",
+              "label": "Contain"
+            },
+            {
+              "value": "cover",
+              "label": "Cover"
+            }
+          ],
+          "default": "contain",
+          "label": "Story #2 Media fit",
+          "info": "Contain preserves media's aspect ratio, cover fills out the whole story box."
+        },
+        {
+          "type": "text",
+          "id": "story_2_time_posted",
+          "label": "Story #2 Time posted",
+          "default": "1h"
+        },
+        {
+          "type": "color",
+          "id": "story_2_bg",
+          "label": "Story #2 Background",
+          "default": "#282828",
+          "info": "Visible if Media fit is set to Contain"
+        },
+        {
+          "type": "header",
+          "content": "Story #3"
+        },
+        {
+          "type": "image_picker",
+          "id": "story_3_image",
+          "label": "Story #3 Image"
+        },
+        {
+          "type": "video",
+          "id": "story_3_video",
+          "label": "Story #3 Video"
+        },
+        {
+          "type": "select",
+          "id": "story_3_media_fit",
+          "options": [
+            {
+              "value": "contain",
+              "label": "Contain"
+            },
+            {
+              "value": "cover",
+              "label": "Cover"
+            }
+          ],
+          "default": "contain",
+          "label": "Story #3 Media fit",
+          "info": "Contain preserves media's aspect ratio, cover fills out the whole story box."
+        },
+        {
+          "type": "text",
+          "id": "story_3_time_posted",
+          "label": "Story #3 Time posted",
+          "default": "4h"
+        },
+        {
+          "type": "color",
+          "id": "story_3_bg",
+          "label": "Story #3 Background",
+          "default": "#282828",
+          "info": "Visible if Media fit is set to Contain"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram stories",
+      "blocks": [
+        {
+          "type": "user"
+        },
+        {
+          "type": "user"
+        },
+        {
+          "type": "user"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

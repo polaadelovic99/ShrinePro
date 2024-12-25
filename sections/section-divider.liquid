@@ -1,0 +1,394 @@
+{%- liquid
+  if section.settings.flip_horizontal
+    assign scaleX = 'scaleX(-1)'
+  else
+    assign scaleX = 'scaleX(1)'
+  endif
+
+  if section.settings.flip_vertical
+    assign scaleY = 'scaleY(-1)'
+  else
+    assign scaleY = 'scaleY(1)'
+  endif
+-%}
+
+{% style %}
+  .section-divider-{{ section.id }} {
+    transform: {{ scaleX }} {{ scaleY }};
+  }
+  .section-divider__svg {
+    --max-height: 150px;
+    background: none;
+    overflow: hidden;
+  }
+  .section-divider__svg svg {
+    color: rgb(var(--color-background));
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: var(--max-height);
+    transform: translateY(1px);
+  }
+
+  .waves-animated-1 {
+    --max-height: 3rem;
+    margin: 0;
+  }
+
+  .parallax1 > use {
+    animation: move-forever1 10s linear infinite;
+    &:nth-child(1) {
+      animation-delay: -2s;
+    }
+  }
+  .parallax2 > use {
+    animation: move-forever2 8s linear infinite;
+    opacity: 0.4;
+    &:nth-child(1) {
+      animation-delay: -2s;
+    }
+  }
+  .parallax3 > use {
+    animation: move-forever3 6s linear infinite;
+    opacity: 0.3;
+    &:nth-child(1) {
+      animation-delay: -2s;
+    }
+  }
+  .parallax4 > use {
+    animation: move-forever4 4s linear infinite;
+    opacity: 0.2;
+    &:nth-child(1) {
+      animation-delay: -2s;
+    }
+  }
+  @keyframes move-forever1 {
+    0% {
+      transform: translate(85px, 0%);
+    }
+    100% {
+      transform: translate(-90px, 0%);
+    }
+  }
+  @keyframes move-forever2 {
+    0% {
+      transform: translate(-90px, 0%);
+    }
+    100% {
+      transform: translate(85px, 0%);
+    }
+  }
+  @keyframes move-forever3 {
+    0% {
+      transform: translate(85px, 0%);
+    }
+    100% {
+      transform: translate(-90px, 0%);
+    }
+  }
+  @keyframes move-forever4 {
+    0% {
+      transform: translate(-90px, 0%);
+    }
+    100% {
+      transform: translate(85px, 0%);
+    }
+  }
+  @media screen and (min-width: 1000px) {
+    .waves-animated-1 {
+      --max-height: 6rem;
+    }
+  }
+  .section-{{ section.id }}-top-padding {
+    height: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+  }
+  .section-{{ section.id }}-bottom-padding {
+    height: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-top-padding {
+      height: {{ section.settings.padding_top }}px;
+    }
+    .section-{{ section.id }}-bottom-padding {
+      height: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{% endstyle %}
+
+<div class='section-{{ section.id }}-top-padding color-{% if section.settings.flip_vertical %}{{ section.settings.shape_color }}{% else %}{{ section.settings.background_color }}{% endif %}'>&nbsp</div>
+<div class="section-divider section-divider-{{ section.id }} color-{{ section.settings.background_color }}">
+  <div class="section-divider__svg color-{{ section.settings.shape_color }}">
+    {% case section.settings.shape %}
+      {% when 'diagonal_1' %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 32" height="200" width="100%" preserveAspectRatio="none">
+          <polygon fill="currentColor" points="0 29.91 0 32 360 32 360 0 0 29.91"/>
+        </svg>
+      {% when 'diagonal_2' %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 64 1440 256" height="200" width="100%" preserveAspectRatio="none" style='--max-height: 200px;'>
+          <path fill="currentColor" fill-opacity="1" d="M0,288L1440,64L1440,320L0,320Z"></path>
+        </svg>
+      {% when "curved_1" %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 74.65" height="200" width="100%" preserveAspectRatio="none" style='--max-height: 130px;'>
+          <path fill="currentColor" fill-opacity="1" d="M0,20.29,12,23.6A474.72,474.72,0,0,0,72,37c24,3.31,48,3.31,72-6.69S192,.29,216,7c24,6.43,48,40.18,72,50,24,10.18,48-3.57,60-10l12-6.69v40H0Z" transform="translate(0 -5.64)"/>
+        </svg>
+      {% when "curved_2" %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" height="200" width="100%" preserveAspectRatio="none" style='--max-height: 120px;'>
+          <path fill="currentColor" fill-opacity="1" d="M0,192L48,181.3C96,171,192,149,288,144C384,139,480,149,576,149.3C672,149,768,139,864,144C960,149,1056,171,1152,154.7C1248,139,1344,85,1392,58.7L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" data-darkreader-inline-fill="" style="--darkreader-inline-fill: #007acc;"></path>
+        </svg>
+      {% when "curved_3" %}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 195" height="200" width="100%" preserveAspectRatio="none">
+            <path fill="currentColor" fill-opacity="1" d="M0,140l34.3-5.3C68.6,129,137,119,206,92c68.3-27,137-69,205-64,69,5,138,59,206,58.7C685.7,87,754,33,823,28c68.4-5,137,37,206,37.3C1097.1,65,1166,23,1234,12c68.9-11,137,11,172,21.3L1440,44V204H0Z" transform="translate(0 -9)"/>
+          </svg>
+      {% when "curved_4" %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 226.97" height="200" width="100%" preserveAspectRatio="none" style='--max-height: 120px;'>
+          <path fill="currentColor" fill-opacity="1" d="M0,81,21.8,70.3C43.6,60,87,38,131,27.7,174.5,17,218,17,262,49c43.5,32,87,96,131,106.7C436.4,166,480,124,524,97c43.3-27,87-37,131-26.7,43.2,10.7,87,42.7,130,64C829.1,156,873,166,916,161c44-5,88-27,131-58.7C1090.9,70,1135,28,1178,17c43.8-11,87,11,131,26.7,43.7,16.3,87,26.3,109,32l22,5.3V241H0Z" transform="translate(0 -14.03)"/>
+        </svg>
+      {% when 'sharp_1' %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" height="200" width="100%" preserveAspectRatio="none">
+          <path fill="currentColor" fill-opacity="1" d="M0,160L240,288L480,288L720,160L960,224L1200,32L1440,96L1440,320L1200,320L960,320L720,320L480,320L240,320L0,320Z" data-darkreader-inline-fill="" style="--darkreader-inline-fill: #007acc;"></path>
+        </svg>
+      {% when 'sharp_2' %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" height="200" width="100%" preserveAspectRatio="none" style='--max-height: 170px;'>
+          <path fill="currentColor" fill-opacity="1" d="M0,32L240,32L480,224L720,192L960,224L1200,192L1440,96L1440,320L1200,320L960,320L720,320L480,320L240,320L0,320Z" data-darkreader-inline-fill="" style="--darkreader-inline-fill: #007acc;"></path>
+        </svg>
+      {% when 'sharp_3' %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" height="200" width="100%" preserveAspectRatio="none">
+          <path fill="currentColor" fill-opacity="1" d="M0,0L360,32L720,160L1080,96L1440,224L1440,320L1080,320L720,320L360,320L0,320Z" data-darkreader-inline-fill="" style="--darkreader-inline-fill: #007acc;"></path>
+        </svg>
+      {% when 'sharp_4' %}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" height="200" width="100%" preserveAspectRatio="none">
+          <path fill="currentColor" fill-opacity="1" d="M0,64L240,192L480,224L720,96L960,256L1200,160L1440,288L1440,320L1200,320L960,320L720,320L480,320L240,320L0,320Z" data-darkreader-inline-fill="" style="--darkreader-inline-fill: #007acc;"></path>
+        </svg>
+      {% when 'random_1' %}
+        <svg class="section-divider" viewBox="0 0 1920 60" aria-hidden="true" height="200" width="100%" preserveAspectRatio="none">
+          <path fill="currentColor" d="M0,80.75H1920V45.833H1742.083a80.491,80.491,0,0,1,12.863-1.55c5.2-.26,17.24-.3,24.153-.24,26.69.222,54.377,1.094,79.341.96,19.287-.1,37.1-.372,53.573-.788L1920,44V34.078l-6.614.216-9.221.256c-6.252.147-12.7.249-19.265.32-13.132.14-26.739.15-40.206.125-26.935-.052-53.313-.247-74.22.168-14.367-1.4-32.582-.756-48.293-1.92-10.145.509-20.876.936-24.149,2.4-16.09-.266-37.611,2.532-50.019.479V34.684c-10.959-2.291-33.371-1.869-48.292-3.84-15.861-.512-26.214,1.347-39.671,1.92-7.032.178-5.941-.773-13.8-.481-40.751-.071-41.131,5.477-62.087,8.16-4.569-5.691-47.085-5.126-77.622-5.04-2.333-4.154-22.643-5.808-50.015-6.479-4.677-2.069-17.763-2.969-22.423-5.04-4.7-.175-3.474.477-6.9.479-11.485-2.964-40.092-2.449-63.813-3.36-23.312.6-29.4,3.589-55.195,3.841-8.3-3.783-56.5-4.561-84.513-3.361-.316-1.857-5.682-3.862-20.7-4.8-2.193-.137-6.78.122-10.352,0-16.331-.564-22.974-3.145-39.671-1.441-22.812-1.938-73.831-3.919-98.311-.719-4.315-2.2-15.369-3.462-20.7-5.521-23.122-.714-41.26-2.815-65.54-2.64-13.5,1-29.918,1.6-39.671,3.12.27,1.317-1.305,2.38-6.9,2.88-35.562-1.333-83.117-2.545-93.139,2.88-14.338-.314-8.341,2.2-22.423,1.92-5.17-.16-2.615-1.4-6.9-1.68-36.327-1.894-80.653-1.762-100.041,2.161-12.433-1.631-21.648-3.708-36.221-5.04-13.359.1-36.33-.325-48.293-1.2-32.483.6-42.463,4.331-53.471,7.92-25.227-.147-43.752,2.274-58.641,4.321-11.966-1.189-27.56-.426-39.67-1.441-19.514,1.284-40.772,2.328-53.468,4.561C301.584,31.04,294,33.888,283.7,37.8c-15.047-.774-19.865-3.5-36.221-4.321-10.453-.522-37.12-1.01-48.3-.959-10.184.046-17.188,1.062-27.595.719-18.244,2.022-31.516,4.736-46.57,7.2-3.726,2.091-9.8,3.854-17.5,5.39H4.061c-.734-1.281-1.512-2.592-2.344-3.949-.546-.09-1.13-.175-1.717-.26Z"/>
+        </svg>
+      {% when 'waves_1' %}
+        <svg
+          id="wave"
+          style="transform:rotate(0deg); transition: 0.3s"
+          viewBox="0 0 1440 250"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          height="200" width="100%" preserveAspectRatio="none"
+        >
+          <path style="transform:translate(0, 0px); opacity:1" fill="currentColor" d="M0,125L30,120.8C60,117,120,108,180,104.2C240,100,300,100,360,120.8C420,142,480,183,540,191.7C600,200,660,175,720,162.5C780,150,840,150,900,145.8C960,142,1020,133,1080,125C1140,117,1200,108,1260,108.3C1320,108,1380,117,1440,133.3C1500,150,1560,175,1620,170.8C1680,167,1740,133,1800,125C1860,117,1920,133,1980,125C2040,117,2100,83,2160,62.5C2220,42,2280,33,2340,25C2400,17,2460,8,2520,16.7C2580,25,2640,50,2700,58.3C2760,67,2820,58,2880,50C2940,42,3000,33,3060,41.7C3120,50,3180,75,3240,108.3C3300,142,3360,183,3420,183.3C3480,183,3540,142,3600,108.3C3660,75,3720,50,3780,33.3C3840,17,3900,8,3960,37.5C4020,67,4080,133,4140,158.3C4200,183,4260,167,4290,158.3L4320,150L4320,250L4290,250C4260,250,4200,250,4140,250C4080,250,4020,250,3960,250C3900,250,3840,250,3780,250C3720,250,3660,250,3600,250C3540,250,3480,250,3420,250C3360,250,3300,250,3240,250C3180,250,3120,250,3060,250C3000,250,2940,250,2880,250C2820,250,2760,250,2700,250C2640,250,2580,250,2520,250C2460,250,2400,250,2340,250C2280,250,2220,250,2160,250C2100,250,2040,250,1980,250C1920,250,1860,250,1800,250C1740,250,1680,250,1620,250C1560,250,1500,250,1440,250C1380,250,1320,250,1260,250C1200,250,1140,250,1080,250C1020,250,960,250,900,250C840,250,780,250,720,250C660,250,600,250,540,250C480,250,420,250,360,250C300,250,240,250,180,250C120,250,60,250,30,250L0,250Z"></path>
+          <path style="transform:translate(0, 15%); opacity:0.5" fill="currentColor" d="M0,75L30,62.5C60,50,120,25,180,41.7C240,58,300,117,360,125C420,133,480,92,540,87.5C600,83,660,117,720,116.7C780,117,840,83,900,62.5C960,42,1020,33,1080,50C1140,67,1200,108,1260,129.2C1320,150,1380,150,1440,141.7C1500,133,1560,117,1620,95.8C1680,75,1740,50,1800,70.8C1860,92,1920,158,1980,158.3C2040,158,2100,92,2160,79.2C2220,67,2280,108,2340,129.2C2400,150,2460,150,2520,150C2580,150,2640,150,2700,162.5C2760,175,2820,200,2880,212.5C2940,225,3000,225,3060,187.5C3120,150,3180,75,3240,66.7C3300,58,3360,117,3420,116.7C3480,117,3540,58,3600,50C3660,42,3720,83,3780,83.3C3840,83,3900,42,3960,37.5C4020,33,4080,67,4140,100C4200,133,4260,167,4290,183.3L4320,200L4320,250L4290,250C4260,250,4200,250,4140,250C4080,250,4020,250,3960,250C3900,250,3840,250,3780,250C3720,250,3660,250,3600,250C3540,250,3480,250,3420,250C3360,250,3300,250,3240,250C3180,250,3120,250,3060,250C3000,250,2940,250,2880,250C2820,250,2760,250,2700,250C2640,250,2580,250,2520,250C2460,250,2400,250,2340,250C2280,250,2220,250,2160,250C2100,250,2040,250,1980,250C1920,250,1860,250,1800,250C1740,250,1680,250,1620,250C1560,250,1500,250,1440,250C1380,250,1320,250,1260,250C1200,250,1140,250,1080,250C1020,250,960,250,900,250C840,250,780,250,720,250C660,250,600,250,540,250C480,250,420,250,360,250C300,250,240,250,180,250C120,250,60,250,30,250L0,250Z"></path>
+        </svg>
+      {% when 'waves_2' %}
+        <svg
+          id="wave"
+          style="transform:rotate(0deg); transition: 0.3s"
+          viewBox="0 0 1440 250"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          height="200" width="100%" preserveAspectRatio="none"
+        >
+          <path style="transform:translate(-5%, -5%); opacity:0.3" fill="currentColor" d="M0,100L30,100C60,100,120,100,180,83.3C240,67,300,33,360,45.8C420,58,480,117,540,133.3C600,150,660,125,720,133.3C780,142,840,183,900,175C960,167,1020,108,1080,91.7C1140,75,1200,100,1260,104.2C1320,108,1380,92,1440,108.3C1500,125,1560,175,1620,166.7C1680,158,1740,92,1800,83.3C1860,75,1920,125,1980,137.5C2040,150,2100,125,2160,120.8C2220,117,2280,133,2340,120.8C2400,108,2460,67,2520,41.7C2580,17,2640,8,2700,12.5C2760,17,2820,33,2880,41.7C2940,50,3000,50,3060,79.2C3120,108,3180,167,3240,187.5C3300,208,3360,192,3420,187.5C3480,183,3540,192,3600,195.8C3660,200,3720,200,3780,187.5C3840,175,3900,150,3960,133.3C4020,117,4080,108,4140,125C4200,142,4260,183,4290,204.2L4320,225L4320,250L4290,250C4260,250,4200,250,4140,250C4080,250,4020,250,3960,250C3900,250,3840,250,3780,250C3720,250,3660,250,3600,250C3540,250,3480,250,3420,250C3360,250,3300,250,3240,250C3180,250,3120,250,3060,250C3000,250,2940,250,2880,250C2820,250,2760,250,2700,250C2640,250,2580,250,2520,250C2460,250,2400,250,2340,250C2280,250,2220,250,2160,250C2100,250,2040,250,1980,250C1920,250,1860,250,1800,250C1740,250,1680,250,1620,250C1560,250,1500,250,1440,250C1380,250,1320,250,1260,250C1200,250,1140,250,1080,250C1020,250,960,250,900,250C840,250,780,250,720,250C660,250,600,250,540,250C480,250,420,250,360,250C300,250,240,250,180,250C120,250,60,250,30,250L0,250Z"></path>
+          <path style="transform:translate(0, 0); opacity:1" fill="currentColor" d="M0,75L30,87.5C60,100,120,125,180,116.7C240,108,300,67,360,66.7C420,67,480,108,540,133.3C600,158,660,167,720,154.2C780,142,840,108,900,112.5C960,117,1020,158,1080,154.2C1140,150,1200,100,1260,91.7C1320,83,1380,117,1440,141.7C1500,167,1560,183,1620,162.5C1680,142,1740,83,1800,54.2C1860,25,1920,25,1980,58.3C2040,92,2100,158,2160,183.3C2220,208,2280,192,2340,187.5C2400,183,2460,192,2520,183.3C2580,175,2640,150,2700,154.2C2760,158,2820,192,2880,175C2940,158,3000,92,3060,91.7C3120,92,3180,158,3240,154.2C3300,150,3360,75,3420,41.7C3480,8,3540,17,3600,54.2C3660,92,3720,158,3780,158.3C3840,158,3900,92,3960,79.2C4020,67,4080,108,4140,133.3C4200,158,4260,167,4290,170.8L4320,175L4320,250L4290,250C4260,250,4200,250,4140,250C4080,250,4020,250,3960,250C3900,250,3840,250,3780,250C3720,250,3660,250,3600,250C3540,250,3480,250,3420,250C3360,250,3300,250,3240,250C3180,250,3120,250,3060,250C3000,250,2940,250,2880,250C2820,250,2760,250,2700,250C2640,250,2580,250,2520,250C2460,250,2400,250,2340,250C2280,250,2220,250,2160,250C2100,250,2040,250,1980,250C1920,250,1860,250,1800,250C1740,250,1680,250,1620,250C1560,250,1500,250,1440,250C1380,250,1320,250,1260,250C1200,250,1140,250,1080,250C1020,250,960,250,900,250C840,250,780,250,720,250C660,250,600,250,540,250C480,250,420,250,360,250C300,250,240,250,180,250C120,250,60,250,30,250L0,250Z"></path>
+        </svg>
+      {% when 'waves_3' %}
+        <svg class="waves-animated-1"
+           xmlns="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           viewBox="0 24 150 28 "
+           preserveAspectRatio="none"
+        >
+          <defs>
+            <path id="gentle-wave"
+            d="M-160 44c30 0 
+              58-18 88-18s
+              58 18 88 18 
+              58-18 88-18 
+              58 18 88 18
+              v44h-352z" />
+          </defs>
+          <g class="parallax1">
+            <use xlink:href="#gentle-wave" x="50" y="3" fill="currentColor"/>
+          </g>
+          <g class="parallax2">
+            <use xlink:href="#gentle-wave" x="50" y="0" fill="currentColor"/>
+          </g>
+          <g class="parallax3">
+            <use xlink:href="#gentle-wave" x="50" y="9" fill="currentColor"/>
+          </g>
+          <g class="parallax4">
+            <use xlink:href="#gentle-wave" x="50" y="6" fill="currentColor"/>  
+          </g>
+        </svg>
+    {% endcase %}
+  </div>
+</div>
+<div class='section-{{ section.id }}-bottom-padding color-{% if section.settings.flip_vertical %}{{ section.settings.background_color }}{% else %}{{ section.settings.shape_color }}{% endif %}'>&nbsp</div>
+
+{% schema %}
+{
+  "name": "Section divider",
+  "settings": [
+    {
+      "type": "select",
+      "id": "shape",
+      "options": [
+        {
+          "value": "diagonal_1",
+          "label": "Diagonal 1"
+        },
+        {
+          "value": "diagonal_2",
+          "label": "Diagonal 2"
+        },
+        {
+          "value": "curved_1",
+          "label": "Curved 1"
+        },
+        {
+          "value": "curved_2",
+          "label": "Curved 2"
+        },
+        {
+          "value": "curved_3",
+          "label": "Curved 3"
+        },
+        {
+          "value": "curved_4",
+          "label": "Curved 4"
+        },
+        {
+          "value": "sharp_1",
+          "label": "Sharp 1"
+        },
+        {
+          "value": "sharp_2",
+          "label": "Sharp 2"
+        },
+        {
+          "value": "sharp_3",
+          "label": "Sharp 3"
+        },
+        {
+          "value": "sharp_4",
+          "label": "Sharp 4"
+        },
+        {
+          "value": "waves_1",
+          "label": "Waves 1"
+        },
+        {
+          "value": "waves_2",
+          "label": "Waves 2"
+        },
+        {
+          "value": "waves_3",
+          "label": "Waves 3 (Animated)"
+        },
+        {
+          "value": "random_1",
+          "label": "Random 1"
+        }
+      ],
+      "label": "Shape",
+      "default": "diagonal_1"
+    },
+    {
+      "type": "checkbox",
+      "id": "flip_horizontal",
+      "label": "Flip horizontal",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "flip_vertical",
+      "label": "Flip vertical",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "shape_color",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "accent-1",
+      "label": "Shape color"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "Background color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Section divider"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

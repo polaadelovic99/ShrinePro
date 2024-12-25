@@ -1,0 +1,546 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  .vertical-ticker-content-{{ section.id }}-padding {
+    padding-top: {{ section.settings.content_padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.content_padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    .vertical-ticker-content-{{ section.id }}-padding {
+      padding-top: {{ section.settings.content_padding_top }}px;
+      padding-bottom: {{ section.settings.content_padding_bottom }}px;
+    }
+  }
+
+  .vertical-ticker-{{ section.id }} .vertical-ticker__container {
+    animation: vertTicker {{ section.settings.number_of_rows | divided_by: section.settings.speed | times: 4 }}s linear infinite forwards;
+  }
+
+  .vertical-ticker-{{ section.id }} .vertical-ticker__item {
+    font-size: {{ section.settings.text_size | times: 0.6 | round: 1 }}rem;
+    line-height: 1.2em;
+  }
+  .vertical-ticker-{{ section.id }} .vertical-ticker__inner {
+    max-height: {{ section.settings.text_size | times: 0.6 | round: 1 | times: 1.2 | times: section.settings.number_of_rows }}rem;
+  }
+
+  @media screen and (min-width: 500px) {
+    .vertical-ticker-{{ section.id }} .vertical-ticker__item {
+      font-size: {{ section.settings.text_size | times: 0.8 | round: 1 }}rem;
+    }
+    .vertical-ticker-{{ section.id }} .vertical-ticker__inner {
+      max-height: {{ section.settings.text_size | times: 0.8 | round: 1 | times: 1.2 | times: section.settings.number_of_rows }}rem;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .vertical-ticker-{{ section.id }} .vertical-ticker__item {
+      font-size: {{ section.settings.text_size }}rem;
+    }
+    .vertical-ticker-{{ section.id }} .vertical-ticker__inner {
+      max-height: {{ section.settings.text_size | times: 1.2 | times: section.settings.number_of_rows }}rem;
+    }
+  }
+
+  .vertical-ticker-content__bg-overlay{{ section.id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity }}%;
+  }
+{%- endstyle -%}
+
+<div class="{% if section.settings.display_content != 'never' %}vertical-ticker-and-content section-group__container__child-grid{% endif %}{% if section.settings.display_content == 'desktop_only' %} vertical-ticker-and-content--content-desktop-only{% endif %}{% if section.settings.layout == 'ticker_first' %} vertical-ticker-and-content--ticker-first{% endif %} content-for-grouping animate-section animate--hidden {{ section.settings.visibility }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  {%- if section.settings.display_content != 'never' -%}
+    <div class="vertical-ticker-content vertical-ticker-content-{{ section.id }}-padding color-{{ section.settings.content_color_scheme }}">
+      <div class="page-width">
+        <div class="content-container content-rte center animate-item animate-item--child index-0{% if section.settings.layout == 'ticker_first' %} desktop-index-1{% endif %}">
+          {%- unless section.settings.content_heading == blank -%}
+            <h2 class="title {{ section.settings.content_heading_size }}">
+              {{ section.settings.content_heading | escape }}
+            </h2>
+          {%- endunless -%}
+          {%- unless section.settings.content_text == blank -%}
+            <div class='rte'>
+              {{ section.settings.content_text }}
+            </div>
+          {%- endunless -%}
+          {%- if section.settings.button_label != blank -%}
+            <a
+              {% if section.settings.link %}
+                href="{{ section.settings.link }}"
+              {% else %}
+                role="link" aria-disabled="true"
+              {% endif %}
+              class="button mb-1em {% if section.settings.button_style_secondary %}button--secondary{% else %}button--primary{% endif %}"
+            >
+              {{- section.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.atc_button_label != blank -%}
+            {% if section.settings.atc_product == blank %}
+              <button
+                id="SectionAtcBtn-{{ section.id }}"
+                type="button"
+                class="button mb-1em main-product-atc button--has-spinner"
+                {% if product.selected_or_first_available_variant.available == false %}
+                  disabled
+                {% endif %}
+              >
+                {{ section.settings.atc_button_label | escape }}
+                <div class="loading-overlay__spinner">
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    class="spinner"
+                    viewBox="0 0 66 66"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                  </svg>
+                </div>
+              </button>
+            {% else %}
+              {% assign product_form_id = 'section-product-form-'
+                | append: section.id
+              %}
+              {% render 'separate-atc-btn',
+                product: section.settings.atc_product,
+                product_form_id: product_form_id,
+                label: section.settings.atc_button_label
+              %}
+            {% endif %}
+          {%- endif -%}
+        </div>
+      </div>
+      {% unless section.settings.content_bg_image == blank %}
+        <div class="vertical-ticker-content__bg">
+          <img
+            src="{{ section.settings.content_bg_image | image_url }}"
+            {% if section.settings.content_bg_image.alt != blank %}
+              alt="{{ section.settings.image.alt | escape }}"
+            {% else %}
+              role="presentation"
+            {% endif %}
+            height="auto"
+            width="auto"
+            loading="lazy"
+          >
+          <div class="vertical-ticker-content__bg-overlay{{ section.id }}">&nbsp</div>
+        </div>
+      {% endunless %}
+    </div>
+  {%- endif -%}
+  <div class="vertical-ticker vertical-ticker-{{ section.id }} color-{{ section.settings.ticker_color_scheme }} section-{{ section.id }}-padding">
+    <div class="page-width vertical-ticker__inner">
+      <div class="vertical-ticker__container animate-item animate-item--child index-1{% if section.settings.layout == 'ticker_first' or section.settings.display_content != 'never' %} desktop-index-0{% endif %}{% if section.settings.display_content == 'desktop_only' %} mobile-index-0{% endif %}">
+        {% assign unique_blocks_total = section.blocks | size %}
+        {% assign unique_blocks_total_float = unique_blocks_total | times: 1.0 %}
+        {% assign target_multiply = section.settings.number_of_rows | divided_by: unique_blocks_total_float | ceil %}
+        {% assign target_total = unique_blocks_total | times: target_multiply | times: 2 %}
+        {% assign block_counter = 0 %}
+
+        {%- for block in section.blocks -%}
+          {%- assign block_counter = block_counter | plus: 1 -%}
+          <p class="vertical-ticker__item{% if section.settings.italic_text %} vertical-ticker__item--italic{% endif %}{% if section.settings.uppercase_text %} vertical-ticker__item--uppercase{% endif %}{% if section.settings.bold_text %} vertical-ticker__item--bold{% endif %}">
+            {{ block.settings.title }}
+          </p>
+        {%- endfor -%}
+
+        {%- if block_counter < target_total -%}
+          {% for i in (1..15) %}
+            {% for block in section.blocks %}
+              <p class="vertical-ticker__item{% if section.settings.italic_text %} vertical-ticker__item--italic{% endif %}{% if section.settings.uppercase_text %} vertical-ticker__item--uppercase{% endif %}{% if section.settings.bold_text %} vertical-ticker__item--bold{% endif %}">
+                {{ block.settings.title }}
+              </p>
+
+              {% assign block_counter = block_counter | plus: 1 %}
+              {% if block_counter >= target_total %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+            {% if block_counter >= target_total %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Vertical Ticker",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "header",
+      "content": "Ticker"
+    },
+    {
+      "type": "range",
+      "id": "number_of_rows",
+      "min": 4,
+      "max": 16,
+      "default": 8,
+      "step": 1,
+      "label": "Number of rows displayed"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Ticker speed",
+      "min": 1,
+      "max": 5,
+      "default": 3,
+      "step": 0.5
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Text size",
+      "options": [
+        {
+          "value": "2",
+          "label": "Extra small"
+        },
+        {
+          "value": "3",
+          "label": "Small"
+        },
+        {
+          "value": "4",
+          "label": "Medium"
+        },
+        {
+          "value": "5",
+          "label": "Large"
+        },
+        {
+          "value": "6",
+          "label": "Extra large"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "italic_text",
+      "label": "Italic text",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase_text",
+      "label": "Uppercase text",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "bold_text",
+      "label": "Bold text",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "ticker_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "accent-1",
+      "label": "Ticker color scheme"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Ticker placement",
+      "options": [
+        {
+          "value": "ticker_first",
+          "label": "Ticker first"
+        },
+        {
+          "value": "ticker_second",
+          "label": "Ticker second"
+        }
+      ],
+      "default": "ticker_second"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Ticker top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Ticker bottom padding",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "display_content",
+      "label": "Display content",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always"
+        },
+        {
+          "value": "desktop_only",
+          "label": "Desktop only"
+        },
+        {
+          "value": "never",
+          "label": "Never"
+        }
+      ],
+      "default": "always"
+    },
+    {
+      "type": "text",
+      "id": "content_heading",
+      "label": "Heading",
+      "default": "Vertical Ticker"
+    },
+    {
+      "type": "select",
+      "id": "content_heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "content_text",
+      "label": "Text",
+      "default": "<p>Talk about features, perks, or benefits of your brand or product </p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Button label",
+      "label": "t:sections.slideshow.blocks.slide.settings.button_label.label",
+      "info": "t:sections.slideshow.blocks.slide.settings.button_label.info"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.slideshow.blocks.slide.settings.link.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_style_secondary",
+      "label": "t:sections.slideshow.blocks.slide.settings.secondary_style.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "atc_button_label",
+      "label": "Add to Cart button label",
+      "info": "Leave the label blank to hide the Add to Cart button."
+    },
+    {
+      "type": "product",
+      "id": "atc_product",
+      "label": "ATC Custom product",
+      "info": "IMPORTANT: If empty, the button will add the main product FROM THE PRODUCT PAGE to cart (INCLUDING the selected variant/quantity, upsells etc.)"
+    },
+    {
+      "type": "select",
+      "id": "content_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "Content color scheme"
+    },
+    {
+      "type": "image_picker",
+      "id": "content_bg_image",
+      "label": "Background image",
+      "info": "Note: GIFs are supported as well"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "default": "#000000",
+      "label": "Background overlay color"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0,
+      "unit": "%",
+      "label": "Background overlay opacity"
+    },
+    {
+      "type": "range",
+      "id": "content_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Content top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "content_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Content bottom padding",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Shrine Theme",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+        "name": "Vertical Ticker",
+        "blocks": [
+          {
+              "type": "text"
+          },
+          {
+              "type": "text"
+          },
+          {
+              "type": "text"
+          },
+          {
+              "type": "text"
+          }
+        ]
+    }
+    ]
+}
+{% endschema %}

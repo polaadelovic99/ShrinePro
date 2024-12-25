@@ -1,0 +1,81 @@
+{% comment %}
+  block, margins (boolean), block_attributes (boolean)
+{% endcomment %}
+
+{% liquid
+  assign item_count = 0
+  if block.settings.text_1 != blank
+    assign item_count = item_count | plus: 1
+  endif
+  if block.settings.text_2 != blank
+    assign item_count = item_count | plus: 1
+  endif
+  if block.settings.text_3 != blank
+    assign item_count = item_count | plus: 1
+  endif
+%}
+<div
+  class="product__text-container product__text-container--{{ block.settings.alignment }}{% if mobile_align %} product__text-container--mobile-{{ block.settings.mobile_alignment }}{% endif %} product__text-container--{{ block.settings.direction }} product__text-container--{{ block.settings.width }}{% if block.settings.enable_bg %} product__text-container--background{% endif %}{% if item_count > 1 %} product__text-container--multiple{% endif %}{% if block.settings.negative_side_margins %} side-margins-negative{% endif %}"
+  style="--item-count:{{ item_count }};--mobile-text-size: {{ block.settings.mobile_text_size | divided_by: 10.0 }}rem;--desktop-text-size: {{ block.settings.desktop_text_size | divided_by: 10.0 }}rem;--icon-scale:{{ block.settings.icon_scale | divided_by: 100.0 }};--column-gap:{{ block.settings.column_gap | divided_by: 2.0 }}em;--row-gap:{{ block.settings.column_gap | divided_by: 5.0 }}em;--padding:{{ block.settings.padding | divided_by: 7.0 }}em;--bg-color:{{ block.settings.bg_color }};--corner-radius:{{ block.settings.corner_radius | divided_by: 100.0 }}em;--border-size:{{ block.settings.border_size }}px;--border-color:{{ block.settings.border_color }};{% if margins %}--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;{% endif %}"
+  {% if block_attributes %}
+    {{- block.shopify_attributes -}}
+  {% endif %}
+>
+  {% if block.settings.text_1 != blank %}
+    <p
+      class="product__text product__text-{{ block.settings.alignment }}{% if mobile_align %} product__text-mobile-{{ block.settings.mobile_alignment }}{% endif %}"
+      style="--text-color:{{ block.settings.text_color }};--icon-color:{{ block.settings.icon_color }};"
+    >
+      {% if block.settings.custom_icon_1 != blank %}
+        <img
+          src="{{ block.settings.custom_icon_1 | image_url }}"
+          alt="{{ block.settings.custom_icon_1.alt }}"
+          width="auto"
+          height="auto"
+          loading="lazy"
+        >
+      {% elsif block.settings.icon_1 != blank %}
+        {% render 'material-icon', icon: block.settings.icon_1, filled: block.settings.filled_icon_1 %}
+      {% endif %}
+      <span>{{- block.settings.text_1 -}}</span>
+    </p>
+  {% endif %}
+  {% if block.settings.text_2 != blank %}
+    <p
+      class="product__text product__text-{{ block.settings.alignment }}{% if mobile_align %} product__text-mobile-{{ block.settings.mobile_alignment }}{% endif %}"
+      style="--text-color:{{ block.settings.text_color }};--icon-color:{{ block.settings.icon_color }};"
+    >
+      {% if block.settings.custom_icon_2 != blank %}
+        <img
+          src="{{ block.settings.custom_icon_2 | image_url }}"
+          alt="{{ block.settings.custom_icon_2.alt }}"
+          width="auto"
+          height="auto"
+          loading="lazy"
+        >
+      {% elsif block.settings.icon_2 != blank %}
+        {% render 'material-icon', icon: block.settings.icon_2, filled: block.settings.filled_icon_2 %}
+      {% endif %}
+      <span>{{- block.settings.text_2 -}}</span>
+    </p>
+  {% endif %}
+  {% if block.settings.text_3 != blank %}
+    <p
+      class="product__text product__text-{{ block.settings.alignment }}{% if mobile_align %} product__text-mobile-{{ block.settings.mobile_alignment }}{% endif %}"
+      style="--text-color:{{ block.settings.text_color }};--icon-color:{{ block.settings.icon_color }};"
+    >
+      {% if block.settings.custom_icon_3 != blank %}
+        <img
+          src="{{ block.settings.custom_icon_3 | image_url }}"
+          alt="{{ block.settings.custom_icon_3.alt }}"
+          width="auto"
+          height="auto"
+          loading="lazy"
+        >
+      {% elsif block.settings.icon_3 != blank %}
+        {% render 'material-icon', icon: block.settings.icon_3, filled: block.settings.filled_icon_3 %}
+      {% endif %}
+      <span>{{- block.settings.text_3 -}}</span>
+    </p>
+  {% endif %}
+</div>

@@ -1,0 +1,683 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% liquid
+  assign has_mobile_slider = false
+  assign has_desktop_slider = false
+  if section.settings.slider_mobile and section.settings.columns_mobile > 0
+    assign has_mobile_slider = true
+  endif
+  if section.settings.slider_desktop and section.settings.columns_desktop > 0
+    assign has_desktop_slider = true
+  endif
+%}
+
+<div
+  class="announcement-bar announcement-bar-{{ section.id }} section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} gradient"
+  role="region"
+  style="--columns-desktop: {{ section.settings.columns_desktop }};--columns-mobile: {{ section.settings.columns_mobile }};--gap-desktop:{{ section.settings.desktop_spacing | divided_by: 10.0 }}rem;--gap-mobile:{{ section.settings.mobile_spacing | divided_by: 10.0 }}rem;"
+>
+  <div class="page-width">
+    {% if has_mobile_slider or has_desktop_slider %}
+      <splide-component
+        data-type='{{ section.settings.type }}'
+        data-autoplay='{{ section.settings.autoplay }}'
+        data-autoplay-speed='{{ section.settings.autoplay_speed }}'
+        data-slides-desktop="{{ section.settings.columns_desktop }}"
+        data-slides-mobile="{{ section.settings.columns_mobile }}"
+        data-gap-desktop='{{ section.settings.desktop_spacing }}'
+        data-gap-mobile='{{ section.settings.mobile_spacing }}'
+        data-arrows='false'
+        data-pagination='false'
+        {% if has_desktop_slider == false %}
+          data-destroy-desktop="true"
+        {% elsif has_mobile_slider == false %}
+          data-destroy-mobile="true"
+        {% endif %}
+      >
+    {% endif %}
+      <div class='splide splide--vertically-centered'>
+        <div class="splide__track">
+          <ul 
+            class="splide__list{% if has_desktop_slider == false %} announcement-bar__desktop-grid{% endif %}{% if has_mobile_slider == false %} announcement-bar__mobile-grid{% endif %}"
+            data-columns-desktop="{{ section.settings.columns_desktop }}"
+            data-columns-mobile="{{ section.settings.columns_mobile }}"
+          >
+            {%- for block in section.blocks -%}
+              {% liquid
+                assign displayed = true
+                if block.settings.hidden_products != blank
+                  assign hidden_handles = block.settings.hidden_products | split: ','
+                  for hidden_handle in hidden_handles
+                    assign handle_strip = hidden_handle | strip
+                    if handle_strip == product.handle
+                      assign displayed = false
+                      break
+                    endif
+                  endfor
+                endif
+                if block.settings.enable_specific_display and block.settings.displayed_products != blank
+                  assign displayed_handles = block.settings.displayed_products | split: ','
+                  assign displayed = false
+                  for displayed_handle in displayed_handles
+                    assign handle_strip = displayed_handle | strip
+                    if handle_strip == product.handle
+                      assign displayed = true
+                      break
+                    endif
+                  endfor
+                endif
+              %}
+              {% if displayed %}
+                <li class="splide__slide">
+                  <div class="splide__slide__container">
+                    <div
+                      class="announcement-bar__item announcement-bar__item-{{ block.settings.text_alignment }}{% if section.settings.show_separator %} announcement-bar__separator{% endif %}"
+                      style="
+                        --mobile-text-size: {{ block.settings.mobile_text_size | divided_by: 10.0 }}rem;
+                        --desktop-text-size: {{ block.settings.desktop_text_size | divided_by: 10.0 }}rem;
+                        --mobile-icon-size: {{ block.settings.mobile_icon_size | divided_by: 10.0 }}rem;
+                        --desktop-icon-size: {{ block.settings.desktop_icon_size | divided_by: 10.0 }}rem;
+                      "
+                      {{ block.shopify_attributes }}
+                    >
+                      {%- case block.type -%}
+                        {%- when 'announcement' -%}
+                          {% liquid
+                            if block.settings.icon != blank or block.settings.custom_icon != blank
+                              assign has_icon = true
+                            endif
+                          %}
+                          {%- if block.settings.text != blank -%}
+                            <p class="announcement-bar__message{% if has_icon %} announcement-bar__message--mobile-{{ block.settings.mobile_layout }} announcement-bar__message--desktop-{{ block.settings.desktop_layout }}{% endif %}">
+                              {% if block.settings.custom_icon != blank %}
+                                <img
+                                  src="{{ block.settings.custom_icon | image_url }}"
+                                  {% if block.settings.custom_icon.alt != blank %}
+                                    alt="{{ block.settings.custom_icon.alt | escape }}"
+                                  {% else %}
+                                    role="presentation"
+                                  {% endif %}
+                                  class='announcement-bar__message__custom-icon'
+                                  height="auto"
+                                  width="auto"
+                                  loading="lazy"
+                                >
+                              {% elsif block.settings.icon != blank %}
+                                {% render 'material-icon', icon: block.settings.icon, filled: block.settings.filled_icon %}
+                              {% endif %}
+                              <span>{{ block.settings.text }}</span>
+                            </p>
+                          {%- endif -%}
+                        {% when 'discount' %}
+                          <button
+                            class="announcement-bar__discount announcement-bar__message"
+                            onclick="copyCode(event)"
+                            data-code="{{ block.settings.code }}"
+                            style="--border-radius:{{ block.settings.border_radius | divided_by: 10.0 }}rem;"
+                          >
+                            <p class="announcement-bar__discount__left">{{ block.settings.code_text }}</p>
+                            <p class="announcement-bar__discount__right">
+                              {{ block.settings.button_label }}
+                              {% if block.settings.display_btn_icon %}
+                                {% render 'material-icon', icon: 'content_copy' %}
+                              {% endif %}
+                            </p>
+                            <p class="announcement-bar__discount__success">
+                              {% render 'material-icon', icon: 'check_circle' %}
+                              {{ block.settings.success_msg }}
+                            </p>
+                          </button>
+                        {% when 'socials' %}
+                          <div class="announcement-bar__message">
+                            {% render 'social-icons' %}
+                          </div>
+                      {%- endcase -%}
+                    </div>
+                  </div>
+                </li>
+              {% endif %}
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+    {% if has_mobile_slider or has_desktop_slider %}
+      </splide-component>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function copyCode(e) {
+    const btn = e.currentTarget;
+    navigator.clipboard.writeText(btn.dataset.code.trim());
+    btn.classList.add('success');
+    setTimeout(() => {
+      btn.classList.remove('success')
+    }, 2000)
+  }
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.announcement-bar.name",
+  "max_blocks": 12,
+  "class": "announcement-bar-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns desktop",
+      "min": 0,
+      "max": 6,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "label": "Columns mobile",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "paragraph",
+      "content": "NOTE: Set number of columns to 0 to autofit all blocks in the center."
+    },
+    {
+      "type": "range",
+      "id": "desktop_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop spacing",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "mobile_spacing",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile spacing",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "Show separator between blocks",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "accent-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_mobile",
+      "label": "Enable mobile slider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_desktop",
+      "label": "Enable desktop slider",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "options": [
+        {
+          "value": "slide",
+          "label": "Classic"
+        },
+        {
+          "value": "loop",
+          "label": "Infinite"
+        },
+        {
+          "value": "fade",
+          "label": "Fade"
+        }
+      ],
+      "default": "loop",
+      "label": "Type"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 1,
+      "max": 15,
+      "step": 0.5,
+      "default": 3,
+      "unit": "sec",
+      "label": "Autoplay speed"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 16
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Text"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "default": "Welcome to our store",
+          "label": "t:sections.announcement-bar.blocks.announcement.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__1.label"
+            },
+            {
+              "value": "center",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__2.label"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__3.label"
+            }
+          ],
+          "default": "center",
+          "label": "Alignment"
+        },
+        {
+          "type": "range",
+          "id": "mobile_text_size",
+          "min": 8,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 16,
+          "label": "Mobile text size"
+        },
+        {
+          "type": "range",
+          "id": "desktop_text_size",
+          "min": 10,
+          "max": 30,
+          "step": 1,
+          "unit": "px",
+          "default": 20,
+          "label": "Desktop text size"
+        },
+        {
+          "type": "header",
+          "content": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "default": "storefront",
+          "label": "Icon",
+          "info": "[View all available icons](https:\/\/fonts.google.com\/icons?icon.set=Material+Symbols&icon.platform=web)."
+        },
+        {
+          "type": "checkbox",
+          "id": "filled_icon",
+          "default": false,
+          "label": "Filled icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon"
+        },
+        {
+          "type": "range",
+          "id": "mobile_icon_size",
+          "min": 10,
+          "max": 32,
+          "step": 1,
+          "unit": "px",
+          "default": 20,
+          "label": "Mobile icon size"
+        },
+        {
+          "type": "range",
+          "id": "desktop_icon_size",
+          "min": 12,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "default": 26,
+          "label": "Desktop icon size"
+        },
+        {
+          "type": "select",
+          "id": "desktop_layout",
+          "label": "Desktop layout",
+          "options": [
+            {
+              "value": "horizontal",
+              "label": "Horizontal"
+            },
+            {
+              "value": "vertical",
+              "label": "Vertical"
+            }
+          ],
+          "default": "horizontal"
+        },
+        {
+          "type": "select",
+          "id": "mobile_layout",
+          "label": "Mobile layout",
+          "options": [
+            {
+              "value": "horizontal",
+              "label": "Horizontal"
+            },
+            {
+              "value": "vertical",
+              "label": "Vertical"
+            }
+          ],
+          "default": "horizontal"
+        },
+        {
+          "type": "header",
+          "content": "Visibility"
+        },
+        {
+          "type": "text",
+          "id": "hidden_products",
+          "label": "Product pages to hide the block on",
+          "info": "Handles of products to hide the block on, split with a comma."
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_specific_display",
+          "label": "Display the block on specific product pages only",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "displayed_products",
+          "label": "Specific product pages to display the block on",
+          "info": "Applied if the checkbox above is checked. Handles of products to only display the block on, split with a comma."
+        }
+      ]
+    },
+    {
+      "type": "discount",
+      "name": "Discount code",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "code",
+          "default": "EXAMPLE10",
+          "label": "Discount code"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "code_text",
+          "default": "<strong>EXAMPLE10</strong>",
+          "label": "Discount code text",
+          "info": "Text to be displayed inside the container"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "button_label",
+          "default": "Copy code",
+          "label": "Copy button label"
+        },
+        {
+          "type": "checkbox",
+          "id": "display_btn_icon",
+          "default": true,
+          "label": "Display button icon"
+        },
+        {
+          "type": "text",
+          "id": "success_msg",
+          "default": "Code copied!",
+          "label": "Success message"
+        },
+        {
+          "type": "range",
+          "id": "border_radius",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "label": "Corner radius",
+          "default": 40
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__1.label"
+            },
+            {
+              "value": "center",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__2.label"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__3.label"
+            }
+          ],
+          "default": "center",
+          "label": "Alignment"
+        },
+        {
+          "type": "range",
+          "id": "mobile_text_size",
+          "min": 8,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 12,
+          "label": "Mobile text size"
+        },
+        {
+          "type": "range",
+          "id": "desktop_text_size",
+          "min": 10,
+          "max": 30,
+          "step": 1,
+          "unit": "px",
+          "default": 14,
+          "label": "Desktop text size"
+        },
+        {
+          "type": "header",
+          "content": "Visibility"
+        },
+        {
+          "type": "text",
+          "id": "hidden_products",
+          "label": "Product pages to hide the block on",
+          "info": "Handles of products to hide the block on, split with a comma."
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_specific_display",
+          "label": "Display the block on specific product pages only",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "displayed_products",
+          "label": "Specific product pages to display the block on",
+          "info": "Applied if the checkbox above is checked. Handles of products to only display the block on, split with a comma."
+        }
+      ]
+    },
+    {
+      "type": "socials",
+      "name": "Social media",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.footer.settings.header__2.info"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__1.label"
+            },
+            {
+              "value": "center",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__2.label"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__3.label"
+            }
+          ],
+          "default": "center",
+          "label": "Alignment"
+        },
+        {
+          "type": "range",
+          "id": "mobile_icon_size",
+          "min": 10,
+          "max": 32,
+          "step": 1,
+          "unit": "px",
+          "default": 20,
+          "label": "Mobile icon size"
+        },
+        {
+          "type": "range",
+          "id": "desktop_icon_size",
+          "min": 12,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "default": 26,
+          "label": "Desktop icon size"
+        },
+        {
+          "type": "header",
+          "content": "Visibility"
+        },
+        {
+          "type": "text",
+          "id": "hidden_products",
+          "label": "Product pages to hide the block on",
+          "info": "Handles of products to hide the block on, split with a comma."
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_specific_display",
+          "label": "Display the block on specific product pages only",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "displayed_products",
+          "label": "Specific product pages to display the block on",
+          "info": "Applied if the checkbox above is checked. Handles of products to only display the block on, split with a comma."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.announcement-bar.name",
+      "blocks": [
+        {
+          "type": "announcement"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

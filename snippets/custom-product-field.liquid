@@ -1,0 +1,98 @@
+{% liquid
+  assign default_value = ''
+  if block.settings.type == 'pills' or block.settings.type == 'select'
+    assign options = block.settings.select_options | split: ','
+    assign default_value =  block.settings.select_options | split: ',' | first
+  endif
+%}
+
+<custom-product-field
+  class="custom-product-field"
+  id='CustomField-{{ section.id }}-{{ block.id }}'
+  data-type="{{ block.settings.type }}"
+  data-name="{{ block.settings.field_name }}"
+  data-default-value='{{ default_value }}'
+  data-required="{{ block.settings.required }}"
+  data-section="{{ section.id }}"
+  data-atc-error-msg="{{ block.settings.atc_error_message }}"
+  data-apply-sticky-atc-error="{{ block.settings.sticky_atc_error_msg }}"
+  {{ block.shopify_attributes }}
+  style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+>
+  <div class="product-form__input small-field__field{% if block.settings.full_width %} product-form__input--full{% endif %}">
+    <label class="form__label">
+      {% if block.settings.custom_label != blank %}
+        {{ block.settings.field_label }}
+      {% else %}
+        {{ block.settings.field_name }}
+      {% endif %}
+    </label>
+    {% if block.settings.type == 'text' %}
+      <input
+        type="text"
+        class='input--small'
+        placeholder="{{ block.settings.text_placeholder }}"
+        {% if block.settings.text_max_characters != blank %}
+          maxlength="{{ block.settings.text_max_characters }}"
+        {% endif %}
+        aria-required="{{ block.settings.required }}"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off" 
+      >
+    {% elsif block.settings.type == 'number' %}
+      <input
+        type="number"
+        class='input--small'
+        placeholder="{{ block.settings.number_placeholder }}"
+        {% if block.settings.number_min != blank %}
+          min="{{ block.settings.number_min }}"
+        {% endif %}
+        {% if block.settings.number_max != blank %}
+          max="{{ block.settings.number_max }}"
+        {% endif %}
+        aria-required="{{ block.settings.required }}"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off" 
+      >
+    {% elsif block.settings.type == 'textarea' %}
+      <textarea
+        class='input--small textarea--{{ block.settings.textarea_height }}'
+        placeholder="{{ block.settings.textarea_placeholder }}"
+        aria-required="{{ block.settings.required }}"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off" 
+      ></textarea>
+    {% elsif block.settings.type == 'pills' %}
+      {% for option in options %}
+        <input
+          type="radio"
+          name='{{ block.settings.field_name }}'
+          id="{{ block.id }}-{{ forloop.index0 }}"
+          value="{{ option }}"
+          {% if forloop.index0 == 0 %}
+            checked
+          {% endif %}
+        >
+        <label class="accent-color-{{ settings.variant_pills_accent_color }}{% if settings.variant_pills_bold_text %} variant-pills--bold{% endif %}" for="{{ block.id }}-{{ forloop.index0 }}">
+          {{ option -}}
+        </label>
+      {% endfor %}
+    {% else %}
+      <div class="select no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+        <select 
+          class='select__select'
+          value="{{ default_value }}"
+        >
+          {% for option in options %}
+            <option value='{{ option }}'>{{ option }}</option>
+          {% endfor %}
+        </select>
+        {% render 'icon-caret' %}
+      </div>
+    {% endif %}
+    <span class='input-error-msg'>{{ block.settings.field_error_message }}</span>
+  </div>
+</custom-product-field>

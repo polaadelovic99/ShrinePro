@@ -1,0 +1,49 @@
+{% comment %}
+  product, product_form_id label, class, outline_btn, display_price
+{% endcomment %}
+<product-form{% if animation %} class='animate-item animate-item--child' style='--index: {{ index }};'{% endif %}>
+  {%- form 'product',
+    product,
+    id: product_form_id,
+    class: 'form',
+    novalidate: 'novalidate',
+    data-type: 'add-to-cart-form'
+  -%}
+    <input
+      type="hidden"
+      name="id"
+      value="{{ product.selected_or_first_available_variant.id }}"
+      disabled
+      class="product-variant-id"
+      {% if skip_cart %}
+        data-skip-cart="true"
+      {% endif %}
+    >
+    <button
+      type="submit"
+      name="add"
+      class="button {{ class }}{% if outline_btn %} button--secondary{% endif %}"
+      {% if product.selected_or_first_available_variant.available == false %}
+        disabled
+      {% endif %}
+    >
+      <span>
+        {% if display_price %}
+          <span> {{ product.selected_or_first_available_variant.price | money }} • </span>
+        {% endif %}
+        {{ label }}
+      </span>
+      <div class="loading-overlay__spinner hidden">
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          class="spinner"
+          viewBox="0 0 66 66"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+        </svg>
+      </div>
+    </button>
+  {%- endform -%}
+</product-form>

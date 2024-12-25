@@ -1,0 +1,168 @@
+{% comment %}
+  Renders product variant-picker
+
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} Id of the product form to which the variant picker is associated.
+  - update_url: {Boolean} whether or not to update url when changing variants. If false, the url isn't updated. Default: true (optional).
+  Usage:
+  {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+{% endcomment %}
+
+{%- unless product.has_only_default_variant -%}
+  {% liquid
+    assign types_string = block.settings.picker_types | downcase
+    if types_string == blank
+      assign types_string = 'pills,pills,pills'
+    endif
+    assign types_array = types_string | split: ','
+  %}
+  <variant-selects
+    id="variant-selects-{{ section.id }}"
+    class="no-js-hidden"
+    data-section="{{ section.id }}"
+    data-url="{{ product.url }}"
+    {% if update_url == false %}
+      data-update-url="false"
+    {% endif %}
+    {% if types_string contains 'quantity breaks' %}
+      data-has-quantity-breaks-picker="true"
+      data-quantity-breaks-picker-style="{{ block.settings.breaks_style }}"
+      data-quantity-breaks-picker-displayed-images="{{ block.settings.breaks_displayed_images }}"
+    {% endif %}
+    style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+    {{ block.shopify_attributes }}
+  >
+    {%- for option in product.options_with_values -%}
+      {% assign type = types_array[forloop.index0] | strip | replace: ' ', '-' %}
+      <div
+        class="product-form__input product-form__input--{{ type }}{% if block.settings.full_width_dropdowns %} product-form__input--full{% endif %}"
+      >
+        <div class="visually-hidden product-form__input__type" data-type="{{ type }}">&nbsp</div>
+        {% unless type == 'quantity-breaks' %}
+          <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+            {% if block.settings.custom_labels == blank %}
+              {{ option.name }}
+            {% else %}
+              <span id="custom-label-{{ section.id }}-{{ forloop.index }}">
+                {% assign downcase_name = option.name | downcase %}
+                {% assign uppercase_name = option.name | upcase %}
+                {{
+                  block.settings.custom_labels
+                  | replace: '[count]', forloop.index
+                  | replace: '[name]', option.name
+                  | replace: '[name_lowercase]', downcase_name
+                  | replace: '[name_uppercase]', uppercase_name
+                  | replace: '[selected]', option.selected_value
+                }}
+              </span>
+            {% endif %}
+          </label>
+        {% endunless %}
+        {% case type %}
+          {% when 'pills' %}
+            {% render 'product-variant-options', product: product, option: option, block: block, type: 'pills' %}
+          {% when 'swatches' %}
+            <div class="color-swatches-container color-swatches-container--size-{{ block.settings.swatches_size }}">
+              {% render 'product-variant-options', product: product, option: option, block: block, type: 'swatches' %}
+            </div>
+          {% when 'quantity-breaks' %}
+            <div 
+              class="quantity-breaks quantity-breaks--{{ block.settings.breaks_style }} accent-color-{{ block.settings.breaks_color_scheme }}{% if block.settings.breaks_space_images %} quantity-breaks--space-images{% endif %}"
+              data-items="{{ option.values.size }}"
+              style="--items-count:{{ option.values.size }};--image-width:{{ block.settings.breaks_image_width }}%"
+            >
+              {% if block.settings.breaks_headline != blank %}
+                <h3 class="quantity-breaks__title">
+                  <span></span>
+                  <span>{{ block.settings.breaks_headline }}</span>
+                  <span></span>
+                </h3>
+              {% endif %}
+              <div class="quantity-breaks-container">
+                {% render 'product-variant-options',
+                  product: product,
+                  option: option,
+                  block: block,
+                  type: 'quantity-breaks'
+                %}
+              </div>
+            </div>
+          {% else %}
+            <div class="select no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+              <select
+                id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                class="select__select"
+                name="options[{{ option.name | escape }}]"
+                form="{{ product_form_id }}"
+              >
+                {% render 'product-variant-options', product: product, option: option, block: block, type: 'dropdown' %}
+              </select>
+              {% render 'icon-caret' %}
+            </div>
+        {% endcase %}
+      </div>
+    {%- endfor -%}
+
+    <script type="application/json">
+      {{ product.variants | json }}
+    </script>
+  </variant-selects>
+{%- endunless -%}
+
+<noscript
+  class="product-form__noscript-wrapper-{{ section.id }}"
+  style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+>
+  <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
+    <label class="form__label" for="Variants-{{ section.id }}">
+      {{- 'products.product.product_variants' | t -}}
+    </label>
+    <div class="select">
+      <select
+        name="id"
+        id="Variants-{{ section.id }}"
+        class="select__select"
+        form="{{ product_form_id }}"
+      >
+        {%- for variant in product.variants -%}
+          <option
+            {% if variant == product.selected_or_first_available_variant %}
+              selected="selected"
+            {% endif %}
+            {% if variant.available == false %}
+              disabled
+            {% endif %}
+            value="{{ variant.id }}"
+          >
+            {%- liquid
+              echo variant.title
+              echo variant.price | money | strip_html | prepend: ' - '
+              if variant.available == false
+                echo 'products.product.sold_out' | t | prepend: ' - '
+              endif
+              if variant.quantity_rule.increment > 1
+                echo 'products.product.quantity.multiples_of' | t: quantity: variant.quantity_rule.increment | prepend: ' - '
+              endif
+              if variant.quantity_rule.min > 1
+                echo 'products.product.quantity.minimum_of' | t: quantity: variant.quantity_rule.min | prepend: ' - '
+              endif
+              if variant.quantity_rule.max != null
+                echo 'products.product.quantity.maximum_of' | t: quantity: variant.quantity_rule.max | prepend: ' - '
+              endif
+              # TODO: enable theme-check once `item_count_for_variant` is accepted as valid filter
+              # theme-check-disable
+              assign cart_quantity = cart | item_count_for_variant: variant.id
+              # theme-check-enable
+              if cart_quantity > 0
+                echo 'products.product.quantity.in_cart_html' | t: quantity: cart_quantity | prepend: ' - '
+              endif
+            -%}
+          </option>
+        {%- endfor -%}
+      </select>
+      {% render 'icon-caret' %}
+    </div>
+  </div>
+</noscript>

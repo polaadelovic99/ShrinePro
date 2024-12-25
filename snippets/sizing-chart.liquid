@@ -1,0 +1,92 @@
+<modal-v2
+  class="sizing-chart sizing-chart--button-{{ block.settings.button_alignment }} modal-v2"
+  data-open="{{ block.settings.test_mode }}"
+  style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+  {{ block.shopify_attributes }}
+>
+  <button class="sizing-chart__button{% if block.settings.button_underline %} sizing-chart__button--underline{% endif %} flex-center modal-v2__open-btn font-size--desktop-auto" style='--font-size:{{ block.settings.text_size | divided_by: 10.0 }}rem;'>
+    {% if block.settings.button_custom_icon != blank %}
+      <img
+        src="{{ block.settings.button_custom_icon | image_url: width: 150 }}"
+        alt=""
+        height="auto"
+        width="auto"
+        loading="lazy"
+      >
+    {% elsif block.settings.button_icon != blank %}
+      {% render 'material-icon', icon: block.settings.button_icon, filled: block.settings.button_filled_icon %}
+    {% endif %}
+    <span class="sizing-chart__button__text">{{ block.settings.button_label }}</span>
+  </button>
+  <div class="modal-v2__overlay modal-v2__close-btn">&nbsp</div>
+  <div class="sizing-chart__modal modal-v2__modal color-{{ block.settings.color_scheme }}">
+    <button class="popup-modal__close popup-modal__close--borderless modal-v2__close-btn">
+      <span></span>
+      <span></span>
+    </button>
+    {% if block.settings.headline != blank %}
+      <h3 class="sizing-chart__title center {{ block.settings.heading_size }}">
+        {{ block.settings.headline }}
+      </h3>
+    {% endif %}
+    {% if block.settings.top_image != blank %}
+      <div class="sizing-chart__top-image">
+        {%- capture sizes -%}
+          (min-width: 750px) 800px / 2), calc((100vw - 50px))
+        {%- endcapture -%}
+        {{
+          block.settings.top_image
+          | image_url: width: 1500
+          | image_tag: loading: 'lazy', sizes: sizes, widths: '165, 360, 535, 750, 1070, 1250, 1500'
+        }}
+      </div>
+    {% endif %}
+    <table class="sizing-chart-table">
+      {% if block.settings.table_header_content != blank %}
+        {% assign columns = block.settings.table_header_content | split: ',' %}
+        <thead>
+          <tr>
+            {% for column in columns %}
+              <th class="sizing-chart-table__th color-{{ block.settings.table_header_color_scheme }}" align="center">
+                {{ column | strip }}
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+      {% endif %}
+      <tbody>
+        {% assign rows = block.settings.table_content | split: '</p><p>' %}
+        {% for row in rows %}
+          <tr>
+            {% assign columns = row | remove: '<p>' | remove: '</p>' | split: ',' %}
+            {% for column in columns %}
+              <td class="sizing-chart-table__td" align="center">
+                {{ column | strip }}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if block.settings.caption != blank %}
+      <p
+        class="sizing-chart__caption {{ block.settings.caption_alignment }}"
+        style="--text-size:{{ block.settings.caption_size }};--text-color:{{ block.settings.caption_color }};"
+      >
+        {{ block.settings.caption }}
+      </p>
+    {% endif %}
+    {% if block.settings.bottom_image != blank %}
+      <div class="sizing-chart__top-image">
+        {%- capture sizes -%}
+          (min-width: 750px) 800px / 2), calc((100vw - 50px))
+        {%- endcapture -%}
+        {{
+          block.settings.bottom_image
+          | image_url: width: 1500
+          | image_tag: loading: 'lazy', sizes: sizes, widths: '165, 360, 535, 750, 1070, 1250, 1500'
+        }}
+      </div>
+    {% endif %}
+  </div>
+</modal-v2>

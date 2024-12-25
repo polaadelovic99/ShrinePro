@@ -1,0 +1,191 @@
+{% style %}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .section-group-grid-{{ section.id }} {
+    column-gap: {{ section.settings.spacing_desktop | divided_by: 10.0 }}rem;
+    row-gap: {{ section.settings.spacing_mobile | divided_by: 10.0 }}rem;
+  }
+{% endstyle %}
+
+{%- if section.settings.section_1_id != blank and section.settings.section_2_id != blank-%}
+  <section-group 
+    class='section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} animate-section animate--hidden {{ section.settings.visibility }}'
+    data-section-one-id="{{ section.settings.section_1_id }}"
+    data-section-two-id="{{ section.settings.section_2_id }}"
+  >
+    <div class="page-width{% if section.settings.desktop_full_page %} desktop-full-page desktop-full-page-no-padding{% endif %}{% if section.settings.mobile_full_page %} mobile-full-page{% endif %}">
+      <div class='section-group-grid section-group-grid-{{ section.id }}{% if section.settings.mobile_reverse_grid %} section-group-grid--mobile-reverse{% endif %}'>
+        <section class='section-group__section-one-container section-group__container'></section>
+        <section class='section-group__section-two-container section-group__container'></section>
+      </div>
+    </div>
+  </section-group>
+{%- else -%}
+  <h2 class='title center h1'>Paste IDs of the 2 sections you wish to combine</h2>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Sections group",
+  "settings": [
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "paragraph",
+      "content": "This section is used to combine 2 sections. Paste their IDs in to display them next to each other on desktop"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Section #1"
+    },
+    {
+      "type": "text",
+      "id": "section_1_id",
+      "label": "Section #1 ID"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_reverse_grid",
+      "label": "Display second on mobile",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section #2"
+    },
+    {
+      "type": "text",
+      "id": "section_2_id",
+      "label": "Section #2 ID"
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_full_page",
+      "label": "Full page width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "spacing_desktop",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_full_page",
+      "label": "Full page width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "spacing_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sections group"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

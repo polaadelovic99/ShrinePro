@@ -1,0 +1,498 @@
+{{ 'section-bundle-deals.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .bundle-deals-{{ section.id }} .bundle-deals__media {
+    grid-template-columns: repeat({{ section.blocks.size }}, 1fr);
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} content-for-grouping animate-section animate--hidden {{ section.settings.visibility }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  <div class="page-width section-{{ section.id }}-padding">
+    {% assign content_index = 0 %}
+    <div class="animate-item animate-item--child index-0">
+      {%- unless section.settings.title == blank -%}
+        {% assign content_index = 1 %}
+        <div class="title-wrapper--no-top-margin{% if section.settings.text != blank %} main-title-with-text{% endif %}">
+          <h2 class="title {{ section.settings.heading_size }}">
+            {{ section.settings.title | escape }}
+          </h2>
+        </div>
+      {%- endunless -%}
+      {% if section.settings.text != blank %}
+        {% assign content_index = 1 %}
+        <div class="text-under-title">
+          {{ section.settings.text }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% assign total_percentage_left_multiplier = 100.0 | minus: section.settings.percentage_discount | divided_by: 100.0 %}
+    {% assign total_fixed_discount = section.settings.fixed_amount_discount | times: 100.0 %}
+    <bundle-deals
+      id="bundle-deals-{{ section.id }}"
+      class="bundle-deals bundle-deals-{{ section.id }} bundle-deals-{{ section.settings.layout }}"
+      data-section="{{ section.id }}"
+      data-percentage-left="{{ total_percentage_left_multiplier }}"
+      data-fixed-discount="{{ total_fixed_discount }}"
+      data-currency-symbol="{{ cart.currency.symbol }}"
+      data-update-prices="{{ section.settings.enable_price_changes }}"
+    >
+      {% assign product_form_id = 'bundle-deals-' | append: section.id %}
+
+      <div class="bundle-deals__media animate-item animate-item--child index-{{ content_index }}">
+        {% for block in section.blocks %}
+          {% assign product = block.settings.product %}
+
+          <div class="bundle-deals__media-item">
+            {% if product != blank and product.featured_image != blank %}
+              <a
+                href="{{ product.url }}"
+                class="bundle-deals__media-item-container bundle-deals__media-item-container-js"
+              >
+                <img
+                  src="{{ product.featured_image | image_url: width: 800 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  loading="lazy"
+                  width="auto"
+                  height="auto"
+                  class="bundle-deals__media-item-img bundle-deals__media-item-img-js"
+                >
+              </a>
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="bundle-deals__center animate-item animate-item--child index-{{ content_index | plus: 1 }}">
+        {% liquid 
+          assign items_count = 0
+          assign total_compare_price = 0
+          assign total_price = 0
+        %}
+        {% for block in section.blocks %}
+          {% assign product = block.settings.product %}
+
+          {% if product != blank %}
+            {% liquid
+              assign items_count = items_count | plus: 1
+              assign percentage_left_multiplier = 100.0 | minus: block.settings.percentage_discount | divided_by: 100.0
+              assign fixed_discount = block.settings.fixed_amount_discount | times: 100.0
+              assign price = product.selected_or_first_available_variant.price | times: percentage_left_multiplier | minus: fixed_discount
+              if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price
+                assign compare_price = product.selected_or_first_available_variant.compare_at_price
+              else 
+                assign compare_price = product.selected_or_first_available_variant.price
+              endif
+              assign total_price = total_price | plus: price
+              assign total_compare_price = total_compare_price | plus: compare_price
+            %}
+
+            <div class="bundle-deals__product bundle-deals__product-js">
+              <div class="bundle-deals__checkbox-container{% if product.has_only_default_variant and section.settings.prices_under %} bundle-deals__checkbox-container--price-under{% endif %}">
+                <input
+                  type="checkbox"
+                  class="bundle-deals__checkbox bundle-deals__checkbox-js visually-hidden"
+                  id="checkbox-{{ forloop.index0 }}"
+                  data-id="{{ product.selected_or_first_available_variant.id }}"
+                  data-price="{{ price }}"
+                  data-compare-price="{{ compare_price }} "
+                  data-index="{{ forloop.index0 }}"
+                  data-id-index="id_{{ forloop.index0 }}"
+                  data-checked="true"
+                  checked
+                >
+                <label for="checkbox-{{ forloop.index0 }}" class="bundle-deals__checkbox-label h4">
+                  <svg
+                    class="checkmark-checked"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                    fill="currentColor"
+                    width="50"
+                    height="50"
+                  >
+                    <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
+                  </svg>
+                  <svg
+                    class="checkmark-unchecked"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                    fill="currentColor"
+                    width="50"
+                    height="50"
+                  >
+                    <path d="M384 80c8.8 0 16 7.2 16 16V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16H384zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/>
+                  </svg>
+                  <p class="bundle-deals__title">
+                    {{ product.title }}
+                  </p>
+                </label>
+                <div class="bundle-deals__prices">
+                  <span class="bundle-deals__price bundle-deals__price-js regular-price">{{ price | money }}</span>
+                  <span class="bundle-deals__compare-price bundle-deals__compare-price-js compare-price">{% if compare_price > price %}{{ compare_price | money }}{% endif %}</span>
+                </div>
+              </div>
+              <div class="bundle-deals__info">
+                {% if product.has_only_default_variant == false %}
+                  <div class="bundle-deals__variant-selects bundle-deals__variant-selects-js" data-index="{{ forloop.index0 }}" data-id-index="id_{{ forloop.index0 }}">
+                    {%- for option in product.options_with_values -%}
+                      <div class="select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+                        <select class="select__select">
+                          {% for value in option.values %}
+                            <option
+                              value="{{ value | escape }}"
+                              {% if option.selected_value == value %}
+                                selected="selected"
+                              {% endif %}
+                            >
+                              {{- value -}}
+                            </option>
+                          {% endfor %}
+                        </select>
+                        {% render 'icon-caret' %}
+                      </div>
+                    {%- endfor -%}
+                    <script type="application/json">
+                      {{ product.variants | json }}
+                    </script>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="bundle-deals__empty"></div>
+      <div class="bundle-deals__button animate-item animate-item--child index-{{ content_index | plus: 1 }}">
+        {% if items_count == section.blocks.size %}
+          <p class="bundle-deals__total-price-container">
+            <span>{{ section.settings.total_price_label }}</span>
+            <span>
+              <span class="bundle-deals__total-price bundle-deals__total-price-js regular-price">{{ total_price | times: total_percentage_left_multiplier | minus: total_fixed_discount | money }}</span>
+              <span class="bundle-deals__total-compare-price bundle-deals__total-compare-price-js compare-price">{%- if total_compare_price > total_price %}{{ total_compare_price | money }}{% endif -%}</span>
+            </span>
+          </p>
+          <product-form class="product-form" data-section="{{ section.id }}">
+            <div class="product-form__error-message-wrapper" role="alert" hidden>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="icon icon-error"
+                viewBox="0 0 13 13"
+              >
+                <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+              </svg>
+              <span class="product-form__error-message"></span>
+            </div>
+            {%- form 'product',
+              product,
+              id: product_form_id,
+              class: 'form',
+              novalidate: 'novalidate',
+              data-type: 'add-to-cart-form'
+            -%}
+              <div class="product-form__variants"></div>
+              <input
+                type="hidden"
+                name="id"
+                value=""
+                disabled
+                class="product-variant-id"
+                {% if section.settings.skip_cart %}
+                  data-skip-cart="true"
+                {% endif %}
+              >
+              <div class="product-form__buttons">
+                <button
+                  type="submit"
+                  name="add"
+                  class="atc-button product-form__submit button button--full-width"
+                >
+                  <span>
+                    {{ section.settings.btn_label }}
+                  </span>
+                  <div class="loading-overlay__spinner hidden">
+                    <svg
+                      aria-hidden="true"
+                      focusable="false"
+                      class="spinner"
+                      viewBox="0 0 66 66"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                    </svg>
+                  </div>
+                </button>
+              </div>
+            {%- endform -%}
+          </product-form>
+        {% else %}
+          <button class="button button--full-width" disabled>Select a product for every added block</button>
+        {% endif %}
+      </div>
+    </bundle-deals>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Bundle deals",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Bundle deals",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+        ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Bundles"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "",
+          "label": "Vertical"
+        },
+        {
+          "value": "horizontal-images-left",
+          "label": "Horizontal - Images left"
+        },
+        {
+          "value": "horizontal-images-right",
+          "label": "Horizontal - Images right"
+        }
+      ],
+      "default": "horizontal-images-left",
+      "label": "Desktop layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_price_changes",
+      "label": "Enable dynamic price changes",
+      "info": "Enables live changes to item and total prices after variant/checkbox change. CAUTION: Due to the way Liquid works, after a change, new price will NOT work with currency converters.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "prices_under",
+      "label": "Dispaly price under the title for products without a variant picker",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "skip_cart",
+      "label": "Skip cart",
+      "default": false,
+      "info": "Your customers will be sent directly to checkout after click the Add to Cart button."
+    },
+    {
+      "type": "text",
+      "id": "total_price_label",
+      "label": "Total price label",
+      "default": "Total Price:"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Add to cart button label",
+      "default": "Add selected to cart"
+    },
+    {
+      "type": "header",
+      "content": "Discounts"
+    },
+    {
+      "type": "text",
+      "id": "percentage_discount",
+      "label": "Percentage discount",
+      "default": "0",
+      "info": "Percentae to be discounted from the total price, WITHOUT the % symbol."
+    },
+    {
+      "type": "text",
+      "id": "fixed_amount_discount",
+      "label": "Fixed amount discount",
+      "default": "0",
+      "info": "Fixed amount of money to be discounted from the total price, WITHOUT the currency symbol."
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "percentage_discount",
+          "label": "Percentage discount",
+          "default": "0",
+          "info": "Percentae to be discounted from the total price, WITHOUT the % symbol."
+        },
+        {
+          "type": "text",
+          "id": "fixed_amount_discount",
+          "label": "Fixed amount discount",
+          "default": "0",
+          "info": "Fixed amount of money to be discounted from the total price, WITHOUT the currency symbol."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle deals",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

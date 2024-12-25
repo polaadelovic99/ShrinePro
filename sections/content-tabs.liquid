@@ -1,0 +1,711 @@
+{{ 'section-content-tabs.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    {% unless section.settings.container_width == 'normal' %}
+      max-width: {{ section.settings.container_width }}rem;
+    {% endunless %}
+  }
+  .content-tabs-{{ section.id }} .content-tabs__buttons {
+    font-size: {{ section.settings.buttons_mobile_font_size | divided_by: 10.0 }}rem;
+    border-radius: {{ section.settings.button_border_radius | divided_by: 10.0 }}em;
+  }
+  .content-tabs-{{ section.id }} .content-tabs__buttons--outlined {
+    border-radius: calc({{ section.settings.button_border_radius | divided_by: 10.0 }}em + var(--padding));
+  }
+  .content-tabs-{{ section.id }} .content-tab-button, .content-tabs-{{ section.id }} .content-tab-buttom__active-bg {
+    border-radius: {{ section.settings.button_border_radius | divided_by: 10.0 }}em;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    .content-tabs-{{ section.id }} .content-tab-button {
+      font-size: {{ section.settings.buttons_desktop_font_size | divided_by: 10.0 }}rem;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} content-for-grouping animate-section animate--hidden {{ section.settings.visibility }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  <div class="page-width section-{{ section.id }}-padding">
+    <content-tabs 
+      class='content-tabs content-tabs-{{ section.id }}'
+      data-animation="{{ section.settings.active_button_animation }}"
+    >
+      <div class="content-tabs__header content-tabs__header--{{ section.settings.header_layout }}{% if section.settings.desktop_full_size_buttons %} content-tab-buttons--desktop-expand{% endif %}{% if section.settings.mobile_full_size_buttons %} content-tab-buttons--mobile-expand{% endif %}">
+        {% assign animate_index = 0 %}
+        {% if section.settings.title != blank %}
+          {% assign animate_index = 1 %}
+          <h2 class="content-tabs__heading title {{ section.settings.heading_size }} animate-item animate-item--child index-0">
+            {{ section.settings.title | escape }}
+          </h2>
+        {% endif %}
+        <div class='content-tabs__buttons flex-center content-tabs__buttons--{{ section.settings.buttons_style }} content-tabs__buttons--animation-{{ section.settings.active_button_animation }} color-{{ section.settings.buttons_color_scheme }} animate-item animate-item--child index-{{ animate_index }}'>
+          {% for block in section.blocks %}
+            <button class='content-tab-button flex-center{% if forloop.index0 == 0 %} content-tab-button--active{% endif %}' data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              {% if block.settings.btn_icon != blank %}
+                {% render 'material-icon', icon: block.settings.btn_icon, filled: block.settings.filled_btn_icon %}
+              {%- endif -%}
+              <span>{{ block.settings.btn_label }}</span>
+            </button>
+          {% endfor %}
+          {% if section.settings.active_button_animation == 'moving' %}
+            <div class='content-tab-buttom__active-bg'>&nbsp</div>
+          {% endif %}
+        </div>
+      </div>
+      <div class='content-tabs__tabs animate-item animate-item--child index-{{ animate_index | plus: 1 }}'>
+        {% for block in section.blocks %}
+          {% liquid
+            assign has_media = false
+            if block.settings.image != blank or block.settings.video != blank
+              assign has_media = true
+            endif
+          %}
+          <div class='content-tab{% if forloop.index0 == 0 %} content-tab--active{% endif %}{% if block.settings.desktop_media_width == 'half' %} content-tab--2-column{% endif %}' data-index="{{ forloop.index0 }}" {{ block.shopify_attributes}}>
+            {% if has_media %}
+              <div class='content-tab__media'>
+                {% if block.settings.video != blank %}
+                  {% render 'video-player', block: block %}
+                {% else %}
+                  {%- capture sizes -%}
+                    (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px,
+                    (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px))
+                  {%- endcapture -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 1500
+                    | image_tag: loading: 'lazy', sizes: sizes, widths: '165, 360, 535, 750, 1070, 1250, 1500'
+                  }}
+                {% endif %}
+              </div>
+            {% endif %}
+            <div class='content-tab__content content-rte {{ block.settings.desktop_text_alignment }} {{ block.settings.mobile_text_alignment }}{% if block.settings.mobile_media_position == 'media_second' %} mobile-order-first{% endif %}{% if block.settings.desktop_media_position == 'media_second' %} desktop-order-first{% endif %}'>
+              {% if block.settings.title != blank %}
+                <h2 class="{{ block.settings.heading_size }}">
+                  {{ block.settings.title | escape }}
+                </h2>
+              {% endif %}
+              {% if block.settings.text != blank %}
+                <div class="rte">
+                  {{ block.settings.text }}
+                </div>
+              {% endif %}
+              {%- if block.settings.button_label != blank -%}
+                <a
+                  {% if block.settings.button_link == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ block.settings.button_link }}"
+                  {% endif %}
+                  class="button{% if block.settings.button_style_secondary %} button--secondary{% else %} button--primary{% endif %}"
+                  {{ block.shopify_attributes }}
+                >
+                  {{ block.settings.button_label | escape }}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.atc_button_label != blank -%}
+                {% if block.settings.product == blank %}
+                  <button
+                    id="SectionAtcBtn-{{ section.id }}"
+                    type="button"
+                    class="button main-product-atc button--has-spinner"
+                    {% if product == blank or product.selected_or_first_available_variant.available == false %}
+                      disabled
+                    {% endif %}
+                  >
+                    {{ block.settings.atc_button_label | escape }}
+                    <div class="loading-overlay__spinner">
+                      <svg
+                        aria-hidden="true"
+                        focusable="false"
+                        class="spinner"
+                        viewBox="0 0 66 66"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                      </svg>
+                    </div>
+                  </button>
+                {% else %}
+                  {% assign product_form_id = 'section-product-form-'
+                    | append: section.id
+                    | append: forloop.index
+                  %}
+                  {% render 'separate-atc-btn',
+                    product: block.settings.product,
+                    product_form_id: product_form_id,
+                    label: block.settings.atc_button_label
+                  %}
+                {% endif %}
+              {%- endif -%}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </content-tabs>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Content tabs",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Content tabs",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        { 
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Tabs"
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "options": [
+        {
+          "value": "80",
+          "label": "Extra small"
+        },
+        {
+          "value": "100",
+          "label": "Small"
+        },
+        {
+          "value": "120",
+          "label": "Medium"
+        },
+        {
+          "value": "normal",
+          "label": "Normal"
+        }
+      ],
+      "default": "100",
+      "label": "Container width"
+    },
+    {
+      "type": "select",
+      "id": "buttons_color_scheme",
+      "options": [
+        { 
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "accent-1",
+      "label": "Tab buttons color"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Buttons corner radius",
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "buttons_style",
+      "options": [
+        {
+          "value": "outlined",
+          "label": "Outlined"
+        },
+        {
+          "value": "shadow",
+          "label": "Drop shadow"
+        }
+      ],
+      "default": "outlined",
+      "label": "Buttons container style"
+    },
+    {
+      "type": "select",
+      "id": "active_button_animation",
+      "options": [
+        {
+          "value": "opacity",
+          "label": "Opacity"
+        },
+        {
+          "value": "moving",
+          "label": "Moving"
+        }
+      ],
+      "default": "moving",
+      "label": "Active button animation type",
+      "info": "Choosing \"Moving\" is only recommended if all your buttons fit in one row."
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "select",
+      "id": "header_layout",
+      "options": [
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "horizontal",
+      "label": "Desktop header layout"
+    },
+    {
+      "type": "range",
+      "id": "buttons_desktop_font_size",
+      "min": 14,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Buttons font size",
+      "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_full_size_buttons",
+      "label": "Expand buttons to full width",
+      "default": false,
+      "info": "Evently expands all buttons to fit whole container width. Recommended only if all your buttons fit in one row."
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "buttons_mobile_font_size",
+      "min": 8,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Buttons font size",
+      "default": 13
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_full_size_buttons",
+      "label": "Expand buttons to full width",
+      "default": true,
+      "info": "Evently expands all buttons to fit whole container width. Recommended only if all your buttons fit in one row."
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Tab button"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "btn_label",
+          "label": "Tab button label",
+          "default": "Tab button"
+        },
+        {
+          "type": "text",
+          "id": "btn_icon",
+          "label": "Icon",
+          "info": "[View all available icons](https:\/\/fonts.google.com\/icons?icon.set=Material+Symbols&icon.platform=web)."
+        },
+        {
+          "type": "checkbox",
+          "id": "filled_btn_icon",
+          "default": false,
+          "label": "Filled icon"
+        },
+        {
+          "type": "header",
+          "content": "Media"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "header",
+          "content": "Or"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "checkbox",
+          "id": "loop",
+          "label": "Video looping",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "muted_autoplay",
+          "label": "Muted autoplay",
+          "info": "Use this option instead of adding GIFs. The quality is better and the loading time is much quicker. Alternatively, if you disable this option, a play button will be displayed."
+        },
+        {
+          "type": "select",
+          "id": "btn_color_scheme",
+          "options": [
+            {
+              "value": "accent-1",
+              "label": "t:sections.all.colors.accent_1.label"
+            },
+            {
+              "value": "accent-2",
+              "label": "t:sections.all.colors.accent_2.label"
+            },
+            {
+              "value": "background-1",
+              "label": "t:sections.all.colors.background_1.label"
+            },
+            {
+              "value": "background-2",
+              "label": "t:sections.all.colors.background_2.label"
+            },
+            {
+              "value": "inverse",
+              "label": "t:sections.all.colors.inverse.label"
+            }
+          ],
+          "default": "accent-1",
+          "label": "Play button color scheme"
+        },
+        {
+          "type": "checkbox",
+          "id": "btn_animation",
+          "label": "Enable button ripple animation",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Tab heading",
+          "label": "Heading"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "h3",
+              "label": "Extra small"
+            },
+            {
+              "value": "h2",
+              "label": "Small"
+            },
+            {
+              "value": "h1",
+              "label": "Medium"
+            },
+            {
+              "value": "h0",
+              "label": "Large"
+            }
+          ],
+          "default": "h1",
+          "label": "t:sections.all.heading_size.label"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Use this section to display different benefits or different products that are sorted by clickable tabs.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Button label",
+          "label": "t:sections.slideshow.blocks.slide.settings.button_label.label",
+          "info": "t:sections.slideshow.blocks.slide.settings.button_label.info"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.slideshow.blocks.slide.settings.link.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_style_secondary",
+          "label": "t:sections.slideshow.blocks.slide.settings.secondary_style.label",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "atc_button_label",
+          "label": "Add to Cart button label",
+          "info": "Leave the label blank to hide the Add to Cart button."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Add to Cart product",
+          "info": "If empty, the product from the product page will be added in the cart (with the selected variant and quantity)."
+        },
+        {
+          "type": "header",
+          "content": "Desktop layout"
+        },
+        {
+          "type": "select",
+          "id": "desktop_media_width",
+          "options": [
+            {
+              "value": "half",
+              "label": "Half of the tab"
+            },
+            {
+              "value": "full",
+              "label": "Full width of the tab"
+            }
+          ],
+          "default": "half",
+          "label": "Desktop media (image/video) width"
+        },
+        {
+          "type": "select",
+          "id": "desktop_media_position",
+          "options": [
+            {
+              "value": "media_first",
+              "label": "Media first"
+            },
+            {
+              "value": "media_second",
+              "label": "Media second"
+            }
+          ],
+          "default": "media_first",
+          "label": "Desktop media placement"
+        },
+        {
+          "type": "select",
+          "id": "desktop_text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Left"
+            }
+          ],
+          "default": "center",
+          "label": "Desktop text alignment"
+        },
+        {
+          "type": "header",
+          "content": "Mobile layout"
+        },
+        {
+          "type": "select",
+          "id": "mobile_media_position",
+          "options": [
+            {
+              "value": "media_first",
+              "label": "Media first"
+            },
+            {
+              "value": "media_second",
+              "label": "Media second"
+            }
+          ],
+          "default": "media_first",
+          "label": "Mobile media placement"
+        },
+        {
+          "type": "select",
+          "id": "mobile_text_alignment",
+          "options": [
+            {
+              "value": "mobile-left",
+              "label": "Left"
+            },
+            {
+              "value": "mobile-center",
+              "label": "Center"
+            },
+            {
+              "value": "mobile-right",
+              "label": "Left"
+            }
+          ],
+          "default": "mobile-center",
+          "label": "Mobile text alignment"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Content tabs",
+      "blocks": [
+        {
+          "type": "tab"
+        },
+        {
+          "type": "tab"
+        },
+        {
+          "type": "tab"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

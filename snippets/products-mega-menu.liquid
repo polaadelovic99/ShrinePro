@@ -1,0 +1,105 @@
+<products-mega-menu>
+  <details id="ProductsMegaMenu-{{ forloop.index }}">
+    <summary class="header__menu-item list-menu__item link focus-inset products-mega-menu">
+      <span
+        {%- if link.child_active %}
+          class="header__active-menu-item"
+        {% endif %}
+      >
+        {{- link.title | escape -}}
+      </span>
+      {% render 'icon-caret' %}
+    </summary>
+    <div class="products-mega-menu__body color-background-1">
+      <div class="products-mega-menu__overlay">&nbsp</div>
+      <div class="page-width">
+        <div class="products-mega-menu__container">
+          <ul
+            id="ProductsMegaMenu-List-{{ forloop.index }}"
+            class="products-mega-menu__list"
+            role="list"
+            tabindex="-1"
+          >
+            {%- for childlink in link.links -%}
+              <li
+                id="ProductsMegaMenu-Item-{{ link.handle }}-{{ forloop.index }}"
+                class="products-mega-menu__item{% if forloop.index == 1 %} products-mega-menu__item--active{% endif %}"
+              >
+                <a
+                  id="ProductsMegaMenu-Link-{{ link.handle }}-{{ forloop.index }}"
+                  href="{{ childlink.url }}"
+                  class="header__menu-item list-menu__item link link--text focus-inset caption-large{% if section.settings.highlight_active_link and childlink.current %} list-menu__item--active{% endif %}"
+                  {% if childlink.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {% if childlink.url contains 'collections' and section.settings.products_mega_menu_display_collection_images %}
+                    {% assign link_collection_handle = childlink.url | remove: '/collections/' %}
+                    {% assign link_current_collection = collections[link_collection_handle] %}
+                    {% if link_current_collection.featured_image != blank %}
+                      <div class="header__menu-item__preview-image">
+                        <img
+                          src="{{ link_current_collection.featured_image | image_url: width: 150 }}"
+                          alt=""
+                          width="auto"
+                          height="auto"
+                        >
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                  <span>{{ childlink.title | escape }}</span>
+                  {% render 'icon-caret' %}
+                </a>
+
+                <div class="products-mega-menu__content">
+                  <ul class="products-mega-menu__cards">
+                    {% if section.settings.products_mega_menu_display_collection_products %}
+                      {% assign link_collection_handle = childlink.url | remove: '/collections/' %}
+                      {% assign link_current_collection = collections[link_collection_handle] %}
+                      {% for product in link_current_collection.products %}
+                        <li>
+                          {% render 'card-product',
+                            card_product: product,
+                            media_aspect_ratio: 'square',
+                            show_secondary_image: true,
+                            extend_height: false,
+                            custom_color_scheme: 'background-1'
+                          %}
+                        </li>
+                      {% endfor %}
+                    {% endif %}
+                    {%- for grandchildlink in childlink.links -%}
+                      <li>
+                        {% if grandchildlink.url contains 'products' %}
+                          {% assign product_handle = grandchildlink.url | remove: '/products/' %}
+                          {% assign current_product = all_products[product_handle] %}
+                          {% render 'card-product',
+                            card_product: current_product,
+                            media_aspect_ratio: 'square',
+                            show_secondary_image: true,
+                            extend_height: false,
+                            custom_color_scheme: 'background-1'
+                          %}
+                        {% elsif grandchildlink.url contains 'collections' %}
+                          {% assign collection_handle = grandchildlink.url | remove: '/collections/' %}
+                          {% assign current_collection = collections[collection_handle] %}
+                          {% render 'card-collection',
+                            card_collection: current_collection,
+                            media_aspect_ratio: 'square',
+                            extend_height: false,
+                            columns: 1,
+                            custom_color_scheme: 'background-1'
+                          %}
+                        {% endif %}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </details>
+</products-mega-menu>

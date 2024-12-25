@@ -1,0 +1,335 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+
+    .logo-list-{{ section.id }} .logo-list__item svg, .logo-list-{{ section.id }} .logo-list__item, .logo-list-{{ section.id }} .logo-list__item img {
+      height: {{ section.settings.desktop_logo_height }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .logo-list-{{ section.id }} .logo-list__item svg, .logo-list-{{ section.id }} .logo-list__item, .logo-list-{{ section.id }} .logo-list__item img {
+      height: {{ section.settings.mobile_logo_height }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} content-for-grouping animate-section animate--hidden {{ section.settings.visibility }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  <div class="logo-list-{{ section.id }} page-width section-{{ section.id }}-padding">
+    <div class="logo-list-container logo-list-container-{{ section.settings.layout }}" style='--columns-mobile:{{ section.settings.columns_mobile }};'>
+      {% assign content_index = 0 %}
+      {% if section.settings.title != blank %}
+        {% assign content_index = 1 %}
+        <div class="logo-list__heading animate-item animate-item--child index-0">
+          <h2 class="title {{ section.settings.heading_size }}">
+            {{ section.settings.title | escape }}
+          </h2>
+        </div>
+      {% endif %}
+      {% if section.settings.mobile_slider %}
+        <splide-component
+          data-type='loop'
+          data-autoplay='{{ section.settings.autoplay }}'
+          data-autoplay-speed='{{ section.settings.autoplay_speed }}'
+          data-slides-mobile="{{ section.settings.columns_mobile }}"
+          data-gap-mobile='0px'
+          data-arrows='false'
+          data-pagination='{{ section.settings.show_dots }}'
+          data-destroy-desktop="true"
+        >
+      {% endif %}
+        <div class="splide splide--mobile-dots-under desktop-destroy--flex">
+          <div class="splide__track">
+            <ul class="splide__list{% if section.settings.mobile_slider == false %} mobile-logo-list--grid{% endif %}">
+              {% for block in section.blocks %}
+                <li class="splide__slide">
+                  <div class="splide__slide__container">
+                    <{% if block.settings.link != blank %}a href="{{ block.settings.link }}" {% if block.settings.target_blank %}target="_blank" rel="noreferrer"{% endif %} {% else %}div{% endif %} class="logo-list__item{% if section.settings.gray_logos %} logo-list__item--gray{% endif %} animate-item animate-item--child" style="--index:{{ forloop.index0 | plus: content_index }};">
+                      {% if block.settings.image != blank %}
+                        <img
+                          src="{{ block.settings.image | image_url }}"
+                          {% if block.settings.image.alt != blank %}
+                            alt="{{ block.settings.image.alt | escape }}"
+                          {% else %}
+                            role="presentation"
+                          {% endif %}
+                          height="auto"
+                          width="auto"
+                          loading="lazy"
+                        >
+                      {% else %}
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+                      {% endif %}
+                    </{%- if block.settings.link != blank -%}a{% else %}div{%- endif -%}>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% if section.settings.mobile_slider %}
+        </splide-component>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured on",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Featured on",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "gray_logos",
+      "label": "Gray logos",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "horizontal",
+      "label": "Desktop layout"
+    },
+    { 
+      "type": "range",
+      "id": "desktop_logo_height",
+      "min": 30,
+      "max": 150,
+      "step": 10,
+      "default": 50,
+      "label": "Desktop logo height"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "label": "t:sections.multicolumn.settings.columns_mobile.label"
+    },
+    {
+      "type": "range",
+      "id": "mobile_logo_height",
+      "min": 30,
+      "max": 150,
+      "step": 10,
+      "default": 50,
+      "label": "Mobile logo height"
+    },
+    {
+      "type": "paragraph",
+      "content": "ATTENTION: ONLY in the theme editor, pagination dots might duplicate after changing section settings. To overcome this, simply click Save. This has NO EFFECT on the published website."
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_slider",
+      "default": true,
+      "label": "Enable mobile slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 1,
+      "max": 15,
+      "step": 0.5,
+      "default": 5,
+      "unit": "sec",
+      "label": "Autoplay speed"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "target_blank",
+          "label": "Open link in a new tab",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured on",
+      "blocks": [
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}
+

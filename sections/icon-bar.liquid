@@ -1,0 +1,704 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="icon-bar multicolumn animate-section animate--hidden color-{{ section.settings.color_scheme }} gradient{% if section.settings.title == blank %} no-heading{% endif %} content-for-grouping {{ section.settings.visibility }}" data-mobile-columns="{{ section.settings.columns_mobile }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  {%- liquid
+    assign has_mobile_slider = false
+    assign has_desktop_slider = false
+    if section.settings.slider_mobile
+      assign has_mobile_slider = true
+    endif
+    if section.settings.slider_desktop
+      assign has_desktop_slider = true
+    endif
+  
+    assign bg_diff_class = ' multicolumn--same-bgs'
+    unless section.settings.color_scheme == section.settings.cards_color_scheme
+      assign bg_diff_class = ' multicolumn--diff-bgs'
+    endunless
+  -%}
+  <div class="page-width{% if section.settings.desktop_full_page %} desktop-full-page{% endif %}{% if has_mobile_slider %} mobile-full-page{% endif %} section-{{ section.id }}-padding isolate" style="--columns-desktop: {{ section.settings.columns_desktop }};--columns-mobile: {{ section.settings.columns_mobile }};--gap-desktop:{{ section.settings.desktop_spacing }}px;--gap-mobile:{{ section.settings.mobile_spacing }}px;">
+    {% assign content_index = 0 %}
+    <div class='animate-item animate-item--child index-0'>
+      {%- unless section.settings.title == blank -%}
+        {% assign content_index = 1 %}
+        <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin{% if section.settings.text != blank %} multicolumn-title-with-text{% endif %}">
+          <h2 class="title {{ section.settings.heading_size }}">
+            {{ section.settings.title | escape }}
+          </h2>
+        </div>
+      {%- endunless -%}
+      {% if section.settings.text != blank %}
+        {% assign content_index = 1 %}
+        <div class="multicolumn-text">
+          {{ section.settings.text }}
+        </div>
+      {% endif %}
+    </div>
+    {% if has_mobile_slider or has_desktop_slider %}
+      <splide-component
+        data-type='{{ section.settings.type }}'
+        data-autoplay='{{ section.settings.autoplay }}'
+        data-autoplay-speed='{{ section.settings.autoplay_speed }}'
+        data-arrows-color="{{ section.settings.arrows_color_scheme }}"
+        data-dots-color="{{ section.settings.dots_color_scheme }}"
+        data-slides-desktop="{{ section.settings.columns_desktop }}"
+        data-per-move-desktop='{{ section.settings.per_move_desktop }}'
+        data-gap-desktop='{{ section.settings.desktop_spacing }}'
+        data-side-padding-desktop='{{ section.settings.desktop_side_padding }}'
+        data-padding-calc-desktop='{{ section.settings.desktop_padding_calc }}'
+        data-slides-mobile="{{ section.settings.columns_mobile }}"
+        data-gap-mobile='15'
+        {% if section.settings.enable_mobile_preview %}
+          data-side-padding-mobile='24'
+        {% else %}
+          data-side-padding-mobile='15'
+        {% endif %}
+        {% if has_desktop_slider == false %}
+          data-destroy-desktop="true"
+        {% elsif has_mobile_slider == false %}
+          data-destroy-mobile="true"
+        {% endif %}
+      >
+    {% endif %}
+      <div 
+        class='splide splide--desktop-dots-{{ section.settings.desktop_dots_position }} splide--mobile-dots-{{ section.settings.mobile_dots_position }} splide--desktop-arrows-{{ section.settings.desktop_arrows_position }} splide--desktop-arrows-outside splide--mobile-arrows-{{ section.settings.mobile_arrows_position }}{% if section.settings.transparent_arrows %} splide--transparent-arrows{% endif %}{% if section.settings.vertical-alignment == 'center' %} splide--vertically-centered{% endif %}{% if has_desktop_slider == false %} splide--destroy-desktop{% endif %}{% if has_mobile_slider == false %} splide--destroy-mobile{% endif %}' 
+        {% if section.settings.desktop_adaptive_height and section.settings.slides_desktop == 1 and has_desktop_slider %}
+          data-desktop-adaptive-height="true"
+        {% endif %}
+        {% if section.settings.mobile_adaptive_height and has_mobile_slider %}
+          data-mobile-adaptive-height="true"
+        {% endif %}
+      >
+        <div class="splide__track">
+          <ul class="splide__list">
+            {%- for block in section.blocks -%}
+              <li class="splide__slide">
+                <div class="splide__slide__container" style="--index:{{ forloop.index0 | plus: content_index }};" {{ block.shopify_attributes }}>
+                  <div class="icon-bar-card icon-bar-card--{{ section.settings.icon_layout }} multicolumn-card center content-container color-{{ section.settings.cards_color_scheme }}{{ bg_diff_class }} animate-item animate-item--child">
+                    <div class="icon-bar-card__icon icon-bar-card__icon--{{ section.settings.icon_size }} text-color-{{ section.settings.icon_color }}">
+                      {%- if block.settings.image == blank -%}
+                        {% render 'material-icon', icon: block.settings.icon, filled: block.settings.filled_icon %}
+                      {%- else -%}
+                        <img
+                          src="{{ block.settings.image | image_url }}"
+                          {% if block.settings.image.alt != blank %}
+                            alt="{{ block.settings.image.alt | escape }}"
+                          {% else %}
+                            role="presentation"
+                          {% endif %}
+                          height="auto"
+                          width="auto"
+                          loading="lazy"
+                        >
+                      {%- endif -%}
+                    </div>
+                    {% unless block.settings.title == blank and block.settings.text == blank %}
+                      <div class="multicolumn-card__info">
+                        {%- if block.settings.title != blank -%}
+                          <h3>{{ block.settings.title | escape }}</h3>
+                        {%- endif -%}
+                        {%- if block.settings.text != blank -%}
+                          <div class="rte">{{ block.settings.text }}</div>
+                        {%- endif -%}
+                      </div>
+                    {% endunless %}
+                  </div>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <div class='splide__dots-and-arrows'>
+          <ul class="splide__pagination"></ul>
+          <div class="splide__arrows"></div>
+        </div>
+      </div>
+    {% if has_mobile_slider or has_desktop_slider %}
+      </splide-component>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Icon Bar",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Icon bar",
+      "label": "t:sections.multicolumn.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "select",
+      "id": "icon_layout",
+      "options": [
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        },
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        }
+      ],
+      "default": "vertical",
+      "label": "Icon layout"
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "medium",
+      "label": "Icon Size"
+    },
+    {
+      "type": "select",
+      "id": "icon_color",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "text",
+          "label": "Text"
+        }
+      ],
+      "default": "accent-1",
+      "label": "Icon color"
+    },
+    {
+      "type": "select",
+      "id": "cards_color_scheme",
+      "options": [
+        {
+          "value": "bg-overlay",
+          "label": "Light overlay"
+        },
+        {
+          "value": "accent-1",
+          "label": "Accent 1"
+        },
+        {
+          "value": "accent-2",
+          "label": "Accent 2"
+        },
+        {
+          "value": "background-1",
+          "label": "Background 1"
+        },
+        {
+          "value": "background-2",
+          "label": "Background 2"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        }
+      ],
+      "default": "background-1",
+      "label": "Cards color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "paragraph",
+      "content": "ATTENTION: ONLY in the theme editor, pagination dots might duplicate after changing section settings. To overcome this, simply click Save. This has NO EFFECT on the published website."
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "options": [
+        {
+          "value": "slide",
+          "label": "Classic"
+        },
+        {
+          "value": "loop",
+          "label": "Infinite"
+        }
+      ],
+      "default": "slide",
+      "label": "Type"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 1,
+      "max": 15,
+      "step": 0.5,
+      "default": 5,
+      "unit": "sec",
+      "label": "Autoplay speed"
+    },
+    {
+      "type": "select",
+      "id": "arrows_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "inverse",
+      "label": "Arrows color scheme"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_arrows",
+      "label": "Transparent arrows",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "dots_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "inverse",
+      "label": "Dots color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_full_page",
+      "label": "Full page width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "label": "Columns desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_desktop",
+      "label": "Enable desktop slider",
+      "default": false,
+      "info": "The settings bellow are applied if this option is checked"
+    },
+    {
+      "type": "range",
+      "id": "per_move_desktop",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 1,
+      "label": "Slides to scroll on one move"
+    },
+    {
+      "type": "range",
+      "id": "desktop_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_side_padding",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Preview of prev & next slide",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_padding_calc",
+      "label": "Disable empty preview on first & last slide",
+      "default": true,
+      "info": "Moves the first slide to the left edge adn last one to the right if Preview value is enabled. Visible if type is set to Slider."
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_adaptive_height",
+      "label": "Adaptive height",
+      "default": false,
+      "info": "Only available if Slides per page is set to 1."
+    },
+    {
+      "type": "select",
+      "id": "desktop_dots_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        }
+      ],
+      "default": "under",
+      "label": "Dots position"
+    },
+    {
+      "type": "select",
+      "id": "desktop_arrows_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        },
+        {
+          "value": "sides",
+          "label": "On sides of the slider"
+        }
+      ],
+      "default": "sides",
+      "label": "Arrows position"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.multicolumn.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.multicolumn.settings.columns_mobile.options__2.label"
+        }
+      ],
+      "default": "1",
+      "label": "t:sections.multicolumn.settings.columns_mobile.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_mobile",
+      "label": "Enable mobile slider",
+      "default": true,
+      "info": "The settings bellow are applied if this option is checked"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mobile_preview",
+      "label": "Preview of prev & next slides",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_adaptive_height",
+      "label": "Adaptive height",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_dots_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        }
+      ],
+      "default": "under",
+      "label": "Dots position"
+    },
+    {
+      "type": "select",
+      "id": "mobile_arrows_position",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "under",
+          "label": "Under the slider"
+        },
+        {
+          "value": "sides",
+          "label": "On sides of the slider"
+        }
+      ],
+      "default": "under",
+      "label": "Arrows position"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "default": "check_circle",
+          "label": "Icon",
+          "info": "[View all available icons](https:\/\/fonts.google.com\/icons?icon.set=Material+Symbols&icon.platform=web)."
+        },
+        {
+          "type": "checkbox",
+          "id": "filled_icon",
+          "default": false,
+          "label": "Filled icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Icon",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Pair text with an icon to focus on your chosen product, collection, or blog post<p>",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon Bar",
+      "blocks": [
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

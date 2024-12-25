@@ -1,0 +1,269 @@
+{% assign item_count = block.settings.product_list.count %}
+<div 
+  class='{{ type }}-upsells-container accent-color-{{ block.settings.accent_color }}{% if item_count > 1 and block.settings.stacking == 'column' %} upsells-container--stacked-columns{% endif %}{% if item_count > 1 and block.settings.stacking == 'slider' %} side-margins-negative{% endif %}'
+  style="
+    --item-count: {{ item_count }};
+    --image-size: {{ block.settings.images_size }}rem;
+    --image-size-number: {{ block.settings.images_size }};
+    --image-border-radius: {{ block.settings.images_corner_radius | divided_by: 10.0 }}rem;
+    --title-font-size: {{ block.settings.title_size }}rem;
+    --desc-font-size: {{ block.settings.desc_size }}rem;
+    --price-font-size: {{ block.settings.price_size }}rem;
+    --border-radius: {{ block.settings.corner_radius | divided_by: 10.0 }}rem;
+    --regular-border-color: {{ block.settings.regular_border_color }};
+    --selected-border-color: {{ block.settings.selected_border_color }};
+    --border-width: {{ block.settings.border_width }}rem;
+    --regular-bg-color: {{ block.settings.regular_bg_color }};
+    --selected-bg-color: {{ block.settings.selected_bg_color }};
+    --margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;
+    --margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;
+  "
+  data-count="{{ item_count }}"
+  {{ block.shopify_attributes }}
+>
+  {% if item_count == 0 %}
+    <h4 class='center'>Assign upsell products in block settings</h4>
+  {% endif %}
+  {% if item_count > 1 and block.settings.stacking == 'slider' %}
+    {% liquid
+      assign side_padding = '15'
+      assign gap = '45'
+    %}
+    <splide-component
+      data-type='slide'
+      data-arrows='false'
+      data-gap-desktop="{{ gap }}"
+      data-gap-mobile="{{ gap }}"
+      data-side-padding-desktop="{{ side_padding }}"
+      data-side-padding-mobile="{{ side_padding }}"
+      data-slides-desktop="1"
+      data-slides-mobile="1"
+      style="--side-padding-desktop:{{ side_padding }};--side-padding-mobile:{{ side_padding }};"
+    >
+      <div class='splide splide--has-padding splide--desktop-dots-under splide--mobile-dots-under' data-desktop-adaptive-height="true" data-mobile-adaptive-height="true">
+        <div class='splide__track'>
+          <ul class="splide__list">
+  {% endif %}
+  {% for product in block.settings.product_list %}
+    {% if item_count > 1 and block.settings.stacking == 'slider' %}
+      <li class="splide__slide">
+        <div class="splide__slide__container">
+    {% endif %}
+    {% liquid
+      if forloop.index == 1
+        assign preselected = block.settings.prdouct_1_preselected
+        assign featured_image = block.settings.product_1_image
+        assign description = block.settings.product_1_desc
+      elsif forloop.index == 2 
+        assign preselected = block.settings.prdouct_2_preselected
+        assign featured_image = block.settings.product_2_image
+        assign description = block.settings.product_2_desc
+      else
+        assign preselected = block.settings.prdouct_3_preselected
+        assign featured_image = block.settings.product_3_image
+        assign description = block.settings.product_3_desc
+      endif
+    %}
+      <{{ type }}-upsell
+        class='upsell upsell--{{ block.settings.style }} {{ type }}-upsell-{{ section.id }} upsell--btn-{{ block.settings.btn_position }} color-{{ block.settings.color_scheme }}{% if block.settings.show_custom_bg %} upsell--custom-bg{% endif %}{% if block.settings.show_box_shadow %} upsell--box-shadow{% endif %}{% if block.settings.show_border %} upsell--border{% endif %}'
+        data-style="{{ block.settings.style }}" 
+        data-selected="{{ preselected }}"
+        data-handle="{{ product.handle }}"
+        data-toggle="{% if block.settings.style == 'add_button' %}false{% else %}true{% endif %}"
+        data-id="{{ product.selected_or_first_available_variant.id }}"
+      >
+        {% liquid
+          assign product_form_id = type | append: 'upsell' | append: block.id | append: forloop.index 
+          for item in cart.items
+            if item.product.handle == product.handle
+              assign in_cart = true
+              break
+            endif
+          endfor
+        %}
+        {% if type == 'cart-drawer' and block.settings.style != 'add_button' %}
+          <style>
+            .cart-drawer .cart-item--product-{{ product.handle }} {
+              display: none;
+            }
+          </style>
+        {% endif %}
+        <div class='upsell__container{% if block.settings.toggle_element == 'container' and block.settings.style != "add_button" %} upsell-toggle-btn{% endif %}{% if block.settings.style == 'add_button' and in_cart %} hiden{% endif %}'>
+          {% if block.settings.show_images %}
+            {% liquid
+              if featured_image != blank
+                assign product_image = featured_image
+              else 
+                assign product_image = product.featured_image
+              endif
+            %}
+            {% if product_image != blank %}
+              <div class='upsell__image'>
+                <img
+                  src="{{ product_image | image_url: width: 500 }}"
+                  alt="{{ product_image.alt | escape }}"
+                  class="upsell__image__img"
+                  loading="lazy"
+                  width="auto"
+                  height="auto"
+                >
+              </div>
+            {% endif %}
+          {% endif %}
+          <div class='upsell__content{% if block.settings.hide_compare_price %} hide-compare-price{% endif %}'>
+            <div class='upsell__title'>
+              <h3>
+                {% if block.settings.title_link %}<a href='{{ product.url }}'>{% endif %}
+                  {{ product.title }}
+                {% if block.settings.title_link %}</a>{% endif %}
+              </h3>
+              {% if block.settings.price_position == 'next_to_title' %}
+                <div class='upsell__price'>
+                  <span class='regular-price'>{{ product.first_available_variant.price | money }}</span>
+                  {% if product.first_available_variant.compare_at_price > product.first_available_variant.price %}
+                    <span class='compare-price'>{{ product.first_available_variant.compare_at_price | money }}</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+            {%- unless description == blank -%}
+              <p class="upsell__desc">
+                {{ description }}
+              </p>
+            {%- endunless -%}
+            {%- unless product.has_only_default_variant -%}
+              {% if block.settings.show_variant_picker %}
+                <div class='upsell__variant-picker'>
+                  {%- for option in product.options_with_values -%}
+                    <div class="upsell__select select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+                      <select class="select__select variant-dropdown" name="options[{{ option.name | escape }}]">
+                        {%- liquid
+                          assign variants_available_arr = product.variants | map: 'available'
+                          assign variants_option1_arr = product.variants | map: 'option1'
+                          assign variants_option2_arr = product.variants | map: 'option2'
+                          assign variants_option3_arr = product.variants | map: 'option3'
+                        -%}
+                        {% for value in option.values %}
+                          {%- liquid
+                            assign option_disabled = true
+        
+                            for option1_name in variants_option1_arr
+                              case option.position
+                                when 1
+                                  if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 2
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 3
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                              endcase
+                            endfor
+                          -%}
+                          <option value="{{ value | escape }}">
+                            {% if option_disabled -%}
+                              {{- 'products.product.value_unavailable' | t: option_value: value -}}
+                            {%- else -%}
+                              {{- value -}}
+                            {%- endif %}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      {% render 'icon-caret' %}
+                    </div>
+                  {%- endfor -%}
+                  <script type="application/json">
+                    {{ product.variants | json }}
+                  </script>
+                </div>
+              {% endif %}
+            {% endunless %}
+            {% if block.settings.price_position == 'separate' %}
+              <div class='upsell__price upsell__price--separate'>
+                <span class='regular-price'>{{ product.first_available_variant.price | money }}</span>
+                {% if product.first_available_variant.compare_at_price > product.first_available_variant.price %}
+                  <span class='compare-price'>{{ product.first_available_variant.compare_at_price | money }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+          {% if block.settings.style == 'toggle_switch' %}
+            <button class='upsell__toggle-switch toggle-switch{% if block.settings.toggle_element == 'button' %} upsell-toggle-btn{% endif %}'>
+              <span class='toggle-switch__slider'>&nbsp</span>
+            </button>
+          {% elsif block.settings.style == 'checkbox_1' %}
+            <button class='upsell__checkbox flex-center{% if block.settings.toggle_element == 'button' %} upsell-toggle-btn{% endif %}'>
+              {% render 'checkbox-icons' %}
+            </button>
+          {% elsif block.settings.style == 'checkbox_2' %}
+            <button class='upsell__checkbox flex-center{% if block.settings.toggle_element == 'button' %} upsell-toggle-btn{% endif %}'>
+              {% render 'material-icon', icon: 'add_circle', class: ' checkmark-unchecked' %}
+              {% render 'material-icon', icon: 'check_circle', filled: true, class: ' checkmark-checked' %}
+            </button>
+          {% elsif block.settings.style == 'plus_button' %}
+            <button class='upsell__plus-btn{% if block.settings.toggle_element == 'button' %} upsell-toggle-btn{% endif %}'>
+              {% render 'material-icon', icon: 'add', class: ' checkmark-unchecked' %}
+              {% render 'material-icon', icon: 'check', filled: true, class: ' checkmark-checked' %}
+            </button>
+          {% else %}
+            <button
+              type="submit"
+              name="add"
+              class="upsell__add-btn"
+              form="{{ product_form_id }}"
+              {% if product.selected_or_first_available_variant.available == false %}
+                disabled
+              {% endif %}
+            >
+              <span>
+                {%- if product.selected_or_first_available_variant.available -%}
+                  {{ block.settings.add_btn_label }}
+                {%- else -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- endif -%}
+              </span>
+              <div class="loading-overlay__spinner hidden">
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="spinner"
+                  viewBox="0 0 66 66"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                </svg>
+              </div>
+            </button>
+          {% endif %}
+          {% if type == 'cart-drawer' %}
+            <product-form data-is-cart-upsell='true'>
+              {%- form 'product',
+                product,
+                id: product_form_id,
+                class: 'form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                <button type='submit' class='hidden'>+</button>
+              {%- endform -%}
+            </product-form>
+          {% endif %}
+        </div>
+      </{{ type }}-upsell>
+    {% if item_count > 1 and block.settings.stacking == 'slider' %}
+        </div>
+      </li>
+    {% endif %}
+  {% endfor %}
+  {% if item_count > 1 and block.settings.stacking == 'slider' %}
+          </ul>
+        </div>
+      </div>
+    </splide-component>
+  {% endif %}
+</div>

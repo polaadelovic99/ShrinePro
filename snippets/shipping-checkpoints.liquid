@@ -1,0 +1,139 @@
+{% liquid
+  assign item_count = 0
+  if block.settings.top_text_1 != blank or block.settings.bottom_text_1 != blank
+    assign item_count = item_count  | plus: 1
+  endif
+  if block.settings.top_text_2 != blank or block.settings.bottom_text_2 != blank
+    assign item_count = item_count  | plus: 1
+  endif
+  if block.settings.top_text_3 != blank or block.settings.bottom_text_3 != blank
+    assign item_count = item_count  | plus: 1
+  endif
+  if block.settings.top_text_4 != blank or block.settings.bottom_text_4 != blank
+    assign item_count = item_count  | plus: 1
+  endif
+%}
+
+<dynamic-dates
+  data-date-format="{{ block.settings.date_format }}"
+  data-day-labels="{{ block.settings.days_labels }}"
+  data-month-labels="{{ block.settings.months_labels }}"
+  {{ block.shopify_attributes }}
+  style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;--item-count: {{ item_count }};"
+  class='shipping-checkpoints{% if item_count == 4 %} shipping-checkpoints--has-4{% endif %}'
+>
+  <div
+    class='shipping-checkpoints__bar color-{{ block.settings.color_scheme }}'
+    style="--item-count-sub: {{ item_count | minus: 1 }};"
+  >
+    &nbsp
+  </div>
+  {% unless block.settings.top_text_1 == blank and block.settings.bottom_text_1 == blank %}
+    <div class='shipping-checkpoint'>
+      {% if block.settings.icon_1 != blank %}
+        <div class='shipping-checkpoint__icon color-{{ block.settings.color_scheme }}'>
+          {% render 'material-icon', icon: block.settings.icon_1, filled: block.settings.filled_icon_1 %}
+        </div>
+      {% endif %}
+      <p 
+        class='shipping-checkpoint__top'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.top_text_1 }}"
+        data-min-days="{{ block.settings.min_days_1 }}"
+        data-max-days="{{ block.settings.max_days_1 }}"
+      >
+        {{ block.settings.top_text_1 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+      <p 
+        class='shipping-checkpoint__bottom'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.bottom_text_1 }}"
+        data-min-days="{{ block.settings.min_days_1 }}"
+        data-max-days="{{ block.settings.max_days_1 }}"
+      >
+        {{ block.settings.bottom_text_1 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+    </div>
+  {% endunless %}
+  {% unless block.settings.top_text_2 == blank and block.settings.bottom_text_2 == blank %}
+    <div class='shipping-checkpoint'>
+      {% if block.settings.icon_2 != blank %}
+        <div class='shipping-checkpoint__icon color-{{ block.settings.color_scheme }}'>
+          {% render 'material-icon', icon: block.settings.icon_2, filled: block.settings.filled_icon_2 %}
+        </div>
+      {% endif %}
+      <p 
+        class='shipping-checkpoint__top'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.top_text_2 }}"
+        data-min-days="{{ block.settings.min_days_2 }}"
+        data-max-days="{{ block.settings.max_days_2 }}"
+      >
+        {{ block.settings.top_text_2 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+      <p 
+        class='shipping-checkpoint__bottom'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.bottom_text_2 }}"
+        data-min-days="{{ block.settings.min_days_2 }}"
+        data-max-days="{{ block.settings.max_days_2 }}"
+      >
+        {{ block.settings.bottom_text_2 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+    </div>
+  {% endunless %}
+  {% unless block.settings.top_text_3 == blank and block.settings.bottom_text_3 == blank %}
+    <div class='shipping-checkpoint'>
+      {% if block.settings.icon_3 != blank %}
+        <div class='shipping-checkpoint__icon color-{{ block.settings.color_scheme }}'>
+          {% render 'material-icon', icon: block.settings.icon_3, filled: block.settings.filled_icon_3 %}
+        </div>
+      {% endif %}
+      <p 
+        class='shipping-checkpoint__top'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.top_text_3 }}"
+        data-min-days="{{ block.settings.min_days_3 }}"
+        data-max-days="{{ block.settings.max_days_3 }}"
+      >
+        {{ block.settings.top_text_3 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+      <p 
+        class='shipping-checkpoint__bottom'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.bottom_text_3 }}"
+        data-min-days="{{ block.settings.min_days_3 }}"
+        data-max-days="{{ block.settings.max_days_3 }}"
+      >
+        {{ block.settings.bottom_text_3 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+    </div>
+  {% endunless %}
+  {% unless block.settings.top_text_4 == blank and block.settings.bottom_text_4 == blank %}
+    <div class='shipping-checkpoint'>
+      {% if block.settings.icon_4 != blank %}
+        <div class='shipping-checkpoint__icon color-{{ block.settings.color_scheme }}'>
+          {% render 'material-icon', icon: block.settings.icon_4, filled: block.settings.filled_icon_4 %}
+        </div>
+      {% endif %}
+      <p 
+        class='shipping-checkpoint__top'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.top_text_4 }}"
+        data-min-days="{{ block.settings.min_days_4 }}"
+        data-max-days="{{ block.settings.max_days_4 }}"
+      >
+        {{ block.settings.top_text_4 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+      <p 
+        class='shipping-checkpoint__bottom'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.bottom_text_4 }}"
+        data-min-days="{{ block.settings.min_days_4 }}"
+        data-max-days="{{ block.settings.max_days_4 }}"
+      >
+        {{ block.settings.bottom_text_4 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+    </div>
+  {% endunless %}
+</dynamic-dates>

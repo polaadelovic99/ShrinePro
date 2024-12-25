@@ -1,0 +1,986 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  .hotspots-image-container-{{ section.id }} .hotspot__content {
+    max-width: {{ section.settings.hotspot_modal_mobile_width | divided_by: 10.0 }}rem;
+    left: calc(min(max({{ section.settings.hotspot_modal_mobile_width | divided_by: 20.0 | plus: 1 }}rem, var(--offset-x)), calc(100% - {{ section.settings.hotspot_modal_mobile_width | divided_by: 20.0 | plus: 1 }}rem)));
+    width: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+
+    .hotspots-image-container-{{ section.id }} .hotspot__content {
+      left: var(--offset-x);
+      max-width: {{ section.settings.hotspot_modal_desktop_width | divided_by: 10.0 }}rem;
+      {% if section.settings.contain_hotspot_modal %}
+        left: calc(min(max({{ section.settings.hotspot_modal_desktop_width | divided_by: 20.0 | plus: 1 }}rem, var(--offset-x)), calc(100% - {{ section.settings.hotspot_modal_desktop_width | divided_by: 20.0 | plus: 1 }}rem)));
+      {% endif %}
+    }
+  }
+{%- endstyle -%}
+
+{% liquid
+  assign content_empty = false
+  if section.settings.title == blank and section.settings.text == blank and section.settings.button_label == blank and section.settings.atc_button_label == blank
+    assign content_empty = true
+  endif
+%}
+
+<div class="color-{{ section.settings.color_scheme }} content-for-grouping animate-section animate--hidden {{ section.settings.visibility }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  <div class="section-{{ section.id }}-padding{% unless section.settings.full_page_width %} page-width{% endunless %}">
+    <div
+      class="
+        hotspots-image-container
+        hotspots-image-container-{{ section.id }}
+        hotspots-image-container--content-{{ section.settings.desktop_content_position }}
+        hotspots-image-container--mobile-content-{{ section.settings.mobile_content_position }}
+        {% if section.settings.color_scheme != section.settings.content_color_scheme %} hotspots-image--different-bg{% else %} hotspots-image--same-bg{% endif %}
+        hotspots-image-container--{{ section.settings.desktop_image_width }}
+        animate-item
+        {% if content_empty %} hotspots-image-container--content-empty{% endif %}
+      "
+      style="--max-width:{{ section.settings.image_max_width | divided_by: 10.0 }}rem"
+    >
+      <div
+        class="hotspots-image__content{% if section.settings.hide_content_on_mobile %} hotspots-image__content--hide-on-mobile{% endif %}{% if section.settings.content_corner_radius %} content--border-radius{% endif %} color-{{ section.settings.content_color_scheme }}"
+      >
+        <div class="content-rte hotspots-image__content-container {{ section.settings.desktop_content_alignment }}">
+          {% if section.settings.title != blank %}
+            <h2 class="{{ section.settings.heading_size }}">
+              {{ section.settings.title }}
+            </h2>
+          {% endif %}
+          {% if section.settings.text != blank %}
+            <div class="rte">
+              {{ section.settings.text }}
+            </div>
+          {% endif %}
+          {%- if section.settings.button_label != blank -%}
+            <a
+              {% if section.settings.link %}
+                href="{{ section.settings.link }}"
+              {% else %}
+                role="link" aria-disabled="true"
+              {% endif %}
+              class="button {% if section.settings.button_style_secondary %}button--secondary{% else %}button--primary{% endif %}"
+            >
+              {{- section.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.atc_button_label != blank -%}
+            <button
+              id="SectionAtcBtn-{{ section.id }}"
+              type="button"
+              class="button main-product-atc button--has-spinner"
+              {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+                disabled
+              {% endif %}
+            >
+              {{ section.settings.atc_button_label | escape }}
+              <div class="loading-overlay__spinner">
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="spinner"
+                  viewBox="0 0 66 66"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                </svg>
+              </div>
+            </button>
+          {%- endif -%}
+        </div>
+      </div>
+      <div
+        class="hotspots-image{% if section.settings.mobile_image != blank %} hotspots-image--has-mobile-img{% endif %}"
+        style="--max-width:{{ section.settings.image_max_width | divided_by: 10.0 }}rem"
+      >
+        {% if section.settings.image != blank %}
+          <div class="hotspots-image__image{% if section.settings.image_corner_radius %} image--corner-radius{% endif %}">
+            {%- capture sizes -%}
+              (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 }}px,
+              (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px))
+            {%- endcapture -%}
+            {{
+              section.settings.image
+              | image_url: width: 1500
+              | image_tag: loading: 'lazy', sizes: sizes, widths: '165, 360, 535, 750, 1070, 1250, 1500, 2000'
+            }}
+          </div>
+          {% if section.settings.mobile_image != blank %}
+            <div class="hotspots-image__mobile-image{% if section.settings.image_corner_radius %} image--corner-radius{% endif %}">
+              {%- capture sizes -%}
+                (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px))
+              {%- endcapture -%}
+              {{
+                section.settings.mobile_image
+                | image_url: width: 1500
+                | image_tag: loading: 'lazy', sizes: sizes, widths: '165, 360, 535, 750, 1070, 1250, 1500, 2000'
+              }}
+            </div>
+          {% endif %}
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
+        {% endif %}
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'hotspot' %}
+              <hotspot-button
+                class="hotspot{% if block.settings.enable_mobile_position %} hotspot--mobile-position{% endif %}"
+                data-type="feature"
+                data-open-event="{{ section.settings.hotspot_open_event }}"
+                data-open="false"
+                data-section="{{ section.id }}"
+                style="--offset-x:{{ block.settings.offset_x }}%;--offset-y:{{ block.settings.offset_y }}%;--mobile-offset-x:{{ block.settings.mobile_offset_x }}%;--mobile-offset-y:{{ block.settings.mobile_offset_y }}%;"
+                {{ block.shopify_attributes }}
+              >
+                <button
+                  class="hotspot-btn color-{{ section.settings.hotspots_color_scheme }}{% if section.settings.display_hotspots_animation %} ripple-animation{% endif %}"
+                >
+                  {% render 'material-icon', icon: 'add' %}
+                </button>
+                <div
+                  class="hotspot__content color-{{ section.settings.hotspot_content_color_scheme }} {{ block.settings.alignment }}"
+                >
+                  <div class="hotspot__content__image-and-text{% if section.settings.hotspot_image_size == 'small' %}hotspot__content--small-image{% endif %}">
+                    {% if block.settings.image != blank %}
+                      <div class="hotspot__content__image">
+                        {{ block.settings.image | image_url: width: 750 | image_tag: loading: 'lazy' }}
+                      </div>
+                    {% endif %}
+                    <div class="hotspot__content__title-and_text">
+                      {% if block.settings.title != blank %}
+                        <h3 class="hotspot__content__title">
+                          {{ block.settings.title }}
+                        </h3>
+                      {% endif %}
+                      {% if block.settings.text != blank %}
+                        <div class="hotspot__content__text rte">
+                          {{ block.settings.text }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </hotspot-button>
+            {% when 'bullet_point' %}
+              <div
+                class="bullet-point{% if block.settings.enable_mobile_position %} bullet-point--mobile-position{% endif %} color-{{ section.settings.bullet_points_color }}"
+                data-bullet-style="{{ section.settings.bullet_style }}"
+                data-direction="{{ block.settings.direction }}"
+                data-mobile-direction="{{ block.settings.mobile_direction }}"
+                data-line-bend="{{ block.settings.line_bend }}"
+                data-mobile-line-bend="{{ block.settings.mobile_line_bend }}"
+                data-contain="{{ section.settings.contain_bullet_points }}"
+                style="
+                  --offset-x:{{ block.settings.offset_x }}%;
+                  --offset-y:{{ block.settings.offset_y }}%;
+                  --mobile-offset-x:{{ block.settings.mobile_offset_x }}%;
+                  --mobile-offset-y:{{ block.settings.mobile_offset_y }}%;
+                  --desktop-width:{{ section.settings.bullet_point_desktop_width | divided_by: 10.0 }}rem;
+                  --mobile-width:{{ section.settings.bullet_point_mobile_width }}%;
+                "
+                {{ block.shopify_attributes }}
+              >
+                <div class="bullet-point__line-end">&nbsp</div>
+                {% if block.settings.title != blank %}
+                  <h3 class="bullet-point__title">
+                    {{ block.settings.title }}
+                  </h3>
+                {% endif %}
+                {% if block.settings.text != blank %}
+                  <div class="bullet-point__text rte">
+                    {{ block.settings.text }}
+                  </div>
+                {% endif %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product features",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Product features",
+      "label": "t:sections.multicolumn.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Use this section to hightlight key features and benefits of your product</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.slideshow.blocks.slide.settings.button_label.label",
+      "info": "t:sections.slideshow.blocks.slide.settings.button_label.info"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.slideshow.blocks.slide.settings.link.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_style_secondary",
+      "label": "t:sections.slideshow.blocks.slide.settings.secondary_style.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "atc_button_label",
+      "label": "Add to Cart button label",
+      "info": "Leave the label blank to hide the Add to Cart button."
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "label": "Desktop content position",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_alignment",
+      "label": "Desktop content alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_content_on_mobile",
+      "label": "Hide content on mobile",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_position",
+      "label": "Mobile content position",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_corner_radius",
+      "label": "Enable content corner radius",
+      "default": true,
+      "info": "This option is automatically optimized for all layout & color scheme settings."
+    },
+    {
+      "type": "select",
+      "id": "content_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "Content color scheme"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "Section color scheme"
+    },
+    {
+      "type": "header",
+      "content": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_width",
+      "options": [
+        {
+          "value": "limited",
+          "label": "Limited"
+        },
+        {
+          "value": "unlimited",
+          "label": "Maximum possible"
+        }
+      ],
+      "label": "Desktop image width",
+      "default": "limited"
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "min": 300,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Image max width",
+      "default": 900
+    },
+    {
+      "type": "checkbox",
+      "id": "full_page_width",
+      "label": "Use full page width",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "image_corner_radius",
+      "label": "Enable image corner radius",
+      "default": false,
+      "info": "This option is automatically optimized for all layout & color scheme settings."
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "If this is empty, the image for desktop will be applied to mobile."
+    },
+    {
+      "type": "header",
+      "content": "Hotspot buttons & modals"
+    },
+    {
+      "type": "select",
+      "id": "hotspot_open_event",
+      "options": [
+        {
+          "value": "click",
+          "label": "Click"
+        },
+        {
+          "value": "hover",
+          "label": "Hover"
+        }
+      ],
+      "label": "Open modal on:",
+      "default": "click"
+    },
+    {
+      "type": "select",
+      "id": "hotspots_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "inverse",
+      "label": "Hotspot buttons color scheme"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_hotspots_animation",
+      "label": "Display button ripple animation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "hotspot_content_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "Hotspots modal color scheme"
+    },
+    {
+      "type": "select",
+      "id": "hotspot_image_size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "full",
+          "label": "Full width"
+        }
+      ],
+      "label": "Modal image width",
+      "default": "full"
+    },
+    {
+      "type": "checkbox",
+      "id": "contain_hotspot_modal",
+      "label": "Contain modals inside the main image",
+      "default": false,
+      "info": "Prevents modals from getting displayed outside the image on desktop. This option is automatically turned on for mobile."
+    },
+    {
+      "type": "range",
+      "id": "hotspot_modal_desktop_width",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Hotspot modal desktop width",
+      "default": 340
+    },
+    {
+      "type": "range",
+      "id": "hotspot_modal_mobile_width",
+      "min": 100,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Hotspot modal mobile width",
+      "default": 200
+    },
+    {
+      "type": "header",
+      "content": "Bullet Points"
+    },
+    {
+      "type": "select",
+      "id": "bullet_points_color",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "inverse",
+      "label": "Bullet points color scheme"
+    },
+    {
+      "type": "checkbox",
+      "id": "contain_bullet_points",
+      "label": "Contain bullet points inside the image",
+      "default": false,
+      "info": "Prevents bullet points from getting displayed outside the image on desktop. This option is automatically turned on for mobile."
+    },
+    {
+      "type": "range",
+      "id": "bullet_point_desktop_width",
+      "min": 260,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Bullet point desktop maximum width",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "bullet_point_mobile_width",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Bullet point mobile maximum width",
+      "default": 60,
+      "info": "Bullet points are automatically optimized to not overflow on mobile, no matter the selected size."
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "Hotspot",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Hotspot position"
+        },
+        {
+          "type": "range",
+          "id": "offset_x",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Horizontal offset",
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "offset_y",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Vertical offset",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "Mobile hotspot position"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mobile_position",
+          "label": "Enable custom mobile positioning",
+          "info": "Enable this option if you are using a separate image for mobile."
+        },
+        {
+          "type": "range",
+          "id": "mobile_offset_x",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Mobile horizontal offset",
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "mobile_offset_y",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Mobile vertical offset",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Feature",
+          "label": "t:sections.multicolumn.settings.title.label"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Highlight a specifit feature of your product.</p>"
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center",
+          "label": "Text alignment"
+        }
+      ]
+    },
+    {
+      "type": "bullet_point",
+      "name": "Bullet point",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Bullet position"
+        },
+        {
+          "type": "range",
+          "id": "offset_x",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Horizontal offset",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "offset_y",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Vertical offset",
+          "default": 20
+        },
+        {
+          "type": "select",
+          "id": "direction",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left",
+          "label": "Direction"
+        },
+        {
+          "type": "select",
+          "id": "line_bend",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            },
+            {
+              "value": "none",
+              "label": "None"
+            }
+          ],
+          "default": "bottom",
+          "label": "Line bend"
+        },
+        {
+          "type": "header",
+          "content": "Mobile bullet position"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mobile_position",
+          "label": "Enable custom mobile positioning",
+          "info": "Enable this option if you are using a separate image for mobile."
+        },
+        {
+          "type": "range",
+          "id": "mobile_offset_x",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Mobile horizontal offset",
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "mobile_offset_y",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Mobile vertical offset",
+          "default": 30
+        },
+        {
+          "type": "select",
+          "id": "mobile_direction",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left",
+          "label": "Mobile direction"
+        },
+        {
+          "type": "select",
+          "id": "mobile_line_bend",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            },
+            {
+              "value": "none",
+              "label": "None"
+            }
+          ],
+          "default": "bottom",
+          "label": "Mobile line bend"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Feature",
+          "label": "t:sections.multicolumn.settings.title.label"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Highlight a specifit feature of your product.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product features",
+      "blocks": [
+        {
+          "type": "hotspot",
+          "settings": {
+            "offset_x": 30,
+            "offset_y": 30
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "offset_x": 40,
+            "offset_y": 70
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "offset_x": 70,
+            "offset_y": 50
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,3 @@
+<span class="material-icon material-symbols-outlined{% if filled %} filled{% endif %}{% if custom_color != blank %} material-icon--custom-color color-icon-{{ custom_color }}{% endif %}{{ class }}">
+  {{ icon | strip | downcase | replace: ' ', '_' }}
+</span>

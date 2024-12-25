@@ -1,0 +1,516 @@
+{%- unless section.settings.mode == 'disabled' -%}
+  <promo-popup
+    data-test-mode="{% if section.settings.mode == 'testing' or section.settings.mode == 'success_testing' %}true{% else %}false{% endif %}"
+    data-delay-days="{{ section.settings.popup_days }}"
+    data-delay-seconds="{{ section.settings.popup_seconds }}"
+    data-display-timer="{{ section.settings.display_timer }}"
+    data-timer-duration="{{ section.settings.timer_duration }}"
+  >
+    <div class="sign-up-popup-overlay popup-overlay promp-popup__close-btn{% if section.settings.mode == 'testing' %} popup-overlay--active{% endif %}">&nbsp</div>
+    <div class="sign-up-popup-modal popup-modal{% if section.settings.mode == 'testing' %} popup-modal--active{% endif %} color-{{ section.settings.color_scheme }}{% if section.settings.image != blank %} popup-modal--image{% endif %}{% if section.settings.layout == 'image_second' %} popup-modal--image-second{% endif %}">
+      <div class="popup-modal__container">
+        <button class="popup-modal__close promp-popup__close-btn color-{{ section.settings.color_scheme }}">
+          <span></span>
+          <span></span>
+        </button>
+        {%- unless section.settings.image == blank -%}
+          <div class="popup-modal__image">
+            {{
+              section.settings.image
+              | image_url: width: 800
+              | image_tag: loading: 'lazy', width: '100%', height: '100%'
+            }}
+          </div>
+        {%- endunless -%}
+        <div class="popup-modal__content color-{{ section.settings.color_scheme }}">
+          {%- unless section.settings.heading == blank
+            and section.settings.heading_prefix == blank
+            and section.settings.heading_suffix == blank
+          -%}
+            <h2 class="popup-modal__title">
+              {%- unless section.settings.heading_prefix == blank -%}
+                <span class="popup-modal__title__prefix">
+                  {{ section.settings.heading_prefix }}
+                </span>
+              {%- endunless -%}
+              {%- unless section.settings.heading == blank -%}
+                <span class="title {{ section.settings.heading_size }}">
+                  {{ section.settings.heading }}
+                </span>
+              {%- endunless -%}
+              {%- unless section.settings.heading_suffix == blank -%}
+                <span class="popup-modal__title__suffix">
+                  {{ section.settings.heading_suffix }}
+                </span>
+              {%- endunless -%}
+            </h2>
+          {%- endunless -%}
+          {%- unless section.settings.text == blank -%}
+            <div class="popup-modal__text">
+              {{ section.settings.text }}
+            </div>
+          {%- endunless -%}
+          {%- if section.settings.display_timer -%}
+            <div class="popup-modal__timer">
+              <p>
+                <span class="popup-modal__timer__minutes"></span>
+                <span class="popup-modal__timer__minutes-label">M</span>
+                <span class="popup-modal__timer__colon">:</span>
+                <span class="popup-modal__timer__seconds"></span>
+                <span class="popup-modal__timer__seconds-label">S</span>
+              </p>
+            </div>
+          {%- endif -%}
+          <div class="popup-modal__email-form">
+            {% form 'customer', class: 'newsletter-form' %}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div class="newsletter-form__field-wrapper">
+                <div class="field">
+                  <input
+                    id="NewsletterForm--{{ section.id }}"
+                    type="email"
+                    name="contact[email]"
+                    class="field__input"
+                    value="{{ form.email }}"
+                    aria-required="true"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    autocomplete="email"
+                    {% if form.errors %}
+                      autofocus
+                      aria-invalid="true"
+                      aria-describedby="Newsletter-error--{{ section.id }}"
+                    {% elsif form.posted_successfully? %}
+                      aria-describedby="Newsletter-success--{{ section.id }}"
+                    {% endif %}
+                    placeholder="{{ 'newsletter.label' | t }}"
+                    required
+                  >
+                  <label class="field__label" for="NewsletterForm--{{ section.id }}">
+                    {{ 'newsletter.label' | t }}
+                  </label>
+                </div>
+                <button
+                  type="submit"
+                  class="button"
+                  name="commit"
+                  id="Subscribe"
+                  aria-label="{{ 'newsletter.button_label' | t }}"
+                >
+                  {{ section.settings.button_label }}
+                </button>
+                {%- if form.errors -%}
+                  <small class="newsletter-form__message form__message" id="Newsletter-error--{{ section.id }}">
+                    {%- render 'icon-error' -%}
+                    {{- form.errors.translated_fields.email | capitalize }}
+                    {{ form.errors.messages.email -}}
+                  </small>
+                {%- endif -%}
+              </div>
+              {%- if form.posted_successfully? -%}
+                <script>
+                  document.addEventListener('DOMContentLoaded', function() {
+                    const storageKey = "promo-bar-subscribed-" + window.location.host;
+                    {% unless section.settings.mode == 'success_testing' %}
+                      if (localStorage.getItem(storageKey)) return;
+                    {% endunless %}
+  
+                    const successOverlay = document.querySelector('.success-popup-overlay');
+                    const sucessPopupModal = document.querySelector('.success-popup-modal');
+                    if (sucessPopupModal) {
+                      localStorage.setItem(storageKey, JSON.stringify({ subscribed: true}));
+                      sucessPopupModal.classList.add('popup-modal--active');
+                      successOverlay.classList.add('popup-overlay--active');
+  
+                      const copyBtn = sucessPopupModal.querySelector('.popup-modal__copy-btn');
+                      const copySuccessMsg = sucessPopupModal.querySelector('.popup-modal__success-msg');
+                      const discountCode = "{{ section.settings.discount_code }}";
+  
+                      copyBtn.addEventListener('click', function() {
+                        navigator.clipboard.writeText(discountCode);
+                        copySuccessMsg.style.display = 'block';
+                      })
+  
+                      const closeBtn = sucessPopupModal.querySelector('.popup-modal__close');
+                      const dismissBtn = sucessPopupModal.querySelector('.popup-modal__dismiss-btn');
+  
+                      successOverlay.addEventListener('click', function() {
+                        closeModal();
+                      })
+                      closeBtn.addEventListener('click', function() {
+                        closeModal();
+                      })
+                      if (dismissBtn) {
+                        dismissBtn.addEventListener('click', function() {
+                          closeModal();
+                        })
+                      }
+  
+                      function closeModal() {
+                        sucessPopupModal.classList.remove('popup-modal--active');
+                        successOverlay.classList.remove('popup-overlay--active');
+                      }
+                    }
+                  })
+                </script>
+              {%- endif -%}
+            {% endform %}
+          </div>
+          {% unless section.settings.dismiss_btn_label == blank %}
+            <button class="popup-modal__dismiss-btn promp-popup__close-btn">{{ section.settings.dismiss_btn_label }}</button>
+          {% endunless %}
+        </div>
+      </div>
+    </div>
+  </promo-popup>
+
+  <div class="success-popup-overlay popup-overlay{% if section.settings.mode == 'success_testing' %} popup-overlay--active{% endif %}">&nbsp</div>
+  <div class="success-popup-modal popup-modal{% if section.settings.mode == 'success_testing' %} popup-modal--active{% endif %} color-{{ section.settings.color_scheme }}{% if section.settings.image != blank and section.settings.success_display_image %} popup-modal--image{% endif %}{% if section.settings.layout == 'image_second' %} popup-modal--image-second{% endif %}">
+    <button class="popup-modal__close color-{{ section.settings.color_scheme }}">
+      <span></span>
+      <span></span>
+    </button>
+    <div class="popup-modal__container">
+      {%- unless section.settings.image == blank or section.settings.success_display_image == false -%}
+        <div class="popup-modal__image">
+          {{
+            section.settings.image
+            | image_url: width: 800
+            | image_tag: loading: 'lazy', width: '100%', height: '100%'
+          }}
+        </div>
+      {%- endunless -%}
+      <div class="popup-modal__content color-{{ section.settings.color_scheme }}">
+        {%- unless section.settings.success_heading == blank
+          and section.settings.success_heading_prefix == blank
+          and section.settings.success_heading_suffix == blank
+        -%}
+          <h2 class="popup-modal__title">
+            {%- unless section.settings.success_heading_prefix == blank -%}
+              <span class="popup-modal__title__prefix">
+                {{ section.settings.success_heading_prefix }}
+              </span>
+            {%- endunless -%}
+            {%- unless section.settings.success_heading == blank -%}
+              <span class="title {{ section.settings.success_heading_size }}">
+                {{ section.settings.success_heading }}
+              </span>
+            {%- endunless -%}
+            {%- unless section.settings.success_heading_suffix == blank -%}
+              <span class="popup-modal__title__suffix">
+                {{ section.settings.success_heading_suffix }}
+              </span>
+            {%- endunless -%}
+          </h2>
+        {%- endunless -%}
+        {%- unless section.settings.success_text == blank -%}
+          <div class="popup-modal__text success-popup-modal__text">
+            {{ section.settings.success_text }}
+          </div>
+        {%- endunless -%}
+        <div class="popup-modal__discount-code">
+          <div class="field">
+            <input
+              id="DiscountCode--{{ section.id }}"
+              type="text"
+              class="field__input"
+              value="{{ section.settings.discount_code }}"
+              autocorrect="off"
+              autocapitalize="off"
+              placeholder="{{ section.settings.discount_code_label }}"
+              readonly
+            >
+            <label class="field__label" for="DiscountCode--{{ section.id }}">
+              {{- section.settings.discount_code_label -}}
+            </label>
+            <button class="popup-modal__copy-btn button">
+              {{ section.settings.copy_button_label }}
+              {% render 'icon-clipboard' %}
+            </button>
+          </div>
+          <p class="popup-modal__success-msg">{{ section.settings.copy_message }}</p>
+        </div>
+
+        {% unless section.settings.success_dismiss_btn_label == blank %}
+          <button class="popup-modal__dismiss-btn">{{ section.settings.success_dismiss_btn_label }}</button>
+        {% endunless %}
+      </div>
+    </div>
+  </div>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Promo Pop-Up",
+  "limit": 1,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "[Tutorial on how to set up](https://www.youtube.com/watch?v=2c1CCF3gsvI)"
+    },
+    {
+      "type": "header",
+      "content": "Popup"
+    },
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Display mode",
+      "default": "disabled",
+      "options": [
+        {
+          "value": "disabled",
+          "label": "Disabled"
+        },
+        {
+          "value": "testing",
+          "label": "Test mode"
+        },
+        {
+          "value": "success_testing",
+          "label": "Success test mode"
+        },
+        {
+          "value": "enabled",
+          "label": "Enabled"
+        }
+      ],
+      "info": "Test mode displays your popup without delay each time even after dismissing it. Switch to Enabled once you are happy with how your popup looks."
+    },
+    {
+      "type": "range",
+      "id": "popup_seconds",
+      "label": "Delay",
+      "info": "Time interval, in seconds, after which the modal will appear.",
+      "default": 5,
+      "min": 2,
+      "max": 60,
+      "step": 1,
+      "unit": "sec"
+    },
+    {
+      "type": "range",
+      "id": "popup_days",
+      "label": "Frequency",
+      "default": 30,
+      "info": "Number of days before a dismissed popup reappears",
+      "min": 2,
+      "max": 30,
+      "step": 1,
+      "unit": "day"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_timer",
+      "label": "Display countdown timer",
+      "default": true,
+      "info": "IMPORTANT: Due to liquid limitations, ONLY IN TEST MODE, you need to refresh the page after certain changes to display the correct timer. This does NOT happen when the Pop Up is published."
+    },
+    {
+      "type": "range",
+      "id": "timer_duration",
+      "min": 1,
+      "max": 10,
+      "default": 3,
+      "step": 0.5,
+      "unit": "min",
+      "label": "Timer duration"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Desktop image position",
+      "options": [
+        {
+          "value": "image_first",
+          "label": "Image first"
+        },
+        {
+          "value": "image_second",
+          "label": "Image second"
+        }
+      ],
+      "default": "image_first"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading_prefix",
+      "label": "Heading prefix",
+      "default": "Sign up and"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "GET 10% OFF"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "Extra Small"
+        },
+        {
+          "value": "h2",
+          "label": "Small"
+        },
+        {
+          "value": "h1",
+          "label": "Medium"
+        },
+        {
+          "value": "h0",
+          "label": "Large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "text",
+      "id": "heading_suffix",
+      "label": "Heading suffix"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Sign up for our email newsletter for special discounts and exclusive offers.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Sign up button label",
+      "default": "Sign up",
+      "info": "NOTE: Make sure you put in your own discount code in the settings under \"SUCCESS\" category down bellow."
+    },
+    {
+      "type": "text",
+      "id": "dismiss_btn_label",
+      "label": "Dismiss button label",
+      "default": "No thanks"
+    },
+    {
+      "type": "header",
+      "content": "Success"
+    },
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "Discount code",
+      "default": "EXAMPLE10"
+    },
+    {
+      "type": "text",
+      "id": "success_heading_prefix",
+      "label": "Heading prefix",
+      "default": "Enjoy your"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "Heading",
+      "default": "DISCOUNT!"
+    },
+    {
+      "type": "select",
+      "id": "success_heading_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "Extra Small"
+        },
+        {
+          "value": "h2",
+          "label": "Small"
+        },
+        {
+          "value": "h1",
+          "label": "Medium"
+        },
+        {
+          "value": "h0",
+          "label": "Large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "text",
+      "id": "success_heading_suffix",
+      "label": "Heading suffix"
+    },
+    {
+      "type": "richtext",
+      "id": "success_text",
+      "label": "Text",
+      "default": "<p>Use the code bellow to get 10% off your whole order!</p>"
+    },
+    {
+      "type": "text",
+      "id": "discount_code_label",
+      "label": "Discount code field label",
+      "default": "Discount code:"
+    },
+    {
+      "type": "text",
+      "id": "copy_button_label",
+      "label": "Copy button label",
+      "default": "Copy"
+    },
+    {
+      "type": "text",
+      "id": "copy_message",
+      "label": "Copied successful message",
+      "default": "Code copied successfully!"
+    },
+    {
+      "type": "text",
+      "id": "success_dismiss_btn_label",
+      "label": "Dismiss button label",
+      "default": "Close"
+    },
+    {
+      "type": "checkbox",
+      "id": "success_display_image",
+      "label": "Display image in success mode",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

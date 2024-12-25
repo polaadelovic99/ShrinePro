@@ -1,0 +1,33 @@
+<dynamic-dates
+  class="estimated-shipping{% if block.settings.icon_alignment == 'middle' %} estimated-shipping--align-center{% endif %}"
+  data-date-format="{{ block.settings.date_format }}"
+  data-day-labels="{{ block.settings.days_labels }}"
+  data-month-labels="{{ block.settings.months_labels }}"
+  {{ block.shopify_attributes }}
+  style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+>
+  {% unless block.settings.custom_icon == blank and block.settings.icon == blank %}
+    <div class="estimated-shipping__icon estimated-shipping__icon--{{ block.settings.icon_size }}">
+      {% if block.settings.custom_icon != blank %}
+        <img
+          src="{{ block.settings.custom_icon | image_url: width: 150 }}"
+          width="auto"
+          height="auto"
+          loading="lazy"
+        >
+      {% else %}
+        {% render 'material-icon', icon: block.settings.icon, filled: block.settings.filled_icon %}
+      {% endif %}
+    </div>
+  {% endunless %}
+  <div 
+    class="estimated-shipping__text"
+    data-dynamic-date='true'
+    data-text="{{ block.settings.message }}"
+    data-min-days="{{ block.settings.min_shipping_days }}"
+    data-max-days="{{ block.settings.max_shipping_days }}"
+  >
+    {{ block.settings.message | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+  </div>
+</dynamic-dates>
+

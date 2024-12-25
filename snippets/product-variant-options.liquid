@@ -1,0 +1,291 @@
+{% comment %}
+  Renders product variant options
+
+  Accepts:
+  - product: {Object} product object.
+  - option: {Object} current product_option object.
+  - block: {Object} block object.
+  - type: {String}
+
+
+  Usage:
+  {% render 'product-variant-options',
+    product: product,
+    option: option,
+    block: block,
+    type: type
+  %}
+{% endcomment %}
+{%- liquid
+  assign variants_available_arr = product.variants | map: 'available'
+  assign variants_option1_arr = product.variants | map: 'option1'
+  assign variants_option2_arr = product.variants | map: 'option2'
+  assign variants_option3_arr = product.variants | map: 'option3'
+
+  assign product_form_id = 'product-form-' | append: section.id
+
+  assign custom_colors_arr = block.settings.swatches_custom_colors_list | split: ','
+
+  if type == 'quantity-breaks'
+    assign badges = block.settings.breaks_badges | split: ','
+    assign labels = block.settings.breaks_labels | split: ','
+    assign benefits = block.settings.breaks_benefits | split: ','
+    assign captions = block.settings.breaks_captions | split: ','
+    assign price_texts = block.settings.breaks_price_texts | split: ','
+    assign compare_price_texts = block.settings.breaks_compare_price_texts | split: ','
+    if block.settings.breaks_displayed_images == 'custom'
+      assign custom_images = block.settings.breaks_custom_images | split: ','
+    endif
+  endif
+-%}
+
+{%- for value in option.values -%}
+  {%- liquid
+    assign option_disabled = true
+    assign currentVariant = nil
+
+    for variant in product.variants
+      case option.position
+        when 1
+          if variant.option1 == value
+            assign currentVariant = variant
+            if variant.available
+              assign option_disabled = false
+            endif
+            break
+          endif
+        when 2
+          if variant.option1 == product.selected_or_first_available_variant.option1 and variant.option2 == value
+            assign currentVariant = variant
+            if variant.available
+              assign option_disabled = false
+            endif
+            break
+          endif
+        when 3
+          if variant.option1 == product.selected_or_first_available_variant.option1 and variant.option2 == product.selected_or_first_available_variant.option2 and variant.option3 == value
+            assign currentVariant = variant
+            if variant.available
+              assign option_disabled = false
+            endif
+            break
+          endif
+      endcase
+    endfor
+  -%}
+
+  {% case type %}
+    {% when 'quantity-breaks' %}
+      <input
+        type="radio"
+        id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+        name="{{ option.name }}"
+        value="{{ value | escape }}"
+        form="{{ product_form_id }}"
+        {% if option.selected_value == value %}
+          checked
+        {% endif %}
+        {% if option_disabled %}
+          class="disabled"
+        {% endif %}
+      >
+      {% liquid
+        assign price = currentVariant.price
+        assign compare_price = currentVariant.compare_at_price
+        assign price_difference = compare_price | minus: price
+        assign price_difference_rounded = price_difference | divided_by: 100.00 | round | times: 100
+        
+        assign badge = badges[forloop.index0] | replace: '[empty]', '' | strip
+        assign label = labels[forloop.index0] | replace: '[empty]', '' | strip
+        assign benefit = benefits[forloop.index0] | replace: '[empty]', '' | strip
+        assign caption = captions[forloop.index0] | replace: '[empty]', '' | strip
+        assign price_text = price_texts[forloop.index0] | replace: '[empty]', '' | strip
+        assign compare_price_text = compare_price_texts[forloop.index0] | replace: '[empty]', '' | strip
+      %}
+      <label class="quantity-break" for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+        {% if badge != blank %}
+          <p class="quantity-break__badge dynamic-price">
+            {% render 'text-with-price',
+              text: badge,
+              name: value,
+              price: price,
+              compare_price: compare_price,
+              amount_saved: price_difference,
+              amount_saved_rounded: price_difference_rounded
+            %}
+          </p>
+        {% endif %}
+        {% if block.settings.breaks_style == 'vertical' and block.settings.breaks_displayed_images != 'none' %}
+          {% liquid
+            if block.settings.breaks_displayed_images == 'variant_images'
+              assign image_url = currentVariant.featured_image | image_url
+            else 
+             assign image_url = custom_images[forloop.index0]
+            endif
+          %}
+          {% if image_url != blank %}
+            <div class='quantity-break__image'>
+              <img 
+                src='{{ image_url }}'
+                alt="{{ value }}"
+                width='auto'
+                height='auto'
+                loading='lazy'
+              >
+            </div>
+          {% endif %}
+        {% endif %}
+        <div class="quantity-break__content">
+          <div class="quantity-break__left">
+            <span class="quantity-break__label">
+              {% if label != blank %}
+                <span class="quantity-break__label-text dynamic-price">
+                  {% render 'text-with-price',
+                    text: label,
+                    name: value,
+                    price: price,
+                    compare_price: compare_price,
+                    amount_saved: price_difference,
+                    amount_saved_rounded: price_difference_rounded
+                  %}
+                </span>
+              {% endif %}
+              {% if benefit != blank %}
+                <span class="quantity-break__benefit dynamic-price">
+                  {% render 'text-with-price',
+                    text: benefit,
+                    name: value,
+                    price: price,
+                    compare_price: compare_price,
+                    amount_saved: price_difference,
+                    amount_saved_rounded: price_difference_rounded
+                  %}
+                </span>
+              {% endif %}
+            </span>
+            {% if caption != blank %}
+              <span class="quantity-break__caption dynamic-price">
+                {% render 'text-with-price',
+                  text: caption,
+                  name: value,
+                  price: price,
+                  compare_price: compare_price,
+                  amount_saved: price_difference,
+                  amount_saved_rounded: price_difference_rounded
+                %}
+              </span>
+            {% endif %}
+          </div>
+          <div class="quantity-break__right dynamic-price">
+            {% if price_text != blank %}
+              <span class="quantity-break__price">
+                {% render 'text-with-price',
+                  text: price_text,
+                  name: value,
+                  price: price,
+                  compare_price: compare_price,
+                  amount_saved: price_difference,
+                  amount_saved_rounded: price_difference_rounded
+                %}
+              </span>
+            {% endif %}
+            {% if compare_price > price and compare_price_text != blank %}
+              <span class="quantity-break__compare-price">
+                {% render 'text-with-price',
+                  text: compare_price_text,
+                  name: value,
+                  price: price,
+                  compare_price: compare_price,
+                  amount_saved: price_difference,
+                  amount_saved_rounded: price_difference_rounded
+                %}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+      </label>
+    {%- when 'swatches' -%}
+      <div class="color-swatch">
+        <input
+          type="radio"
+          id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+          name="{{ option.name }}"
+          value="{{ value | escape }}"
+          form="{{ product_form_id }}"
+          {% if option.selected_value == value %}
+            checked
+          {% endif %}
+          {% if option_disabled %}
+            class="disabled"
+          {% endif %}
+        >
+        <div class="color-swatch__image">
+          {% for variant in product.variants %}
+            {%- capture variant_option_key -%}
+              option{{- option.position -}}
+            {%- endcapture -%}
+
+            {% assign variant_option_val = variant[variant_option_key] %}
+
+            {% if variant_option_val == value %}
+              {% if block.settings.swatches_custom_colors == 'disabled' %}
+                {% if variant.image %}
+                  <img
+                    src="{{ variant.image | image_url: width: 200 }}"
+                    alt="{{ variant_option_val }}"
+                    width="auto"
+                    height="auto"
+                    loading="lazy"
+                  >
+                {% endif %}
+              {% else %}
+                {% liquid
+                  if block.settings.swatches_custom_colors == 'image_alt'
+                    assign custom_color = variant.image.alt
+                  else
+                    assign custom_color = custom_colors_arr[forloop.index0]
+                  endif
+                %}
+                <div class="color-swatch__custom-color" style="--bg-color: {{ custom_color }}">&nbsp</div>
+              {% endif %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        <label class="color-swatch_hidden-label" for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+        </label>
+        <span class="color-swatch__label">{{ value }}</span>
+      </div>
+    {%- when 'pills' -%}
+      <input
+        type="radio"
+        id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+        name="{{ option.name }}"
+        value="{{ value | escape }}"
+        form="{{ product_form_id }}"
+        {% if option.selected_value == value %}
+          checked
+        {% endif %}
+        {% if option_disabled %}
+          class="disabled"
+        {% endif %}
+      >
+      <label class="accent-color-{{ settings.variant_pills_accent_color }}{% if settings.variant_pills_bold_text %} variant-pills--bold{% endif %}" for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+        {{ value -}}
+        <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
+      </label>
+    {%- when 'dropdown' -%}
+      <option
+        value="{{ value | escape }}"
+        {% if option.selected_value == value %}
+          selected="selected"
+        {% endif %}
+      >
+        {% if option_disabled -%}
+          {{- 'products.product.value_unavailable' | t: option_value: value -}}
+        {%- else -%}
+          {{- value -}}
+        {%- endif %}
+      </option>
+  {% endcase %}
+{%- endfor -%}

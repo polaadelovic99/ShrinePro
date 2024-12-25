@@ -1,0 +1,2051 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+
+{%- liquid
+  assign padding_horizontal = section.settings.padding_horizontal
+  assign padding_horizontal_mobile = section.settings.padding_horizontal_mobile
+  assign padding_top = section.settings.padding_top
+  assign padding_bottom = section.settings.padding_bottom
+  assign border_color = section.settings.border_color
+  assign border_thickness = section.settings.border_thickness
+  assign margin_top = section.settings.margin_top
+  assign margin_bottom = section.settings.margin_bottom
+  assign background_color = section.settings.background_color
+  assign background_gradient = section.settings.background_gradient
+  assign full_width = section.settings.full_width
+  assign content_width = section.settings.content_width
+  assign lazy = section.settings.lazy
+
+  assign heading = section.settings.heading
+  assign heading_size = section.settings.heading_size
+  assign heading_color = section.settings.heading_color
+  assign heading_custom = section.settings.heading_custom
+  assign heading_font = section.settings.heading_font
+  assign heading_height = section.settings.heading_height
+  assign heading_align = section.settings.heading_align
+
+  assign items_mt = section.settings.items_mt
+  assign items_mt_mobile = section.settings.items_mt_mobile
+  assign items_type = section.settings.items_type
+  assign items_type_mobile = section.settings.items_type_mobile
+
+  assign columns_row = section.settings.columns_row
+  assign columns_row_mobile = section.settings.columns_row_mobile
+  assign columns_gap = section.settings.columns_gap
+  assign columns_gap_mobile = section.settings.columns_gap_mobile
+
+  assign item_padding_horizontal = section.settings.item_padding_horizontal
+  assign item_padding_vertical = section.settings.item_padding_vertical
+  assign item_radius = section.settings.item_radius
+  assign item_border_thickness = section.settings.item_border_thickness
+  assign item_border_color = section.settings.item_border_color
+  assign item_bg_color = section.settings.item_bg_color
+
+  assign video_size = section.settings.video_size
+  assign video_size_mobile = section.settings.video_size_mobile
+
+  assign icon = section.settings.icon
+  assign icon_size = section.settings.icon_size
+  assign icon_color = section.settings.icon_color
+  assign icon_bg_color = section.settings.icon_bg_color
+  assign icon_padding = section.settings.icon_padding
+
+  assign content_padding_horizontal = section.settings.content_padding_horizontal
+  assign content_padding_vertical = section.settings.content_padding_vertical
+
+  assign text_size = section.settings.text_size
+  assign text_color = section.settings.text_color
+  assign text_custom = section.settings.text_custom
+  assign text_font = section.settings.text_font
+  assign text_height = section.settings.text_height
+  assign text_align = section.settings.text_align
+
+  assign slider_nav = section.settings.slider_nav
+  assign slider_nav_mobile = section.settings.slider_nav_mobile
+  assign slider_nav_size = section.settings.slider_nav_size
+  assign slider_nav_size_mobile = section.settings.slider_nav_size_mobile
+  assign slider_nav_btn_bg = section.settings.slider_nav_btn_bg
+  assign slider_nav_btn_hover_bg = section.settings.slider_nav_btn_hover_bg
+  assign slider_nav_border = section.settings.slider_nav_border
+  assign slider_nav_border_hover = section.settings.slider_nav_border_hover
+  assign slider_nav_icon = section.settings.slider_nav_icon
+  assign slider_nav_hover_icon = section.settings.slider_nav_hover_icon
+
+  assign slider_pagination_size = section.settings.slider_pagination_size
+  assign slider_pagination_size_mobile = section.settings.slider_pagination_size_mobile
+  assign slider_pagination_color = section.settings.slider_pagination_color
+  assign slider_pagination_hover_color = section.settings.slider_pagination_hover_color
+
+  assign link_text = section.settings.link_text
+  assign link_url = section.settings.link_url
+  assign link_custom = section.settings.link_custom
+  assign link_font = section.settings.link_font
+  assign link_size = section.settings.link_size
+  assign link_height = section.settings.link_height
+  assign link_align = section.settings.link_align
+  assign link_mt = section.settings.link_mt
+  assign link_padding_vertical = section.settings.link_padding_vertical
+  assign link_padding_horizontal = section.settings.link_padding_horizontal
+  assign link_radius = section.settings.link_radius
+  assign link_border_thickness = section.settings.link_border_thickness
+  assign link_text_color = section.settings.link_text_color
+  assign link_text_hover_color = section.settings.link_text_hover_color
+  assign link_bg_color = section.settings.link_bg_color
+  assign link_bg_hover_color = section.settings.link_bg_hover_color
+  assign link_border_color = section.settings.link_border_color
+  assign link_border_hover_color = section.settings.link_border_hover_color
+
+  assign hide_arrow = section.settings.hide_arrow
+
+  assign video_size_mobile_value = ''
+  if video_size_mobile == 'adapt'
+    assign video_size_mobile_value = 'auto'
+  elsif video_size_mobile == 'small'
+    assign video_size_mobile_value = '20rem'
+  elsif video_size_mobile == 'medium'
+    assign video_size_mobile_value = '30rem'
+  elsif video_size_mobile == 'large'
+    assign video_size_mobile_value = '40rem'
+  endif
+
+  assign video_size_value = ''
+  if video_size == 'adapt'
+    assign video_size_value = 'auto'
+  elsif video_size == 'small'
+    assign video_size_value = '25rem'
+  elsif video_size == 'medium'
+    assign video_size_value = '40rem'
+  elsif video_size == 'large'
+    assign video_size_value = '50rem'
+  endif
+-%}
+
+{%- style -%}
+  {{  heading_font | font_face: font_display: 'swap' }}
+  {{  text_font | font_face: font_display: 'swap' }}
+  {{  link_font | font_face: font_display: 'swap' }}
+
+  .section-{{ section.id }} {
+    border-top: solid {{ border_color }} {{ border_thickness }}px;
+    border-bottom: solid {{ border_color }} {{ border_thickness }}px;
+    margin-top: {{ margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ margin_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  .section-{{ section.id }}-settings {
+    margin: 0 auto;
+    padding-top: {{ padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ padding_bottom | times: 0.75 | round: 0 }}px;
+    padding-left: {{ padding_horizontal_mobile }}rem;
+    padding-right: {{ padding_horizontal_mobile }}rem;
+  }
+
+  .video-social-heading-{{ section.id }} {
+    display: block;
+    width: 100%;
+    margin: 0;
+    font-size: {{ heading_size | times: 0.85 }}px;
+    color: {{ heading_color }};
+    line-height: {{ heading_height }}%;
+    text-transform: unset;
+    text-align: {{ heading_align }};
+  }
+
+  .video-social-body-{{ section.id }} {
+    margin-top: {{ items_mt_mobile }}px;
+  }
+
+  .video-social-grid-{{ section.id }} {
+    gap: {{ columns_gap_mobile }}px;
+    grid-template-columns: repeat({{ columns_row_mobile }}, minmax(0px, 1fr));
+  }
+
+  /* .video-social-slider-{{ section.id }} {
+    display: none;
+  } */
+
+  .video-social-slider-{{ section.id }} {
+    padding-bottom: {{ slider_pagination_size_mobile | plus: 15 }}px;
+  }
+
+  .video-social-slider-{{ section.id }} .swiper-wrapper {
+    align-items: stretch !important;
+  }
+
+  .video-social-slider-{{ section.id }} .swiper-slide {
+    height: auto !important;
+  }
+
+  .video-social-item-{{ section.id }} {
+    position: relative;
+    padding: {{ item_padding_vertical | times: 0.75 | round: 0 }}px {{ item_padding_horizontal | times: 0.75 | round: 0 }}px;
+    border-radius: {{ item_radius }}px;
+    border: {{ item_border_thickness }}px solid {{ item_border_color }};
+    background-color: {{ item_bg_color }};
+    box-sizing: border-box !important;
+    overflow: hidden;
+  }
+
+  .video-social-video-{{ section.id }} {
+    height: {{ video_size_mobile_value }};
+    position: relative;
+    z-index: 1;
+  }
+
+  .video-social-video-{{ section.id }} video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    box-shadow: none;
+    border: 0px;
+  }
+
+  .video-social-video-{{ section.id }} > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .video-social-btn-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: {{ icon_size | times: 0.75 | round: 0 }}px;
+    height: {{ icon_size | times: 0.75 | round: 0 }}px;
+    border-radius: 50%;
+    padding: {{ icon_padding | times: 0.75 | round: 0 }}px;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: {{ icon_bg_color }};
+    color: {{ icon_color }};
+    opacity: 0.9;
+    transition: all 0.25s ease 0s;
+  }
+
+  .video-social-btn-{{ section.id }}:hover {
+    transition: all 0.25s ease 0s;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+
+  .video-social-item-{{ section.id }}.active .video-social-btn-{{ section.id }} {
+    display: none;
+  }
+
+  .video-social-btn-{{ section.id }} img,
+  .video-social-btn-{{ section.id }} svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .video-social-btn-{{ section.id }} svg path {
+    fill: {{ icon_color }};
+  }
+
+  .video-social-content-{{ section.id }} {
+    position: relative;
+    padding: {{ content_padding_vertical | times: 0.75 | round: 0 }}px {{ content_padding_horizontal | times: 0.75 | round: 0 }}px
+  }
+
+  .video-social-text-{{ section.id }} {
+    display: block;
+    width: 100%;
+    margin: 0;
+    font-size: {{ text_size | times: 0.85 }}px;
+    color: {{ text_color }};
+    line-height: {{ text_height }}%;
+    text-transform: unset;
+    text-align: {{ text_align }};
+  }
+
+  .video-social-icon-{{ section.id }} {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border-bottom-right-radius: {{ item_radius }}px;
+    border-top-left-radius: {{ item_radius }}px;
+    overflow: hidden;
+  }
+
+  .video-social-icon-{{ section.id }} svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .video-social-btn-next-{{ section.id }},
+  .video-social-btn-prev-{{ section.id }} {
+    position: absolute !important;
+    top: 39% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    border-radius: 50%;
+    border: 1px solid {{ slider_nav_border }} !important;
+    width: {{ slider_nav_size_mobile }}px !important;
+    height: {{ slider_nav_size_mobile }}px !important;
+    background: {{ slider_nav_btn_bg }} !important;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+  }
+
+  .video-social-btn-prev-{{ section.id }} {
+    left: 5px !important;
+  }
+
+  .video-social-btn-next-{{ section.id }} {
+    right: 5px !important;
+  }
+
+  .video-social-btn-next-{{ section.id }} svg {
+    transform: rotate(180deg);
+  }
+
+  .video-social-btn-next-{{ section.id }} svg,
+  .video-social-btn-prev-{{ section.id }} svg {
+    width: {{ slider_nav_size_mobile | times: 0.75 | round: 0 }}px !important;
+    height: {{ slider_nav_size_mobile | times: 0.75 | round: 0 }}px !important;
+  }
+
+  .video-social-btn-prev-{{ section.id }} svg path,
+  .video-social-btn-next-{{ section.id }} svg path {
+    transition: all 0.25s ease 0s;
+    fill: {{ slider_nav_icon }};
+  }
+
+  .video-social-btn-next-{{ section.id }} svg {
+    margin-left: 2px;
+  }
+
+  .video-social-btn-prev-{{ section.id }} svg {
+    margin-left: -1px;
+  }
+
+  .video-social-btn-next-{{ section.id }}:hover,
+  .video-social-btn-prev-{{ section.id }}:hover {
+    border: 1px solid {{ slider_nav_border_hover }} !important;
+    background: {{ slider_nav_btn_hover_bg }} !important;
+    transition: all 0.25s ease 0s;
+  }
+
+  .video-social-btn-next-{{ section.id }}:hover svg path,
+  .video-social-btn-prev-{{ section.id }}:hover svg path {
+    fill: {{ slider_nav_hover_icon }} !important;
+    transition: all 0.25s ease 0s;
+  }
+
+  .video-social-pagination-{{ section.id }} {
+    display: none;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    bottom: 0;
+  }
+
+  .video-social-pagination-{{ section.id }} .swiper-pagination-bullet {
+    width: {{ slider_pagination_size_mobile }}px;
+    height: {{ slider_pagination_size_mobile }}px;
+    background: transparent !important;
+    border: 1px solid {{ slider_pagination_color }};
+  }
+
+  .video-social-pagination-{{ section.id }} .swiper-pagination-bullet-active {
+    background: {{ slider_pagination_color }} !important;
+  }
+
+  .video-social-pagination-{{ section.id }} .swiper-pagination-bullet:hover {
+    border-color: {{ slider_pagination_hover_color }};
+  }
+
+  .video-social-link-{{ section.id }} {
+    margin: 0px;
+    margin-top: {{ link_mt | times: 0.75 | round: 0 }}px;
+    padding: {{ link_padding_vertical | times: 0.75 | round: 0 }}px {{ link_padding_horizontal | times: 0.75 | round: 0 }}px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: {{ link_size | times: 0.85 }}px;
+    line-height: {{ link_height }}%;
+    color: {{ link_text_color }};
+    background-color: {{ link_bg_color }};
+    border: {{ link_border_thickness }}px solid {{ link_border_color }};
+    border-radius: {{ link_radius }}px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: none;
+    transition: all 0.25s ease 0s;
+  }
+
+  .video-social-link-{{ section.id }}:hover {
+    transition: all 0.25s ease 0s;
+    color: {{ link_text_hover_color }};
+    border: {{ link_border_thickness }}px solid {{ link_border_hover_color }};
+    background-color: {{ link_bg_hover_color }};
+  }
+
+  .video-social-link-{{ section.id }} svg path {
+    transition: all 0.25s ease 0s;
+    stroke: {{ link_text_color }};
+  }
+
+  .video-social-link-{{ section.id }}:hover svg path {
+    transition: all 0.25s ease 0s;
+    stroke: {{ link_text_hover_color }};
+  }
+
+  .video-social-slider-wrapper-{{ section.id }} {
+    position: relative;
+  }
+
+  .video-social-slider-mobile-wrapper-{{ section.id }} .video-social-item-{{ section.id }}:not(.swiper-slide-active) {
+    pointer-events: none;
+  }
+
+  @media(min-width: 768px) {
+
+    .section-{{ section.id }} {
+      margin-top: {{ margin_top }}px;
+      margin-bottom: {{ margin_bottom }}px;
+    }
+
+    .section-{{ section.id }}-settings {
+      padding: 0 5rem;
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_horizontal }}rem;
+      padding-right: {{ padding_horizontal }}rem;
+    }
+
+    .video-social-heading-{{ section.id }} {
+      font-size: {{ heading_size }}px;
+    }
+
+    .video-social-body-{{ section.id }} {
+      margin-top: {{ items_mt }}px;
+    }
+
+    .video-social-grid-{{ section.id }} {
+      gap: {{ columns_gap }}px;
+      grid-template-columns: repeat({{ columns_row | times: 0.5 | round: 0 }}, minmax(0px, 1fr));
+    }
+
+    .video-social-item-{{ section.id }} {
+       padding: {{ item_padding_vertical }}px {{ item_padding_horizontal }}px;
+    }
+
+    .video-social-video-{{ section.id }} {
+      height: {{ video_size_value }};
+    }
+
+    .video-social-btn-{{ section.id }} {
+      width: {{ icon_size }}px;
+      height: {{ icon_size }}px;
+      padding: {{ icon_padding }}px;
+    }
+
+    .video-social-content-{{ section.id }} {
+      padding: {{ content_padding_vertical }}px {{ content_padding_horizontal }}px
+    }
+
+    .video-social-text-{{ section.id }} {
+      font-size: {{ text_size }}px;
+    }
+
+    .video-social-btn-next-{{ section.id }},
+    .video-social-btn-prev-{{ section.id }} {
+      width: {{ slider_nav_size }}px !important;
+      height: {{ slider_nav_size }}px !important;
+    }
+
+    .video-social-btn-next-{{ section.id }} svg,
+    .video-social-btn-prev-{{ section.id }} svg {
+      width: {{ slider_nav_size | times: 0.75 | round: 0 }}px !important;
+      height: {{ slider_nav_size | times: 0.75 | round: 0 }}px !important;
+    }
+
+    .video-social-pagination-{{ section.id }} .swiper-pagination-bullet {
+      width: {{ slider_pagination_size }}px;
+      height: {{ slider_pagination_size }}px;
+    }
+
+    .video-social-link-{{ section.id }} {
+      font-size: {{ link_size }}px;
+      margin-top: {{ link_mt }}px;
+      padding: {{ link_padding_vertical }}px {{ link_padding_horizontal }}px;
+    }
+
+    .video-social-slider-mobile-wrapper-{{ section.id }} .video-social-item-{{ section.id }}:not(.swiper-slide-active) {
+      pointer-events: all;
+    }
+
+  }
+
+  @media(min-width: 992px) {
+    .video-social-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ columns_row }}, minmax(0px, 1fr));
+    }
+  }
+{%- endstyle -%}
+
+{% unless full_width %}
+  <style>
+    .section-{{ section.id }}-settings {
+      max-width: {{ content_width }}rem;
+    }
+  </style>
+{% endunless %}
+
+{% if heading_custom %}
+  <style>
+    .video-social-heading-{{ section.id }} {
+      font-family: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+      font-weight: {{ heading_font.weight }};
+      font-style: {{ heading_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if text_custom %}
+  <style>
+    .video-social-text-{{ section.id }} {
+      font-family: {{ text_font.family }}, {{ text_font.fallback_families }};
+      font-weight: {{ text_font.weight }};
+      font-style: {{ text_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if link_custom %}
+  <style>
+    .video-social-link-{{ section.id }} {
+      font-family: {{ link_font.family }}, {{ link_font.fallback_families }};
+      font-weight: {{ link_font.weight }};
+      font-style: {{ link_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if items_type_mobile == 'slider' %}
+  <style>
+    .video-social-grid-{{ section.id }} {
+      display: none !important;
+    }
+
+    .video-social-slider-mobile-wrapper-{{ section.id }} {
+      display: block !important;
+    }
+
+    .video-social-slider-desktop-wrapper-{{ section.id }} {
+      display: none !important;
+    }
+  </style>
+{% else %}
+  <style>
+    .video-social-grid-{{ section.id }} {
+      display: grid !important;
+    }
+
+    .video-social-slider-desktop-wrapper-{{ section.id }} {
+      display: none !important;
+    }
+
+    .video-social-slider-mobile-wrapper-{{ section.id }} {
+      display: none !important;
+    }
+  </style>
+{% endif %}
+
+{% if items_type == 'slider' %}
+  <style>
+    @media(min-width: 768px) {
+     .video-social-grid-{{ section.id }} {
+        display: none !important;
+      }
+
+      .video-social-slider-desktop-wrapper-{{ section.id }} {
+        display: block !important;
+      }
+
+      .video-social-slider-mobile-wrapper-{{ section.id }} {
+        display: none !important;
+      }
+    }
+  </style>
+{% else %}
+  <style>
+    @media(min-width: 768px) {
+     .video-social-grid-{{ section.id }} {
+        display: grid !important;
+      }
+
+      .video-social-slider-desktop-wrapper-{{ section.id }} {
+        display: none !important;
+      }
+
+      .video-social-slider-mobile-wrapper-{{ section.id }} {
+        display: none !important;
+      }
+    }
+  </style>
+{% endif %}
+
+{% if slider_nav_mobile == 'buttons' %}
+  <style>
+    .video-social-btn-next-{{ section.id }},
+    .video-social-btn-prev-{{ section.id }} {
+      display: flex !important;
+    }
+    .video-social-pagination-{{ section.id }} {
+       display: none !important;
+    }
+  </style>
+{% elsif slider_nav_mobile == 'pagination' %}
+  <style>
+    .video-social-pagination-{{ section.id }} {
+       display: flex !important;
+    }
+    .video-social-btn-next-{{ section.id }},
+    .video-social-btn-prev-{{ section.id }} {
+      display: none !important;
+    }
+    .video-social-slider-{{ section.id }} {
+      padding-bottom: {{ slider_pagination_size_mobile | plus: 20 }}px !important;
+    }
+    @media(min-width: 1024px) {
+      .video-social-slider-{{ section.id }} {
+        padding-bottom: 0px !important;
+      }
+    }
+  </style>
+{% else %}
+  <style>
+    .video-social-pagination-{{ section.id }} {
+       display: none !important;
+    }
+    .video-social-btn-next-{{ section.id }},
+    .video-social-btn-prev-{{ section.id }} {
+      display: none !important;
+    }
+  </style>
+{% endif %}
+
+{% if slider_nav == 'buttons' %}
+  <style>
+    @media(min-width: 768px) {
+      .video-social-btn-next-{{ section.id }},
+      .video-social-btn-prev-{{ section.id }} {
+        display: flex !important;
+      }
+      .video-social-pagination-{{ section.id }} {
+        display: none !important;
+      }
+    }
+  </style>
+{% elsif slider_nav == 'pagination' %}
+  <style>
+    @media(min-width: 768px ) {
+      .video-social-pagination-{{ section.id }} {
+        display: flex !important;
+      }
+
+      .video-social-btn-next-{{ section.id }},
+      .video-social-btn-prev-{{ section.id }} {
+        display: none !important;
+      }
+
+      .video-social-slider-{{ section.id }} {
+        padding-bottom: {{ slider_pagination_size | plus: 20 }}px !important;
+      }
+    }
+  </style>
+{% else %}
+  <style>
+    @media(min-width: 768px) {
+      .video-social-pagination-{{ section.id }} {
+        display: none !important;
+      }
+
+      .video-social-btn-next-{{ section.id }},
+      .video-social-btn-prev-{{ section.id }} {
+        display: none !important;
+      }
+    }
+  </style>
+{% endif %}
+
+{% if link_align == 'center' %}
+  <style>
+    .video-social-link-{{ section.id }} {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+{% elsif link_align == 'right' %}
+  <style>
+    .video-social-link-{{ section.id }} {
+      margin-left: auto;
+    }
+  </style>
+{% endif %}
+
+<div
+  class="section-{{ section.id }} video-social-{{ section.id }}"
+  style="background-color:{{ background_color }}; background-image: {{ background_gradient }};"
+>
+  <div class="section-{{ section.id }}-settings ">
+    {% if heading != blank %}
+      <h2 class="video-social-heading-{{ section.id }}">{{ heading }}</h2>
+    {% endif %}
+    <div class="video-social-body-{{ section.id }}">
+      <div class="video-social-grid-{{ section.id }}">
+        {% for block in section.blocks %}
+          <div class="video-social-item-{{ section.id }}">
+            <div class="video-social-video-{{ section.id }}">
+              {% if block.settings.video != blank %}
+                {% if block.settings.poster != blank %}
+                  {% assign poster_url = block.settings.poster | image_url %}
+                    {{ block.settings.video | video_tag: image_size: "400x",
+                        autoplay: false,
+                        loop: true,
+                        controls: false,
+                        preload: "none",
+                        poster: poster_url
+                    }}
+                {% else %}
+                  {{ block.settings.video | video_tag: image_size: "400x",
+                      autoplay: false,
+                      loop: true,
+                      controls: false,
+                      preload: "none"
+                  }}
+                {% endif %}
+              {% else %}
+                {{ 'lifestyle-1' | placeholder_svg_tag }}
+              {% endif %}
+              <div class="video-social-btn-{{ section.id }}">
+                {% if icon != blank %}
+                  <img src="{{ icon | image_url }}" alt="{{ icon.alt }}">
+                {% else %}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                    focusable="false"
+                    role="presentation"
+                    fill="none"
+                    viewBox="0 0 10 14"
+                  >
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.48177 0.814643C0.81532 0.448245 0 0.930414 0 1.69094V12.2081C0 12.991 0.858787 13.4702 1.52503 13.0592L10.5398 7.49813C11.1918 7.09588 11.1679 6.13985 10.4965 5.77075L1.48177 0.814643Z" fill="currentColor"/>
+                  </svg>
+                {% endif %}
+              </div>
+            </div>
+            {% if block.settings.text != blank %}
+              <div class="video-social-content-{{ section.id }}">
+                <p class="video-social-text-{{ section.id }}">{{ block.settings.text }}</p>
+              </div>
+            {% endif %}
+            {% if block.settings.icon_type != 'none' %}
+              <div class="video-social-icon-{{ section.id }}">
+                {% if block.settings.icon_type == 'tiktok' %}
+                  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 12C0 5.37258 5.37258 0 12 0H36V24C36 30.6274 30.6274 36 24 36H0V12Z" fill="#120A0A"/>
+                    <path d="M28.9699 15.8297C26.8636 15.8765 24.8977 15.2212 23.2126 14.0042V22.3828C23.2126 28.2338 16.8467 31.8848 11.7914 28.9827C6.73619 26.0338 6.73619 18.7318 11.7914 15.7829C13.2425 14.9403 14.9744 14.6127 16.6595 14.8467V19.0594C14.085 18.2169 11.6042 20.5105 12.1659 23.1317C12.7744 25.7529 15.9573 26.7827 17.9701 24.9572C18.6722 24.3019 19.0935 23.3657 19.0935 22.3828V6H23.2126C23.2126 6.37446 23.2126 6.70212 23.3062 7.07658C23.587 8.62124 24.4764 9.97867 25.8338 10.8212C26.7232 11.4297 27.8466 11.7574 28.9699 11.7574V15.8297Z"
+                          fill="white"/>
+                  </svg>
+                {% elsif block.settings.icon_type == 'reels' %}
+                  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 12C0 5.37258 5.37258 0 12 0H36V24C36 30.6274 30.6274 36 24 36H0V12Z" fill="#120A0A"/>
+                    <path d="M25.3988 16.2661C25.0238 16.0541 24.6652 15.8259 24.2414 15.5813C24.6652 15.3205 25.0566 15.0923 25.4316 14.8803C27.1758 13.9347 28.1377 12.0112 27.8441 10.0549C27.4201 6.84375 23.7196 4.98562 20.9158 6.58295C18.0468 8.22961 15.1777 9.84348 12.3412 11.5387C10.0916 12.8917 9.76544 14.6848 10.1241 16.804C10.3524 18.1245 11.2326 19.1024 12.39 19.7709C12.7974 19.9992 13.1886 20.2275 13.6289 20.4883C13.1398 20.7816 12.6998 21.0424 12.227 21.2869C10.1404 22.6075 9.42304 25.3133 10.5969 27.4979C11.8358 29.7965 14.7049 30.6768 17.0033 29.4379C19.4812 28.036 21.959 26.6013 24.4206 25.1669C25.0076 24.8245 25.627 24.5149 26.1486 24.0909C28.7732 21.9064 28.382 17.9453 25.3988 16.2661ZM16.6449 21.6131V14.4893L22.807 18.0432L16.6449 21.6131Z" fill="white"/>
+                  </svg>
+
+                {% elsif block.settings.icon_type == 'shorts' %}
+                  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 12C0 5.37258 5.37258 0 12 0H36V24C36 30.6274 30.6274 36 24 36H0V12Z" fill="#120A0A"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.14286 14H29.8571V23.7143C29.8571 26.5615 27.5615 28.8571 24.7143 28.8571H13.2857C10.4385 28.8571 8.14286 26.5615 8.14286 23.7143V14ZM15.5714 18.5469C15.5714 17.5824 16.3915 16.8856 17.2734 16.865C17.5674 16.8581 17.8677 16.9261 18.1473 17.0848H18.1484L22.7132 19.6797C23.8245 20.3111 23.8245 21.9723 22.7132 22.6038L18.1484 25.1987C17.0299 25.8361 15.5714 25.0236 15.5714 23.7377V18.5469Z" fill="white"/>
+                    <path d="M12.9922 7.20201L16.2913 12.8571H8.14286V12.2857C8.14286 9.54276 10.2904 7.3617 12.9922 7.20201Z" fill="white"/>
+                    <path d="M14.2801 7.14286H20.3862L23.7199 12.8571H17.6138L14.2801 7.14286Z" fill="white"/>
+                    <path d="M21.7087 7.14286H24.7143C27.5615 7.14286 29.8571 9.43852 29.8571 12.2857V12.8571H25.0424L21.7087 7.14286Z" fill="white"/>
+                  </svg>
+                {% elsif block.settings.icon_type == 'facebook' %}
+                  <svg style="background-color: black;" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24">
+                    <path fill="white" d="M16.403,9H14V7c0-1.032,0.084-1.682,1.563-1.682h0.868c0.552,0,1-0.448,1-1V3.064c0-0.523-0.401-0.97-0.923-1.005C15.904,2.018,15.299,1.999,14.693,2C11.98,2,10,3.657,10,6.699V9H8c-0.552,0-1,0.448-1,1v2c0,0.552,0.448,1,1,1l2-0.001V21c0,0.552,0.448,1,1,1h2c0.552,0,1-0.448,1-1v-8.003l2.174-0.001c0.508,0,0.935-0.381,0.993-0.886l0.229-1.996C17.465,9.521,17.001,9,16.403,9z"></path>
+                  </svg>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="video-social-slider-wrapper-{{ section.id }} video-social-slider-desktop-wrapper-{{ section.id }}">
+        <div class="video-social-slider-{{ section.id }} video-social-slider-desktop-{{ section.id }} swiper">
+          <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+              <div class="video-social-item-{{ section.id }} swiper-slide">
+                <div class="video-social-video-{{ section.id }}">
+                  {% if block.settings.video != blank %}
+                    {% if block.settings.poster != blank %}
+                      {% assign poster_url = block.settings.poster | image_url %}
+                        {{ block.settings.video | video_tag: image_size: "400x",
+                            autoplay: false,
+                            loop: true,
+                            controls: false,
+                            preload: "none",
+                            poster: poster_url
+                        }}
+                    {% else %}
+                      {{ block.settings.video | video_tag: image_size: "400x",
+                          autoplay: false,
+                          loop: true,
+                          controls: false,
+                          preload: "none"
+                      }}
+                    {% endif %}
+                  {% else %}
+                    {{ 'lifestyle-1' | placeholder_svg_tag }}
+                  {% endif %}
+                  <div class="video-social-btn-{{ section.id }}">
+                    {% if icon != blank %}
+                      <img src="{{ icon | image_url }}" alt="{{ icon.alt }}">
+                    {% else %}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                        focusable="false"
+                        role="presentation"
+                        fill="none"
+                        viewBox="0 0 10 14"
+                      >
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.48177 0.814643C0.81532 0.448245 0 0.930414 0 1.69094V12.2081C0 12.991 0.858787 13.4702 1.52503 13.0592L10.5398 7.49813C11.1918 7.09588 11.1679 6.13985 10.4965 5.77075L1.48177 0.814643Z" fill="currentColor"/>
+                      </svg>
+                    {% endif %}
+                  </div>
+                </div>
+                {% if block.settings.text != blank %}
+                  <div class="video-social-content-{{ section.id }}">
+                    <p class="video-social-text-{{ section.id }}">{{ block.settings.text }}</p>
+                  </div>
+                {% endif %}
+                {% if block.settings.icon_type != 'none' %}
+                  <div class="video-social-icon-{{ section.id }}">
+                    {% if block.settings.icon_type == 'tiktok' %}
+                      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 12C0 5.37258 5.37258 0 12 0H36V24C36 30.6274 30.6274 36 24 36H0V12Z" fill="#120A0A"/>
+                        <path d="M28.9699 15.8297C26.8636 15.8765 24.8977 15.2212 23.2126 14.0042V22.3828C23.2126 28.2338 16.8467 31.8848 11.7914 28.9827C6.73619 26.0338 6.73619 18.7318 11.7914 15.7829C13.2425 14.9403 14.9744 14.6127 16.6595 14.8467V19.0594C14.085 18.2169 11.6042 20.5105 12.1659 23.1317C12.7744 25.7529 15.9573 26.7827 17.9701 24.9572C18.6722 24.3019 19.0935 23.3657 19.0935 22.3828V6H23.2126C23.2126 6.37446 23.2126 6.70212 23.3062 7.07658C23.587 8.62124 24.4764 9.97867 25.8338 10.8212C26.7232 11.4297 27.8466 11.7574 28.9699 11.7574V15.8297Z"
+                              fill="white"/>
+                      </svg>
+                    {% elsif block.settings.icon_type == 'reels' %}
+                      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 12C0 5.37258 5.37258 0 12 0H36V24C36 30.6274 30.6274 36 24 36H0V12Z" fill="#120A0A"/>
+                        <path d="M25.3988 16.2661C25.0238 16.0541 24.6652 15.8259 24.2414 15.5813C24.6652 15.3205 25.0566 15.0923 25.4316 14.8803C27.1758 13.9347 28.1377 12.0112 27.8441 10.0549C27.4201 6.84375 23.7196 4.98562 20.9158 6.58295C18.0468 8.22961 15.1777 9.84348 12.3412 11.5387C10.0916 12.8917 9.76544 14.6848 10.1241 16.804C10.3524 18.1245 11.2326 19.1024 12.39 19.7709C12.7974 19.9992 13.1886 20.2275 13.6289 20.4883C13.1398 20.7816 12.6998 21.0424 12.227 21.2869C10.1404 22.6075 9.42304 25.3133 10.5969 27.4979C11.8358 29.7965 14.7049 30.6768 17.0033 29.4379C19.4812 28.036 21.959 26.6013 24.4206 25.1669C25.0076 24.8245 25.627 24.5149 26.1486 24.0909C28.7732 21.9064 28.382 17.9453 25.3988 16.2661ZM16.6449 21.6131V14.4893L22.807 18.0432L16.6449 21.6131Z" fill="white"/>
+                      </svg>
+
+                    {% elsif block.settings.icon_type == 'shorts' %}
+                      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 12C0 5.37258 5.37258 0 12 0H36V24C36 30.6274 30.6274 36 24 36H0V12Z" fill="#120A0A"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.14286 14H29.8571V23.7143C29.8571 26.5615 27.5615 28.8571 24.7143 28.8571H13.2857C10.4385 28.8571 8.14286 26.5615 8.14286 23.7143V14ZM15.5714 18.5469C15.5714 17.5824 16.3915 16.8856 17.2734 16.865C17.5674 16.8581 17.8677 16.9261 18.1473 17.0848H18.1484L22.7132 19.6797C23.8245 20.3111 23.8245 21.9723 22.7132 22.6038L18.1484 25.1987C17.0299 25.8361 15.5714 25.0236 15.5714 23.7377V18.5469Z" fill="white"/>
+                        <path d="M12.9922 7.20201L16.2913 12.8571H8.14286V12.2857C8.14286 9.54276 10.2904 7.3617 12.9922 7.20201Z" fill="white"/>
+                        <path d="M14.2801 7.14286H20.3862L23.7199 12.8571H17.6138L14.2801 7.14286Z" fill="white"/>
+                        <path d="M21.7087 7.14286H24.7143C27.5615 7.14286 29.8571 9.43852 29.8571 12.2857V12.8571H25.0424L21.7087 7.14286Z" fill="white"/>
+                      </svg>
+                    {% elsif block.settings.icon_type == 'facebook' %}
+                      <svg style="background-color: black;" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24">
+                        <path fill="white" d="M16.403,9H14V7c0-1.032,0.084-1.682,1.563-1.682h0.868c0.552,0,1-0.448,1-1V3.064c0-0.523-0.401-0.97-0.923-1.005C15.904,2.018,15.299,1.999,14.693,2C11.98,2,10,3.657,10,6.699V9H8c-0.552,0-1,0.448-1,1v2c0,0.552,0.448,1,1,1l2-0.001V21c0,0.552,0.448,1,1,1h2c0.552,0,1-0.448,1-1v-8.003l2.174-0.001c0.508,0,0.935-0.381,0.993-0.886l0.229-1.996C17.465,9.521,17.001,9,16.403,9z"></path>
+                      </svg>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+          <div
+            class="video-social-pagination-{{ section.id }} video-social-desktop-pagination-{{ section.id }} swiper-pagination"
+          ></div>
+        </div>
+        <div class="video-social-btn-next-{{ section.id }} video-social-desktop-btn-next-{{ section.id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g id="Left"><path d="M14,17a1,1,0,0,1-.707-.293l-4-4a1,1,0,0,1,0-1.414l4-4a1,1,0,1,1,1.414,1.414L11.414,12l3.293,3.293A1,1,0,0,1,14,17Z"/></g>
+          </svg>
+        </div>
+        <div class="video-social-btn-prev-{{ section.id }} video-social-desktop-btn-prev-{{ section.id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g id="Left"><path d="M14,17a1,1,0,0,1-.707-.293l-4-4a1,1,0,0,1,0-1.414l4-4a1,1,0,1,1,1.414,1.414L11.414,12l3.293,3.293A1,1,0,0,1,14,17Z"/></g>
+          </svg>
+        </div>
+      </div>
+      <div class="video-social-slider-wrapper-{{ section.id }} video-social-slider-mobile-wrapper-{{ section.id }}">
+        <div class="video-social-slider-{{ section.id }} video-social-slider-mobile-{{ section.id }} swiper">
+          <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+              <div class="video-social-item-{{ section.id }} swiper-slide">
+                <div class="video-social-video-{{ section.id }}">
+                  {% if block.settings.video != blank %}
+                    {% if block.settings.poster != blank %}
+                      {% assign poster_url = block.settings.poster | image_url %}
+                        {{ block.settings.video | video_tag: image_size: "400x",
+                            autoplay: false,
+                            loop: true,
+                            controls: false,
+                            preload: "none",
+                            poster: poster_url
+                        }}
+                    {% else %}
+                      {{ block.settings.video | video_tag: image_size: "400x",
+                          autoplay: false,
+                          loop: true,
+                          controls: false,
+                          preload: "none"
+                      }}
+                    {% endif %}
+                  {% else %}
+                    {{ 'lifestyle-1' | placeholder_svg_tag }}
+                  {% endif %}
+                  <div class="video-social-btn-{{ section.id }}">
+                    {% if icon != blank %}
+                      <img src="{{ icon | image_url }}" alt="{{ icon.alt }}">
+                    {% else %}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                        focusable="false"
+                        role="presentation"
+                        fill="none"
+                        viewBox="0 0 10 14"
+                      >
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.48177 0.814643C0.81532 0.448245 0 0.930414 0 1.69094V12.2081C0 12.991 0.858787 13.4702 1.52503 13.0592L10.5398 7.49813C11.1918 7.09588 11.1679 6.13985 10.4965 5.77075L1.48177 0.814643Z" fill="currentColor"/>
+                      </svg>
+                    {% endif %}
+                  </div>
+                </div>
+                {% if block.settings.text != blank %}
+                  <div class="video-social-content-{{ section.id }}">
+                    <p class="video-social-text-{{ section.id }}">{{ block.settings.text }}</p>
+                  </div>
+                {% endif %}
+                {% if block.settings.icon_type != 'none' %}
+                  <div class="video-social-icon-{{ section.id }}">
+                    {% if block.settings.icon_type == 'tiktok' %}
+                      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 12C0 5.37258 5.37258 0 12 0H36V24C36 30.6274 30.6274 36 24 36H0V12Z" fill="#120A0A"/>
+                        <path d="M28.9699 15.8297C26.8636 15.8765 24.8977 15.2212 23.2126 14.0042V22.3828C23.2126 28.2338 16.8467 31.8848 11.7914 28.9827C6.73619 26.0338 6.73619 18.7318 11.7914 15.7829C13.2425 14.9403 14.9744 14.6127 16.6595 14.8467V19.0594C14.085 18.2169 11.6042 20.5105 12.1659 23.1317C12.7744 25.7529 15.9573 26.7827 17.9701 24.9572C18.6722 24.3019 19.0935 23.3657 19.0935 22.3828V6H23.2126C23.2126 6.37446 23.2126 6.70212 23.3062 7.07658C23.587 8.62124 24.4764 9.97867 25.8338 10.8212C26.7232 11.4297 27.8466 11.7574 28.9699 11.7574V15.8297Z"
+                              fill="white"/>
+                      </svg>
+                    {% elsif block.settings.icon_type == 'reels' %}
+                      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 12C0 5.37258 5.37258 0 12 0H36V24C36 30.6274 30.6274 36 24 36H0V12Z" fill="#120A0A"/>
+                        <path d="M25.3988 16.2661C25.0238 16.0541 24.6652 15.8259 24.2414 15.5813C24.6652 15.3205 25.0566 15.0923 25.4316 14.8803C27.1758 13.9347 28.1377 12.0112 27.8441 10.0549C27.4201 6.84375 23.7196 4.98562 20.9158 6.58295C18.0468 8.22961 15.1777 9.84348 12.3412 11.5387C10.0916 12.8917 9.76544 14.6848 10.1241 16.804C10.3524 18.1245 11.2326 19.1024 12.39 19.7709C12.7974 19.9992 13.1886 20.2275 13.6289 20.4883C13.1398 20.7816 12.6998 21.0424 12.227 21.2869C10.1404 22.6075 9.42304 25.3133 10.5969 27.4979C11.8358 29.7965 14.7049 30.6768 17.0033 29.4379C19.4812 28.036 21.959 26.6013 24.4206 25.1669C25.0076 24.8245 25.627 24.5149 26.1486 24.0909C28.7732 21.9064 28.382 17.9453 25.3988 16.2661ZM16.6449 21.6131V14.4893L22.807 18.0432L16.6449 21.6131Z" fill="white"/>
+                      </svg>
+
+                    {% elsif block.settings.icon_type == 'shorts' %}
+                      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 12C0 5.37258 5.37258 0 12 0H36V24C36 30.6274 30.6274 36 24 36H0V12Z" fill="#120A0A"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.14286 14H29.8571V23.7143C29.8571 26.5615 27.5615 28.8571 24.7143 28.8571H13.2857C10.4385 28.8571 8.14286 26.5615 8.14286 23.7143V14ZM15.5714 18.5469C15.5714 17.5824 16.3915 16.8856 17.2734 16.865C17.5674 16.8581 17.8677 16.9261 18.1473 17.0848H18.1484L22.7132 19.6797C23.8245 20.3111 23.8245 21.9723 22.7132 22.6038L18.1484 25.1987C17.0299 25.8361 15.5714 25.0236 15.5714 23.7377V18.5469Z" fill="white"/>
+                        <path d="M12.9922 7.20201L16.2913 12.8571H8.14286V12.2857C8.14286 9.54276 10.2904 7.3617 12.9922 7.20201Z" fill="white"/>
+                        <path d="M14.2801 7.14286H20.3862L23.7199 12.8571H17.6138L14.2801 7.14286Z" fill="white"/>
+                        <path d="M21.7087 7.14286H24.7143C27.5615 7.14286 29.8571 9.43852 29.8571 12.2857V12.8571H25.0424L21.7087 7.14286Z" fill="white"/>
+                      </svg>
+                    {% elsif block.settings.icon_type == 'facebook' %}
+                      <svg style="background-color: black;" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24">
+                        <path fill="white" d="M16.403,9H14V7c0-1.032,0.084-1.682,1.563-1.682h0.868c0.552,0,1-0.448,1-1V3.064c0-0.523-0.401-0.97-0.923-1.005C15.904,2.018,15.299,1.999,14.693,2C11.98,2,10,3.657,10,6.699V9H8c-0.552,0-1,0.448-1,1v2c0,0.552,0.448,1,1,1l2-0.001V21c0,0.552,0.448,1,1,1h2c0.552,0,1-0.448,1-1v-8.003l2.174-0.001c0.508,0,0.935-0.381,0.993-0.886l0.229-1.996C17.465,9.521,17.001,9,16.403,9z"></path>
+                      </svg>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+          <div
+            class="video-social-pagination-{{ section.id }} video-social-mobile-pagination-{{ section.id }} swiper-pagination"
+          ></div>
+        </div>
+        <div class="video-social-btn-next-{{ section.id }} video-social-mobile-btn-next-{{ section.id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g id="Left"><path d="M14,17a1,1,0,0,1-.707-.293l-4-4a1,1,0,0,1,0-1.414l4-4a1,1,0,1,1,1.414,1.414L11.414,12l3.293,3.293A1,1,0,0,1,14,17Z"/></g>
+          </svg>
+        </div>
+        <div class="video-social-btn-prev-{{ section.id }} video-social-mobile-btn-prev-{{ section.id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g id="Left"><path d="M14,17a1,1,0,0,1-.707-.293l-4-4a1,1,0,0,1,0-1.414l4-4a1,1,0,1,1,1.414,1.414L11.414,12l3.293,3.293A1,1,0,0,1,14,17Z"/></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+    {% if link_text != blank %}
+      <a href="{{ link_url }}" class="video-social-link-{{ section.id }}">
+        {{ link_text }}
+        {% unless hide_arrow %}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.75 12H20.25" stroke="#120A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M13.5 5.25L20.25 12L13.5 18.75" stroke="#120A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        {% endunless %}
+      </a>
+    {% endif %}
+  </div>
+</div>
+<style>
+  video img{
+    width:100%;
+    object-fit:cover;
+  }
+</style>
+{% assign col_value_mobile = columns_row_mobile | plus: 0 %}
+{% assign col_value_desktop = columns_row | plus: 0 %}
+{% assign col_value_tablet = columns_row | times: 0.5 %}
+{% assign col_value_tablet = col_value_tablet | round: 0 %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.js"></script>
+<script>
+  function videoFromSocialinit() {
+    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const swiperDesktop = new Swiper('.video-social-slider-desktop-{{ section.id }}', {
+      speed: 300,
+      navigation: {
+        nextEl: '.video-social-desktop-btn-next-{{ section.id }}',
+        prevEl: '.video-social-desktop-btn-prev-{{ section.id }}',
+      },
+      pagination : {
+        el: '.video-social-desktop-pagination-{{ section.id }}',
+        type: 'bullets',
+        clickable: true
+      },
+      breakpoints: {
+        320: {
+          slidesPerView: {% if section.blocks.size > col_value_mobile %}{{ columns_row_mobile }}.2{% else %}{{ columns_row_mobile }}{% endif %},
+          spaceBetween: {{ columns_gap_mobile }},
+        },
+        768: {
+          slidesPerView: {% if section.blocks.size > col_value_tablet %}{{ columns_row | times: 0.5 | round: 0 }}.2{% else %}{{ columns_row | times: 0.5 | round: 0 }}{% endif %},
+          spaceBetween: {{ columns_gap_mobile }}
+        },
+        1024: {
+          slidesPerView: {{ columns_row }},
+          spaceBetween: {{ columns_gap }}
+        }
+      },
+      on: {
+        slideChange: function () {
+          var slides = this.slides;
+          for (var i = 0; i < slides.length; i++) {
+            var video = slides[i].querySelector('video');
+            if (i === this.activeIndex) {
+              video.play();
+              slides[i].classList.add('active');
+            } else {
+              video.pause();
+              slides[i].classList.remove('active');
+            }
+          }
+        }
+      }
+    });
+
+    const swiperMobile = new Swiper('.video-social-slider-mobile-{{ section.id }}', {
+      speed: 300,
+      {% if slider_nav_mobile == "buttons" %}
+        allowTouchMove: false,
+      {% endif %}
+      navigation: {
+        nextEl: '.video-social-mobile-btn-next-{{ section.id }}',
+        prevEl: '.video-social-mobile-btn-prev-{{ section.id }}',
+      },
+      pagination : {
+        el: '.video-social-mobile-pagination-{{ section.id }}',
+        type: 'bullets',
+        clickable: true
+      },
+      breakpoints: {
+        320: {
+          slidesPerView: {% if section.blocks.size > col_value_mobile %}{{ columns_row_mobile }}.2{% else %}{{ columns_row_mobile }}{% endif %},
+          spaceBetween: {{ columns_gap_mobile }},
+        },
+        768: {
+          slidesPerView: {% if section.blocks.size > col_value_tablet %}{{ columns_row | times: 0.5 | round: 0 }}.2{% else %}{{ columns_row | times: 0.5 | round: 0 }}{% endif %},
+          spaceBetween: {{ columns_gap_mobile }}
+        },
+        1024: {
+          slidesPerView: {{ columns_row }},
+          spaceBetween: {{ columns_gap }}
+        }
+      },
+      {% if slider_nav_mobile == "none" or slider_nav_mobile == "pagination" %}
+      on: {
+        slideChange: function () {
+          var slides = this.slides;
+          for (var i = 0; i < slides.length; i++) {
+            var video = slides[i].querySelector('video');
+            if (i === this.activeIndex) {
+
+            } else {
+              video.pause();
+              slides[i].classList.remove('active');
+            }
+          }
+        }
+      }
+      {% endif %}
+    });
+    const items{{ section.id | replace: '-', '' }} = document.querySelectorAll('.video-social-item-{{ section.id }}');
+    items{{ section.id | replace: '-', '' }}.forEach(el => {
+      let video = el.querySelector('.video-social-video-{{ section.id }} video');
+      el.addEventListener('click', () => {
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+        el.classList.toggle('active');
+      })
+    })
+
+    {% if slider_nav_mobile == "buttons" %}
+
+      document.querySelector('.video-social-mobile-btn-prev-{{ section.id }}').addEventListener('click', function() {
+        var currentIndex = swiperMobile.realIndex;
+        playVideoAndSetActive(currentIndex);
+      });
+
+      document.querySelector('.video-social-mobile-btn-next-{{ section.id }}').addEventListener('click', function() {
+        var currentIndex = swiperMobile.realIndex;
+        playVideoAndSetActive(currentIndex);
+      });
+
+    {% endif %}
+
+    function playVideoAndSetActive(index) {
+      var slides = swiperMobile.slides;
+      for (var i = 0; i < slides.length; i++) {
+        var video = slides[i].querySelector('video');
+        if (i === index) {
+          video.play();
+          slides[i].classList.add('active');
+        } else {
+          video.pause();
+          slides[i].classList.remove('active');
+        }
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', videoFromSocialinit);
+
+  if (Shopify.designMode) {
+     document.addEventListener('shopify:section:unload', videoFromSocialinit);
+     document.addEventListener('shopify:section:load', videoFromSocialinit);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "SS - Video Grid Socials",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_custom",
+      "label": "Use Custom Font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading Font Family",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 0,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Heading Line Height",
+      "default": 130
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading Text Align",
+      "default": "center",
+      "options": [
+       {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Right",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Items Settings"
+    },
+    {
+      "type": "range",
+      "id": "items_mt",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Items Margin top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "items_mt_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Items Margin top - Mobile",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "items_type",
+      "label": "Items Type",
+      "default": "columns",
+      "options": [
+       {
+          "label": "Columns",
+          "value": "columns"
+        },
+        {
+          "label": "Slider",
+          "value": "slider"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "items_type_mobile",
+      "label": "Items Type - Mobile",
+      "default": "slider",
+      "options": [
+       {
+          "label": "Columns",
+          "value": "columns"
+        },
+        {
+          "label": "Slider",
+          "value": "slider"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Columns Settings"
+    },
+    {
+      "type": "range",
+      "id": "columns_row",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "label": "Columns Per Row",
+      "info": "Slider use this value for slide",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_row_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns Per Row - Mobile",
+      "info": "Slider Mobile use this value for slide",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "columns_gap",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Columns Gap",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "columns_gap_mobile",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Columns Gap - Mobile",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "select",
+      "id": "slider_nav",
+      "label": "Slider Navigation Type",
+      "default": "buttons",
+      "options": [
+       {
+          "label": "Buttons",
+          "value": "buttons"
+        },
+        {
+          "label": "Pagination",
+          "value": "pagination"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "slider_nav_mobile",
+      "label": "Slider Navigation Type - Mobile",
+      "default": "pagination",
+      "info": "If None or Pagination is selected, autoplay when scrolling through slides is not available",
+      "options": [
+       {
+          "label": "Buttons",
+          "value": "buttons"
+        },
+        {
+          "label": "Pagination",
+          "value": "pagination"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ]
+    },
+    {
+       "type": "range",
+       "id": "slider_nav_size",
+       "min": 10,
+       "max": 100,
+       "step": 5,
+       "unit": "px",
+       "label": "Navigation Buttons Size",
+       "default": 40
+    },
+    {
+       "type": "range",
+       "id": "slider_nav_size_mobile",
+       "min": 10,
+       "max": 100,
+       "step": 5,
+       "unit": "px",
+       "label": "Navigation Buttons Size - Mobile",
+       "default": 30
+    },
+    {
+       "type": "range",
+       "id": "slider_pagination_size",
+       "min": 5,
+       "max": 30,
+       "step": 1,
+       "unit": "px",
+       "label": "Navigation Pagination Size",
+       "default": 15
+    },
+    {
+       "type": "range",
+       "id": "slider_pagination_size_mobile",
+       "min": 5,
+       "max": 30,
+       "step": 1,
+       "unit": "px",
+       "label": "Navigation Pagination Size - Mobile",
+       "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Item Settings"
+    },
+    {
+      "type": "range",
+      "id": "item_radius",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Item Border Radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "item_border_thickness",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Item Border Thickness",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "item_padding_horizontal",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Item Padding horizontal",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "item_padding_vertical",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Item Padding Vertical",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Video Settings"
+    },
+    {
+      "type": "select",
+      "id": "video_size",
+      "label": "Video Size",
+      "default": "medium",
+      "options": [
+       {
+          "label": "Adapt to Video",
+          "value": "adapt"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "video_size_mobile",
+      "label": "Video Size - Mobile",
+      "default": "medium",
+      "options": [
+       {
+          "label": "Adapt to Video",
+          "value": "adapt"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Button Play"
+    },
+    {
+    "type": "range",
+    "id": "icon_size",
+    "min": 0,
+    "max": 150,
+    "step": 10,
+    "unit": "px",
+    "label": "Video Icon Play Size",
+    "default":60
+    },
+    {
+      "type": "range",
+      "id": "icon_padding",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Video Icon Play Padding",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "range",
+      "id": "content_padding_horizontal",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Content Padding horizontal",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "content_padding_vertical",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Content Padding Vertical",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_custom",
+      "label": "Use Custom Font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "label": "Text Font Family",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Text Size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Text Line Height",
+      "default": 130
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text Align",
+      "default": "center",
+      "options": [
+       {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Right",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Link Settings"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+          {
+      "type": "checkbox",
+      "id": "link_custom",
+      "label": "Use Custom Font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "link_font",
+      "label": "Link Font Family",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "min": 0,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Link Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "link_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Link Line Height",
+      "default": 130
+    },
+    {
+      "type": "select",
+      "id": "link_align",
+      "label": "Link Text Align",
+      "default": "center",
+      "options": [
+       {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Right",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "link_mt",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Link Margin top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "link_radius",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Link Border Radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "link_border_thickness",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Link Border Thickness",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "link_padding_horizontal",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Link Padding horizontal",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "link_padding_vertical",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Link Padding Vertical",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_arrow",
+      "label": "Hide Arrow"
+    },
+    {
+      "type": "header",
+      "content": "Section Colors"
+    },
+    {
+      "type": "color",
+      "label": "Heading Color",
+      "id": "heading_color",
+      "default": "#120A0A"
+    },
+    {
+      "type": "color",
+      "label": "Item Background Color",
+      "id": "item_bg_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Item Border Color",
+      "id": "item_border_color",
+      "default": "#120A0A"
+    },
+    {
+      "type": "color",
+      "label": "Button Play Background Color",
+      "id": "icon_bg_color",
+      "default": "#E0C053"
+    },
+    {
+      "type": "color",
+      "label": "Button Play Color",
+      "id": "icon_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Text Color",
+      "id": "text_color",
+      "default": "#120A0A"
+    },
+    {
+      "type": "color",
+      "label": "Navigation Button Background",
+      "id": "slider_nav_btn_bg",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Navigation Button Hover Background",
+      "id": "slider_nav_btn_hover_bg",
+      "default": "#E0C053"
+    },
+    {
+      "type": "color",
+      "label": "Navigation Button Border",
+      "id": "slider_nav_border",
+      "default": "#E0C053"
+    },
+    {
+      "type": "color",
+      "label": "Navigation Button Hover Border",
+      "id": "slider_nav_border_hover",
+      "default": "#E0C053"
+    },
+    {
+      "type": "color",
+      "label": "Navigation Button Icon",
+      "id": "slider_nav_icon",
+      "default": "#E0C053"
+    },
+    {
+      "type": "color",
+      "label": "Navigation Button Hover Icon",
+      "id": "slider_nav_hover_icon",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Navigation Pagination Color",
+      "id": "slider_pagination_color",
+      "default": "#E0C053"
+    },
+    {
+      "type": "color",
+      "label": "Navigation Pagination Hover Color",
+      "id": "slider_pagination_hover_color",
+      "default": "#E0C053"
+    },
+    {
+      "type": "color",
+      "label": "Link Text Color",
+      "id": "link_text_color",
+      "default": "#120A0A"
+    },
+    {
+      "type": "color",
+      "label": "Link Text Hover Color",
+      "id": "link_text_hover_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Link Background Color",
+      "id": "link_bg_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Link Background Hover Color",
+      "id": "link_bg_hover_color",
+      "default": "#120A0A"
+    },
+    {
+      "type": "color",
+      "label": "Link Border Color",
+      "id": "link_border_color",
+      "default": "#120A0A"
+    },
+    {
+      "type": "color",
+      "label": "Link Border Hover Color",
+      "id": "link_border_hover_color",
+      "default": "#120A0A"
+    },
+    {
+      "type": "color",
+      "label": "Section background",
+      "id": "background_color",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Section background gradient"
+    },
+    {
+      "type": "color",
+      "label": "Border",
+      "id": "border_color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Section margin (outside)"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section padding (inside)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 96
+    },
+    {
+       "type": "range",
+       "id": "padding_bottom",
+       "min": 0,
+       "max": 100,
+       "step": 4,
+       "unit": "px",
+       "label": "Padding bottom",
+       "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "rem",
+      "label": "Padding sides",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 0,
+      "max": 15,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Padding sides mobile",
+      "default": 1.5
+    },
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 0,
+      "max": 400,
+      "step": 10,
+      "unit": "rem",
+      "label": "Section content width",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "border_thickness",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "lazy",
+      "label": "Lazy load",
+      "info": "Lazy load videos for speed optimisation",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "image_picker",
+          "id": "poster",
+          "label": "Image Poster",
+          "info":"Shows before pressing play"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "''Video text''"
+        },
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "Icon Type",
+          "default": "tiktok",
+          "options": [
+           {
+              "label": "TikTok",
+              "value": "tiktok"
+            },
+            {
+              "label": "Youtube Shorts",
+              "value": "reels"
+            },
+            {
+              "label": "Instagram Reels",
+              "value": "shorts"
+            },
+            {
+              "label": "Facebook",
+              "value": "facebook"
+            },
+            {
+              "label": "None",
+              "value": "none"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SS - Video Grid Socials",
+      "blocks": [
+        {
+          "type": "video",
+          "settings": {
+            "text": "“We had our fun last night.”"
+          }
+        },
+        {
+          "type": "video",
+          "settings": {
+            "text": "“This will change your love life...seriously”"
+          }
+        },
+        {
+          "type": "video",
+          "settings": {
+            "text": "“It made our night so incredible”"
+          }
+        },
+        {
+          "type": "video",
+          "settings": {
+            "text": "“It definitely increased the sensation”"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

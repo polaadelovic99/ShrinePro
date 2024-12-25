@@ -1,0 +1,258 @@
+<div class="review-items-container" {{ block.shopify_attributes }} style="--star-color:{{ block.settings.star_color }};--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;" {{ block.shopify_attributes }}>
+  {%- assign items_count = 0 -%}
+  {%- if block.settings.text_1 != blank -%}
+    {%- assign items_count = items_count | plus: 1 -%}
+  {%- endif -%}
+  {%- if block.settings.text_2 != blank -%}
+    {%- assign items_count = items_count | plus: 1 -%}
+  {%- endif -%}
+  {%- if block.settings.text_3 != blank -%}
+    {%- assign items_count = items_count | plus: 1 -%}
+  {%- endif -%}
+
+  <slideshow-component
+    class="slider-mobile-gutter"
+    role="region"
+    aria-roledescription="{{ 'sections.slideshow.carousel' | t }}"
+    aria-label="Customer reviews"
+  >
+    <div
+      class="slideshow banner grid grid--1-col slider slider--everywhere"
+      id="Slider-{{ section.id }}"
+      aria-live="polite"
+      aria-atomic="true"
+      data-autoplay="false"
+      data-speed="5"
+    >
+      {%- unless block.settings.text_1 == blank -%}
+        <div
+          class="slideshow__slide grid__item grid--1-col slider__slide"
+          id="Slide-{{ section.id }}-1"
+          role="group"
+          aria-roledescription="{{ 'sections.slideshow.slide' | t }}"
+          aria-label="1 {{ 'general.slider.of' | t }} 3"
+          tabindex="-1"
+        >
+          <div class="review-item review-item--{{ block.settings.avatar_alignment }}">
+            {%- unless block.settings.image_1 == blank -%}
+              <div class="review-item__image">
+                <img
+                  src="{{ block.settings.image_1 | image_url }}"
+                  alt="{{ block.settings.author_1 }}"
+                  width="auto"
+                  height="auto"
+                  loading="lazy"
+                >
+              </div>
+            {%- endunless -%}
+            <div class="review-item__right">
+              <div class="review-item__text">
+                {{ block.settings.text_1 }}
+              </div>
+              {%- unless block.settings.author_1 == blank and block.settings.display_stars == false -%}
+                <div class="review-item__author-and-stars">
+                  {%- unless block.settings.author_1 == blank -%}
+                    <p class="review-item__author">
+                      {{ block.settings.author_1 }}
+                    </p>
+                  {%- endunless -%}
+                  {%- if block.settings.display_stars -%}
+                    <span class="review-item__stars">★★★★★</span>
+                  {%- endif -%}
+                  <svg xmlns="http://www.w3.org/2000/svg" class="verified-icon" viewBox="0 0 122.88 116.87">
+  <polygon fill="currentColor" fill-rule="evenodd" points="61.37 8.24 80.43 0 90.88 17.79 111.15 22.32 109.15 42.85 122.88 58.43 109.2 73.87 111.15 94.55 91 99 80.43 116.87 61.51 108.62 42.45 116.87 32 99.08 11.73 94.55 13.73 74.01 0 58.43 13.68 42.99 11.73 22.32 31.88 17.87 42.45 0 61.37 8.24 61.37 8.24"></polygon>
+  <path fill="#ffffff" d="M37.92,65c-6.07-6.53,3.25-16.26,10-10.1,2.38,2.17,5.84,5.34,8.24,7.49L74.66,39.66C81.1,33,91.27,42.78,84.91,49.48L61.67,77.2a7.13,7.13,0,0,1-9.9.44C47.83,73.89,42.05,68.5,37.92,65Z"></path>
+</svg>
+                </div>
+              {%- endunless -%}
+            </div>
+          </div>
+        </div>
+      {%- endunless -%}
+      {%- unless block.settings.text_2 == blank -%}
+        <div
+          class="slideshow__slide grid__item grid--1-col slider__slide"
+          id="Slide-{{ section.id }}-2"
+          role="group"
+          aria-roledescription="{{ 'sections.slideshow.slide' | t }}"
+          aria-label="2 {{ 'general.slider.of' | t }} 3"
+          tabindex="-1"
+        >
+          <div class="review-item review-item--{{ block.settings.avatar_alignment }}">
+            {%- unless block.settings.image_2 == blank -%}
+              <div class="review-item__image">
+                <img
+                  src="{{ block.settings.image_2 | image_url }}"
+                  alt="{{ block.settings.author_2 }}"
+                  width="auto"
+                  height="auto"
+                  loading="lazy"
+                >
+              </div>
+            {%- endunless -%}
+            <div class="review-item__right">
+              <div class="review-item__text">
+                {{ block.settings.text_2 }}
+              </div>
+              {%- unless block.settings.author_2 == blank and block.settings.display_stars == false -%}
+                <div class="review-item__author-and-stars">
+                  {%- unless block.settings.author_2 == blank -%}
+                    <p class="review-item__author">
+                      {{ block.settings.author_2 }}
+                    </p>
+                  {%- endunless -%}
+                  {%- if block.settings.display_stars -%}
+                    <span class="review-item__stars">★★★★★</span>
+                  {%- endif -%}
+                  <svg xmlns="http://www.w3.org/2000/svg" class="verified-icon" viewBox="0 0 122.88 116.87">
+  <polygon fill="currentColor" fill-rule="evenodd" points="61.37 8.24 80.43 0 90.88 17.79 111.15 22.32 109.15 42.85 122.88 58.43 109.2 73.87 111.15 94.55 91 99 80.43 116.87 61.51 108.62 42.45 116.87 32 99.08 11.73 94.55 13.73 74.01 0 58.43 13.68 42.99 11.73 22.32 31.88 17.87 42.45 0 61.37 8.24 61.37 8.24"></polygon>
+  <path fill="#ffffff" d="M37.92,65c-6.07-6.53,3.25-16.26,10-10.1,2.38,2.17,5.84,5.34,8.24,7.49L74.66,39.66C81.1,33,91.27,42.78,84.91,49.48L61.67,77.2a7.13,7.13,0,0,1-9.9.44C47.83,73.89,42.05,68.5,37.92,65Z"></path>
+</svg>
+                </div>
+              {%- endunless -%}
+            </div>
+          </div>
+        </div>
+      {%- endunless -%}
+
+      {%- unless block.settings.text_3 == blank -%}
+        <div
+          class="slideshow__slide grid__item grid--1-col slider__slide"
+          id="Slide-{{ section.id }}-1"
+          role="group"
+          aria-roledescription="{{ 'sections.slideshow.slide' | t }}"
+          aria-label="3 {{ 'general.slider.of' | t }} 3"
+          tabindex="-1"
+        >
+          <div class="review-item review-item--{{ block.settings.avatar_alignment }}">
+            {%- unless block.settings.image_3 == blank -%}
+              <div class="review-item__image">
+                <img
+                  src="{{ block.settings.image_3 | image_url }}"
+                  alt="{{ block.settings.author_3 }}"
+                  width="auto"
+                  height="auto"
+                  loading="lazy"
+                >
+              </div>
+            {%- endunless -%}
+            <div class="review-item__right">
+              <div class="review-item__text">
+                {{ block.settings.text_3 }}
+              </div>
+              {%- unless block.settings.author_3 == blank and block.settings.display_stars == false -%}
+                <div class="review-item__author-and-stars">
+                  {%- unless block.settings.author_3 == blank -%}
+                    <p class="review-item__author">
+                      {{ block.settings.author_3 }}
+                    </p>
+                  {%- endunless -%}
+                  {%- if block.settings.display_stars -%}
+                    <span class="review-item__stars">★★★★★</span>
+                  {%- endif -%}
+                  <svg xmlns="http://www.w3.org/2000/svg" class="verified-icon" viewBox="0 0 122.88 116.87">
+  <polygon fill="currentColor" fill-rule="evenodd" points="61.37 8.24 80.43 0 90.88 17.79 111.15 22.32 109.15 42.85 122.88 58.43 109.2 73.87 111.15 94.55 91 99 80.43 116.87 61.51 108.62 42.45 116.87 32 99.08 11.73 94.55 13.73 74.01 0 58.43 13.68 42.99 11.73 22.32 31.88 17.87 42.45 0 61.37 8.24 61.37 8.24"></polygon>
+  <path fill="#ffffff" d="M37.92,65c-6.07-6.53,3.25-16.26,10-10.1,2.38,2.17,5.84,5.34,8.24,7.49L74.66,39.66C81.1,33,91.27,42.78,84.91,49.48L61.67,77.2a7.13,7.13,0,0,1-9.9.44C47.83,73.89,42.05,68.5,37.92,65Z"></path>
+</svg>
+                </div>
+              {%- endunless -%}
+            </div>
+          </div>
+        </div>
+      {%- endunless -%}
+    </div>
+
+    {%- if items_count > 1 -%}
+      <div class="slideshow__controls slider-buttons no-js-hidden slideshow__controls--border-radius-mobile">
+        <button
+          type="button"
+          class="slider-button slider-button--prev"
+          name="previous"
+          aria-label="{{ 'sections.slideshow.previous_slideshow' | t }}"
+          aria-controls="Slider-{{ section.id }}"
+        >
+          {% render 'icon-caret' %}
+        </button>
+        <div class="slider-counter slider-counter--dots">
+          <div class="slideshow__control-wrapper">
+            {%- unless block.settings.text_1 == blank -%}
+              <button
+                class="slider-counter__link slider-counter__link--dots link"
+                aria-label="{{ 'sections.slideshow.load_slide' | t }} 1 {{ 'general.slider.of' | t }} 3"
+                aria-controls="Slider-{{ section.id }}"
+              >
+                <span class="dot"></span>
+              </button>
+            {%- endunless -%}
+            {%- unless block.settings.text_2 == blank -%}
+              <button
+                class="slider-counter__link slider-counter__link--dots link"
+                aria-label="{{ 'sections.slideshow.load_slide' | t }} 2 {{ 'general.slider.of' | t }} 3"
+                aria-controls="Slider-{{ section.id }}"
+              >
+                <span class="dot"></span>
+              </button>
+            {%- endunless -%}
+            {%- unless block.settings.text_3 == blank -%}
+              <button
+                class="slider-counter__link slider-counter__link--dots link"
+                aria-label="{{ 'sections.slideshow.load_slide' | t }} 3 {{ 'general.slider.of' | t }} 3"
+                aria-controls="Slider-{{ section.id }}"
+              >
+                <span class="dot"></span>
+              </button>
+            {%- endunless -%}
+          </div>
+        </div>
+        <button
+          type="button"
+          class="slider-button slider-button--next"
+          name="next"
+          aria-label="{{ 'sections.slideshow.next_slideshow' | t }}"
+          aria-controls="Slider-{{ section.id }}"
+        >
+          {% render 'icon-caret' %}
+        </button>
+      </div>
+    {%- endif -%}
+    <noscript>
+      {%- if items_count > 1 -%}
+        <div class="slider-buttons">
+          <div class="slider-counter">
+            {%- unless block.settings.text_1 == blank -%}
+              <a
+                href="#Slide-{{ section.id }}-1"
+                class="slider-counter__link link"
+                aria-label="{{ 'sections.slideshow.load_slide' | t }} 1 {{ 'general.slider.of' | t }} 3"
+              >
+                1
+              </a>
+            {%- endunless -%}
+            {%- unless block.settings.text_2 == blank -%}
+              <a
+                href="#Slide-{{ section.id }}-2"
+                class="slider-counter__link link"
+                aria-label="{{ 'sections.slideshow.load_slide' | t }} 2 {{ 'general.slider.of' | t }} 3"
+              >
+                2
+              </a>
+            {%- endunless -%}
+            {%- unless block.settings.text_3 == blank -%}
+              <a
+                href="#Slide-{{ section.id }}-3"
+                class="slider-counter__link link"
+                aria-label="{{ 'sections.slideshow.load_slide' | t }} 3 {{ 'general.slider.of' | t }} 3"
+              >
+                3
+              </a>
+            {%- endunless -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </noscript>
+  </slideshow-component>
+</div>
+
+{%- if request.design_mode -%}
+  <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

@@ -1,0 +1,23 @@
+<div
+  class="cart-discount{% if block.settings.bottom_separator %} cart-discount--bottom-separator{% endif %}"
+  style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+  {{ block.shopify_attributes }}
+>
+  <form class="cart-discount-form" onsubmit="handleDiscountForm(event)">
+    <div class="cart-discount-form__row">
+      <div class="field">
+        <input
+          class="field__input"
+          autocomplete="name"
+          type="text"
+          name="cart-discount-field"
+          placeholder="{{ block.settings.placeholder }}"
+          oninput="handleDiscountFormChange(event)"
+        >
+        <label class="field__label" for="cart-discount-field">{{ block.settings.placeholder }}</label>
+      </div>
+      <button class="button" type="submit">{{ block.settings.btn_label }}</button>
+    </div>
+    <p class="cart-discount-form__error">{{ block.settings.error_msg }}</p>
+  </form>
+</div>

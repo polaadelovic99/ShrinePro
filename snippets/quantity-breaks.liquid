@@ -1,0 +1,871 @@
+{% liquid
+ assign item_count = 0
+  if block.settings.option_1_quantity != 0
+    assign item_count = item_count | plus: 1
+  endif
+  if block.settings.option_2_quantity != 0
+    assign item_count = item_count | plus: 1
+  endif
+  if block.settings.option_3_quantity != 0
+    assign item_count = item_count | plus: 1
+  endif
+  if block.settings.option_4_quantity != 0
+    assign item_count = item_count | plus: 1
+  endif
+%}
+<quantity-breaks
+  class="quantity-breaks quantity-breaks--{{ block.settings.style }} accent-color-{{ block.settings.color_scheme }}{% if block.settings.space_images %} quantity-breaks--space-images{% endif %}"
+  id="quantity-breaks-{{ section.id }}"
+  data-section="{{ section.id }}"
+  data-items="{{ item_count }}"
+  style="{% if block.settings.hide_pickers_overlay %}--pickers-overlay-opacity:0;--pickers-hover-overlay-opacity:0;{% endif %}--items-count:{{ item_count }};--image-width:{{ block.settings.image_width }}%;--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+  {{ block.shopify_attributes }}
+>
+  {% assign has_variants = false %}
+  {% assign price = product.selected_or_first_available_variant.price %}
+  {% if block.settings.headline != blank %}
+    <h3 class="quantity-breaks__title flex-center center">
+      <span></span>
+      <span>{{ block.settings.headline }}</span>
+      <span></span>
+    </h3>
+  {% endif %}
+  <div class="quantity-breaks-container">
+    {% if block.settings.option_1_quantity != 0 %}
+      <input
+        id="quantity1"
+        aria-label="Quantity"
+        type="radio"
+        name="quantity"
+        value="{{ block.settings.option_1_quantity }}"
+        form="{{ product_form_id }}"
+        {% if block.settings.preselected == 'option_1' %}
+          checked
+        {% endif %}
+        data-input="input_1"
+      >
+      <label
+        for="quantity1"
+        class="quantity-break"
+        data-quantity="{{ block.settings.option_1_quantity }}"
+        data-input="input_1"
+      >
+        {% liquid
+          assign percentage_discount = block.settings.option_1_percentage_off | plus: 0
+          assign percentage_left = 100 | minus: percentage_discount | divided_by: 100.00
+          assign fixed_amount_off = block.settings.option_1_fixed_amount_off | times: 100
+          assign option_1_price = price | times: block.settings.option_1_quantity | times: percentage_left | minus: fixed_amount_off
+
+          assign compare_price = product.selected_or_first_available_variant.price
+          if block.settings.option_1_compare_price == 'compare_price' and product.selected_or_first_available_variant.compare_at_price > 0
+            assign compare_price = product.selected_or_first_available_variant.compare_at_price
+          endif
+          assign option_1_compare_price = compare_price | times: block.settings.option_1_quantity 
+
+          assign option_1_price_difference = option_1_compare_price | minus: option_1_price
+          assign option_1_price_difference_rounded = option_1_price_difference | divided_by: 100.00 | round | times: 100
+          assign option_1_price_each = option_1_price | divided_by: block.settings.option_1_quantity
+          assign option_1_compare_price_each = option_1_compare_price | divided_by: block.settings.option_1_quantity
+        %}
+        {% if block.settings.option_1_badge != blank %}
+          <p class="quantity-break__badge dynamic-price">
+            {% render 'text-with-price',
+              text: block.settings.option_1_badge,
+              quantity: block.settings.option_1_quantity,
+              price: option_1_price,
+              compare_price: option_1_compare_price,
+              amount_saved: option_1_price_difference,
+              amount_saved_rounded: option_1_price_difference_rounded,
+              price_each: option_1_price_each,
+              compare_price_each: option_1_compare_price_each
+            %}
+          </p>
+        {% endif %}
+        {% if block.settings.style == 'vertical' and block.settings.option_1_image != blank %}
+          <div class='quantity-break__image'>
+            <img 
+              src='{{ block.settings.option_1_image | image_url }}'
+              alt="{{ block.settings.option_1_image.alt }}"
+              width='auto'
+              height='auto'
+              loading='lazy'
+            >
+          </div>
+        {% endif %}
+        <div class="quantity-break__content">
+          <div class="quantity-break__left">
+            <span class="quantity-break__label">
+              {%- if block.settings.option_1_label != blank -%}
+                <span class="quantity-break__label-text dynamic-price">
+                  {% render 'text-with-price',
+                    text: block.settings.option_1_label,
+                    quantity: block.settings.option_1_quantity,
+                    price: option_1_price,
+                    compare_price: option_1_compare_price,
+                    amount_saved: option_1_price_difference,
+                    amount_saved_rounded: option_1_price_difference_rounded,
+                    price_each: option_1_price_each,
+                    compare_price_each: option_1_compare_price_each
+                  %}
+                </span>
+              {%- endif -%}
+              {% if block.settings.option_1_benefit != blank %}
+                <span class="quantity-break__benefit dynamic-price">
+                  {% render 'text-with-price',
+                    text: block.settings.option_1_benefit,
+                    quantity: block.settings.option_1_quantity,
+                    price: option_1_price,
+                    compare_price: option_1_compare_price,
+                    amount_saved: option_1_price_difference,
+                    amount_saved_rounded: option_1_price_difference_rounded,
+                    price_each: option_1_price_each,
+                    compare_price_each: option_1_compare_price_each
+                  %}
+                </span>
+              {% endif %}
+            </span>
+            {% if block.settings.option_1_caption != blank %}
+              <span class="quantity-break__caption dynamic-price">
+                {% render 'text-with-price',
+                  text: block.settings.option_1_caption,
+                  quantity: block.settings.option_1_quantity,
+                  price: option_1_price,
+                  compare_price: option_1_compare_price,
+                  amount_saved: option_1_price_difference,
+                  amount_saved_rounded: option_1_price_difference_rounded,
+                  price_each: option_1_price_each,
+                  compare_price_each: option_1_compare_price_each
+                %}
+              </span>
+            {% endif %}
+          </div>
+          <div class="quantity-break__right dynamic-price">
+            {% if block.settings.option_1_price_text != blank %}
+              <span class="quantity-break__price">
+                {% render 'text-with-price',
+                  text: block.settings.option_1_price_text,
+                  quantity: block.settings.option_1_quantity,
+                  price: option_1_price,
+                  compare_price: option_1_compare_price,
+                  amount_saved: option_1_price_difference,
+                  amount_saved_rounded: option_1_price_difference_rounded,
+                  price_each: option_1_price_each,
+                  compare_price_each: option_1_compare_price_each
+                %}
+              </span>
+            {% endif %}
+            {% if option_1_compare_price > option_1_price and block.settings.option_1_compare_price_text != blank %}
+              <span class="quantity-break__compare-price">
+                {% render 'text-with-price',
+                  text: block.settings.option_1_compare_price_text,
+                  quantity: block.settings.option_1_quantity,
+                  price: option_1_price,
+                  compare_price: option_1_compare_price,
+                  amount_saved: option_1_price_difference,
+                  amount_saved_rounded: option_1_price_difference_rounded,
+                  price_each: option_1_price_each,
+                  compare_price_each: option_1_compare_price_each
+                %}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+        {% if product.has_only_default_variant == false and block.settings.enable_variant_selectors %}
+          {% if block.settings.option_1_quantity != 1 or block.settings.enable_variant_selectors_on_quantity_of_1 %}
+            <div class="quantity-break__variants">
+              {% assign has_variants = true %}
+              {% for selectorItem in (1..block.settings.option_1_quantity) %}
+                <div
+                  class="quantity-break__selector-item"
+                  data-select-index="{{ forloop.index0 }}"
+                  data-selected-id="{{ product.selected_or_first_available_variant.id }}"
+                >
+                  <span class="quantity-break__selector-item__number">#{{ selectorItem }}</span>
+                  {%- for option in product.options_with_values -%}
+                    <div class="select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+                      <select
+                        class="quantity-break__variant-select select__select variant-dropdown"
+                        name="options[{{ option.name | escape }}]"
+                        data-product-id="{{ product.selected_or_first_available_variant.id }}"
+                      >
+                        {%- liquid
+                          assign variants_available_arr = product.variants | map: 'available'
+                          assign variants_option1_arr = product.variants | map: 'option1'
+                          assign variants_option2_arr = product.variants | map: 'option2'
+                          assign variants_option3_arr = product.variants | map: 'option3'
+                        -%}
+                        {% for value in option.values %}
+                          {%- liquid
+                            assign option_disabled = true
+
+                            for option1_name in variants_option1_arr
+                              case option.position
+                                when 1
+                                  if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 2
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 3
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                              endcase
+                            endfor
+                          -%}
+                          <option
+                            value="{{ value | escape }}"
+                            {% if option.selected_value == value %}
+                              selected="selected"
+                            {% endif %}
+                          >
+                            {% if option_disabled -%}
+                              {{- 'products.product.value_unavailable' | t: option_value: value -}}
+                            {%- else -%}
+                              {{- value -}}
+                            {%- endif %}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      {% render 'icon-caret' %}
+                    </div>
+                  {%- endfor -%}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endif %}
+      </label>
+    {% endif %}
+    {% if block.settings.option_2_quantity != 0 %}
+      <input
+        id="quantity2"
+        aria-label="Quantity"
+        type="radio"
+        name="quantity"
+        value="{{ block.settings.option_2_quantity }}"
+        form="{{ product_form_id }}"
+        {% if block.settings.preselected == 'option_2' %}
+          checked
+        {% endif %}
+        data-input="input_2"
+      >
+      <label
+        for="quantity2"
+        class="quantity-break"
+        data-quantity="{{ block.settings.option_2_quantity }}"
+        data-input="input_2"
+      >
+        {% liquid
+          assign percentage_discount = block.settings.option_2_percentage_off | plus: 0
+          assign percentage_left = 100 | minus: percentage_discount | divided_by: 100.00
+          assign fixed_amount_off = block.settings.option_2_fixed_amount_off | times: 100
+          assign option_2_price = price | times: block.settings.option_2_quantity | times: percentage_left | minus: fixed_amount_off
+
+          assign compare_price = product.selected_or_first_available_variant.price
+          if block.settings.option_2_compare_price == 'compare_price' and product.selected_or_first_available_variant.compare_at_price > 0
+            assign compare_price = product.selected_or_first_available_variant.compare_at_price
+          endif
+          assign option_2_compare_price = compare_price | times: block.settings.option_2_quantity 
+
+          assign option_2_price_difference = option_2_compare_price | minus: option_2_price
+          assign option_2_price_difference_rounded = option_2_price_difference | divided_by: 100.00 | round | times: 100
+          assign option_2_price_each = option_2_price | divided_by: block.settings.option_2_quantity
+          assign option_2_compare_price_each = option_2_compare_price | divided_by: block.settings.option_2_quantity
+        %}
+        {% if block.settings.option_2_badge != blank %}
+          <p class="quantity-break__badge dynamic-price">
+            {% render 'text-with-price',
+              text: block.settings.option_2_badge,
+              quantity: block.settings.option_2_quantity,
+              price: option_2_price,
+              compare_price: option_2_compare_price,
+              amount_saved: option_2_price_difference,
+              amount_saved_rounded: option_2_price_difference_rounded,
+              price_each: option_2_price_each,
+              compare_price_each: option_2_compare_price_each
+            %}
+          </p>
+        {% endif %}
+        {% if block.settings.style == 'vertical' and block.settings.option_2_image != blank %}
+          <div class='quantity-break__image'>
+            <img 
+              src='{{ block.settings.option_2_image | image_url }}'
+              alt="{{ block.settings.option_2_image.alt }}"
+              width='auto'
+              height='auto'
+              loading='lazy'
+            >
+          </div>
+        {% endif %}
+        <div class="quantity-break__content">
+          <div class="quantity-break__left">
+            <span class="quantity-break__label">
+              {%- if block.settings.option_2_label != blank -%}
+                <span class="quantity-break__label-text dynamic-price">
+                  {% render 'text-with-price',
+                    text: block.settings.option_2_label,
+                    quantity: block.settings.option_2_quantity,
+                    price: option_2_price,
+                    compare_price: option_2_compare_price,
+                    amount_saved: option_2_price_difference,
+                    amount_saved_rounded: option_2_price_difference_rounded,
+                    price_each: option_2_price_each,
+                    compare_price_each: option_2_compare_price_each
+                  %}
+                </span>
+              {%- endif -%}
+              {% if block.settings.option_2_benefit != blank %}
+                <span class="quantity-break__benefit dynamic-price">
+                  {% render 'text-with-price',
+                    text: block.settings.option_2_benefit,
+                    quantity: block.settings.option_2_quantity,
+                    price: option_2_price,
+                    compare_price: option_2_compare_price,
+                    amount_saved: option_2_price_difference,
+                    amount_saved_rounded: option_2_price_difference_rounded,
+                    price_each: option_2_price_each,
+                    compare_price_each: option_2_compare_price_each
+                  %}
+                </span>
+              {% endif %}
+            </span>
+            {% if block.settings.option_2_caption != blank %}
+              <span class="quantity-break__caption dynamic-price">
+                {% render 'text-with-price',
+                  text: block.settings.option_2_caption,
+                  quantity: block.settings.option_2_quantity,
+                  price: option_2_price,
+                  compare_price: option_2_compare_price,
+                  amount_saved: option_2_price_difference,
+                  amount_saved_rounded: option_2_price_difference_rounded,
+                  price_each: option_2_price_each,
+                  compare_price_each: option_2_compare_price_each
+                %}
+              </span>
+            {% endif %}
+          </div>
+          <div class="quantity-break__right dynamic-price">
+            {% if block.settings.option_2_price_text != blank %}
+              <span class="quantity-break__price">
+                {% render 'text-with-price',
+                  text: block.settings.option_2_price_text,
+                  quantity: block.settings.option_2_quantity,
+                  price: option_2_price,
+                  compare_price: option_2_compare_price,
+                  amount_saved: option_2_price_difference,
+                  amount_saved_rounded: option_2_price_difference_rounded,
+                  price_each: option_2_price_each,
+                  compare_price_each: option_2_compare_price_each
+                %}
+              </span>
+            {% endif %}
+            {% if option_2_compare_price > option_2_price and block.settings.option_2_compare_price_text != blank %}
+              <span class="quantity-break__compare-price">
+                {% render 'text-with-price',
+                  text: block.settings.option_2_compare_price_text,
+                  quantity: block.settings.option_2_quantity,
+                  price: option_2_price,
+                  compare_price: option_2_compare_price,
+                  amount_saved: option_2_price_difference,
+                  amount_saved_rounded: option_2_price_difference_rounded,
+                  price_each: option_2_price_each,
+                  compare_price_each: option_2_compare_price_each
+                %}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+        {% if product.has_only_default_variant == false and block.settings.enable_variant_selectors %}
+          {% if block.settings.option_2_quantity != 1 or block.settings.enable_variant_selectors_on_quantity_of_1 %}
+            <div class="quantity-break__variants">
+              {% assign has_variants = true %}
+              {% for selectorItem in (1..block.settings.option_2_quantity) %}
+                <div
+                  class="quantity-break__selector-item"
+                  data-select-index="{{ forloop.index0 }}"
+                  data-selected-id="{{ product.selected_or_first_available_variant.id }}"
+                >
+                  <span class="quantity-break__selector-item__number">#{{ selectorItem }}</span>
+                  {%- for option in product.options_with_values -%}
+                    <div class="select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }}  accent-2-color-{{ settings.pickers_text_color }}">
+                      <select
+                        class="quantity-break__variant-select select__select variant-dropdown"
+                        name="options[{{ option.name | escape }}]"
+                        data-product-id="{{ product.selected_or_first_available_variant.id }}"
+                      >
+                        {%- liquid
+                          assign variants_available_arr = product.variants | map: 'available'
+                          assign variants_option1_arr = product.variants | map: 'option1'
+                          assign variants_option2_arr = product.variants | map: 'option2'
+                          assign variants_option3_arr = product.variants | map: 'option3'
+                        -%}
+                        {% for value in option.values %}
+                          {%- liquid
+                            assign option_disabled = true
+
+                            for option1_name in variants_option1_arr
+                              case option.position
+                                when 1
+                                  if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 2
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 3
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                              endcase
+                            endfor
+                          -%}
+                          <option
+                            value="{{ value | escape }}"
+                            {% if option.selected_value == value %}
+                              selected="selected"
+                            {% endif %}
+                          >
+                            {% if option_disabled -%}
+                              {{- 'products.product.value_unavailable' | t: option_value: value -}}
+                            {%- else -%}
+                              {{- value -}}
+                            {%- endif %}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      {% render 'icon-caret' %}
+                    </div>
+                  {%- endfor -%}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endif %}
+      </label>
+    {% endif %}
+    {% if block.settings.option_3_quantity != 0 %}
+      <input
+        id="quantity3"
+        aria-label="Quantity"
+        type="radio"
+        name="quantity"
+        value="{{ block.settings.option_3_quantity }}"
+        form="{{ product_form_id }}"
+        {% if block.settings.preselected == 'option_3' %}
+          checked
+        {% endif %}
+        data-input="input_3"
+      >
+      <label
+        for="quantity3"
+        class="quantity-break"
+        data-quantity="{{ block.settings.option_3_quantity }}"
+        data-input="input_3"
+      >
+        {% liquid
+          assign percentage_discount = block.settings.option_3_percentage_off | plus: 0
+          assign percentage_left = 100 | minus: percentage_discount | divided_by: 100.00
+          assign fixed_amount_off = block.settings.option_3_fixed_amount_off | times: 100
+          assign option_3_price = price | times: block.settings.option_3_quantity | times: percentage_left | minus: fixed_amount_off
+
+          assign compare_price = product.selected_or_first_available_variant.price
+          if block.settings.option_3_compare_price == 'compare_price' and product.selected_or_first_available_variant.compare_at_price > 0
+            assign compare_price = product.selected_or_first_available_variant.compare_at_price
+          endif
+          assign option_3_compare_price = compare_price | times: block.settings.option_3_quantity 
+
+          assign option_3_price_difference = option_3_compare_price | minus: option_3_price
+          assign option_3_price_difference_rounded = option_3_price_difference | divided_by: 100.00 | round | times: 100
+          assign option_3_price_each = option_3_price | divided_by: block.settings.option_3_quantity
+          assign option_3_compare_price_each = option_3_compare_price | divided_by: block.settings.option_3_quantity
+        %}
+        {% if block.settings.option_3_badge != blank %}
+          <p class="quantity-break__badge dynamic-price">
+            {% render 'text-with-price',
+              text: block.settings.option_3_badge,
+              quantity: block.settings.option_3_quantity,
+              price: option_3_price,
+              compare_price: option_3_compare_price,
+              amount_saved: option_3_price_difference,
+              amount_saved_rounded: option_3_price_difference_rounded,
+              price_each: option_3_price_each,
+              compare_price_each: option_3_compare_price_each
+            %}
+          </p>
+        {% endif %}
+        {% if block.settings.style == 'vertical' and block.settings.option_3_image != blank %}
+          <div class='quantity-break__image'>
+            <img 
+              src='{{ block.settings.option_3_image | image_url }}'
+              alt="{{ block.settings.option_3_image.alt }}"
+              width='auto'
+              height='auto'
+              loading='lazy'
+            >
+          </div>
+        {% endif %}
+        <div class="quantity-break__content">
+          <div class="quantity-break__left">
+            <span class="quantity-break__label">
+              {%- if block.settings.option_3_label != blank -%}
+                <span class="quantity-break__label-text dynamic-price">
+                  {% render 'text-with-price',
+                    text: block.settings.option_3_label,
+                    quantity: block.settings.option_3_quantity,
+                    price: option_3_price,
+                    compare_price: option_3_compare_price,
+                    amount_saved: option_3_price_difference,
+                    amount_saved_rounded: option_3_price_difference_rounded,
+                    price_each: option_3_price_each,
+                    compare_price_each: option_3_compare_price_each
+                  %}
+                </span>
+              {%- endif -%}
+              {% if block.settings.option_3_benefit != blank %}
+                <span class="quantity-break__benefit dynamic-price">
+                  {% render 'text-with-price',
+                    text: block.settings.option_3_benefit,
+                    quantity: block.settings.option_3_quantity,
+                    price: option_3_price,
+                    compare_price: option_3_compare_price,
+                    amount_saved: option_3_price_difference,
+                    amount_saved_rounded: option_3_price_difference_rounded,
+                    price_each: option_3_price_each,
+                    compare_price_each: option_3_compare_price_each
+                  %}
+                </span>
+              {% endif %}
+            </span>
+            {% if block.settings.option_3_caption != blank %}
+              <span class="quantity-break__caption dynamic-price">
+                {% render 'text-with-price',
+                  text: block.settings.option_3_caption,
+                  quantity: block.settings.option_3_quantity,
+                  price: option_3_price,
+                  compare_price: option_3_compare_price,
+                  amount_saved: option_3_price_difference,
+                  amount_saved_rounded: option_3_price_difference_rounded,
+                  price_each: option_3_price_each,
+                  compare_price_each: option_3_compare_price_each
+                %}
+              </span>
+            {% endif %}
+          </div>
+          <div class="quantity-break__right dynamic-price">
+            {% if block.settings.option_3_price_text != blank %}
+              <span class="quantity-break__price">
+                {% render 'text-with-price',
+                  text: block.settings.option_3_price_text,
+                  quantity: block.settings.option_3_quantity,
+                  price: option_3_price,
+                  compare_price: option_3_compare_price,
+                  amount_saved: option_3_price_difference,
+                  amount_saved_rounded: option_3_price_difference_rounded,
+                  price_each: option_3_price_each,
+                  compare_price_each: option_3_compare_price_each
+                %}
+              </span>
+            {% endif %}
+            {% if option_3_compare_price > option_3_price and block.settings.option_3_compare_price_text != blank %}
+              <span class="quantity-break__compare-price">
+                {% render 'text-with-price',
+                  text: block.settings.option_3_compare_price_text,
+                  quantity: block.settings.option_3_quantity,
+                  price: option_3_price,
+                  compare_price: option_3_compare_price,
+                  amount_saved: option_3_price_difference,
+                  amount_saved_rounded: option_3_price_difference_rounded,
+                  price_each: option_3_price_each,
+                  compare_price_each: option_3_compare_price_each
+                %}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+        {% if product.has_only_default_variant == false and block.settings.enable_variant_selectors %}
+          {% if block.settings.option_3_quantity != 1 or block.settings.enable_variant_selectors_on_quantity_of_1 %}
+            <div class="quantity-break__variants">
+              {% assign has_variants = true %}
+              {% for selectorItem in (1..block.settings.option_3_quantity) %}
+                <div
+                  class="quantity-break__selector-item"
+                  data-select-index="{{ forloop.index0 }}"
+                  data-selected-id="{{ product.selected_or_first_available_variant.id }}"
+                >
+                  <span class="quantity-break__selector-item__number">#{{ selectorItem }}</span>
+                  {%- for option in product.options_with_values -%}
+                    <div class="select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }}  accent-2-color-{{ settings.pickers_text_color }}">
+                      <select
+                        class="quantity-break__variant-select select__select variant-dropdown"
+                        name="options[{{ option.name | escape }}]"
+                        data-product-id="{{ product.selected_or_first_available_variant.id }}"
+                      >
+                        {%- liquid
+                          assign variants_available_arr = product.variants | map: 'available'
+                          assign variants_option1_arr = product.variants | map: 'option1'
+                          assign variants_option2_arr = product.variants | map: 'option2'
+                          assign variants_option3_arr = product.variants | map: 'option3'
+                        -%}
+                        {% for value in option.values %}
+                          {%- liquid
+                            assign option_disabled = true
+
+                            for option1_name in variants_option1_arr
+                              case option.position
+                                when 1
+                                  if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 2
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 3
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                              endcase
+                            endfor
+                          -%}
+                          <option
+                            value="{{ value | escape }}"
+                            {% if option.selected_value == value %}
+                              selected="selected"
+                            {% endif %}
+                          >
+                            {% if option_disabled -%}
+                              {{- 'products.product.value_unavailable' | t: option_value: value -}}
+                            {%- else -%}
+                              {{- value -}}
+                            {%- endif %}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      {% render 'icon-caret' %}
+                    </div>
+                  {%- endfor -%}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endif %}
+      </label>
+    {% endif %}
+    {% if block.settings.option_4_quantity != 0 %}
+      <input
+        id="quantity4"
+        aria-label="Quantity"
+        type="radio"
+        name="quantity"
+        value="{{ block.settings.option_4_quantity }}"
+        form="{{ product_form_id }}"
+        {% if block.settings.preselected == 'option_4' %}
+          checked
+        {% endif %}
+        data-input="input_4"
+      >
+      <label
+        for="quantity4"
+        class="quantity-break"
+        data-quantity="{{ block.settings.option_4_quantity }}"
+        data-input="input_4"
+      >
+        {% liquid
+          assign percentage_discount = block.settings.option_4_percentage_off | plus: 0
+          assign percentage_left = 100 | minus: percentage_discount | divided_by: 100.00
+          assign fixed_amount_off = block.settings.option_4_fixed_amount_off | times: 100
+          assign option_4_price = price | times: block.settings.option_4_quantity | times: percentage_left | minus: fixed_amount_off
+
+          assign compare_price = product.selected_or_first_available_variant.price
+          if block.settings.option_4_compare_price == 'compare_price' and product.selected_or_first_available_variant.compare_at_price > 0
+            assign compare_price = product.selected_or_first_available_variant.compare_at_price
+          endif
+          assign option_4_compare_price = compare_price | times: block.settings.option_4_quantity 
+
+          assign option_4_price_difference = option_4_compare_price | minus: option_4_price
+          assign option_4_price_difference_rounded = option_4_price_difference | divided_by: 100.00 | round | times: 100
+          assign option_4_price_each = option_4_price | divided_by: block.settings.option_4_quantity
+          assign option_4_compare_price_each = option_4_compare_price | divided_by: block.settings.option_4_quantity
+        %}
+        {% if block.settings.option_4_badge != blank %}
+          <p class="quantity-break__badge dynamic-price">
+            {% render 'text-with-price',
+              text: block.settings.option_4_badge,
+              quantity: block.settings.option_4_quantity,
+              price: option_4_price,
+              compare_price: option_4_compare_price,
+              amount_saved: option_4_price_difference,
+              amount_saved_rounded: option_4_price_difference_rounded,
+              price_each: option_4_price_each,
+              compare_price_each: option_4_compare_price_each
+            %}
+          </p>
+        {% endif %}
+        {% if block.settings.style == 'vertical' and block.settings.option_4_image != blank %}
+          <div class='quantity-break__image'>
+            <img 
+              src='{{ block.settings.option_4_image | image_url }}'
+              alt="{{ block.settings.option_4_image.alt }}"
+              width='auto'
+              height='auto'
+              loading='lazy'
+            >
+          </div>
+        {% endif %}
+        <div class="quantity-break__content">
+          <div class="quantity-break__left">
+            <span class="quantity-break__label">
+              {%- if block.settings.option_4_label != blank -%}
+                <span class="quantity-break__label-text dynamic-price">
+                  {% render 'text-with-price',
+                    text: block.settings.option_4_label,
+                    quantity: block.settings.option_4_quantity,
+                    price: option_4_price,
+                    compare_price: option_4_compare_price,
+                    amount_saved: option_4_price_difference,
+                    amount_saved_rounded: option_4_price_difference_rounded,
+                    price_each: option_4_price_each,
+                    compare_price_each: option_4_compare_price_each
+                  %}
+                </span>
+              {%- endif -%}
+              {% if block.settings.option_4_benefit != blank %}
+                <span class="quantity-break__benefit dynamic-price">
+                  {% render 'text-with-price',
+                    text: block.settings.option_4_benefit,
+                    quantity: block.settings.option_4_quantity,
+                    price: option_4_price,
+                    compare_price: option_4_compare_price,
+                    amount_saved: option_4_price_difference,
+                    amount_saved_rounded: option_4_price_difference_rounded,
+                    price_each: option_4_price_each,
+                    compare_price_each: option_4_compare_price_each
+                  %}
+                </span>
+              {% endif %}
+            </span>
+            {% if block.settings.option_4_caption != blank %}
+              <span class="quantity-break__caption dynamic-price">
+                {% render 'text-with-price',
+                  text: block.settings.option_4_caption,
+                  quantity: block.settings.option_4_quantity,
+                  price: option_4_price,
+                  compare_price: option_4_compare_price,
+                  amount_saved: option_4_price_difference,
+                  amount_saved_rounded: option_4_price_difference_rounded,
+                  price_each: option_4_price_each,
+                  compare_price_each: option_4_compare_price_each
+                %}
+              </span>
+            {% endif %}
+          </div>
+          <div class="quantity-break__right dynamic-price">
+            {% if block.settings.option_4_price_text != blank %}
+              <span class="quantity-break__price">
+                {% render 'text-with-price',
+                  text: block.settings.option_4_price_text,
+                  quantity: block.settings.option_4_quantity,
+                  price: option_4_price,
+                  compare_price: option_4_compare_price,
+                  amount_saved: option_4_price_difference,
+                  amount_saved_rounded: option_4_price_difference_rounded,
+                  price_each: option_4_price_each,
+                  compare_price_each: option_4_compare_price_each
+                %}
+              </span>
+            {% endif %}
+            {% if option_4_compare_price > option_4_price and block.settings.option_4_compare_price_text != blank %}
+              <span class="quantity-break__compare-price">
+                {% render 'text-with-price',
+                  text: block.settings.option_4_compare_price_text,
+                  quantity: block.settings.option_4_quantity,
+                  price: option_4_price,
+                  compare_price: option_4_compare_price,
+                  amount_saved: option_4_price_difference,
+                  amount_saved_rounded: option_4_price_difference_rounded,
+                  price_each: option_4_price_each,
+                  compare_price_each: option_4_compare_price_each
+                %}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+        {% if product.has_only_default_variant == false and block.settings.enable_variant_selectors %}
+          {% if block.settings.option_4_quantity != 1 or block.settings.enable_variant_selectors_on_quantity_of_1 %}
+            <div class="quantity-break__variants">
+              {% assign has_variants = true %}
+              {% for selectorItem in (1..block.settings.option_4_quantity) %}
+                <div
+                  class="quantity-break__selector-item"
+                  data-select-index="{{ forloop.index0 }}"
+                  data-selected-id="{{ product.selected_or_first_available_variant.id }}"
+                >
+                  <span class="quantity-break__selector-item__number">#{{ selectorItem }}</span>
+                  {%- for option in product.options_with_values -%}
+                    <div class="select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }}  accent-2-color-{{ settings.pickers_text_color }}">
+                      <select
+                        class="quantity-break__variant-select select__select variant-dropdown"
+                        name="options[{{ option.name | escape }}]"
+                        data-product-id="{{ product.selected_or_first_available_variant.id }}"
+                      >
+                        {%- liquid
+                          assign variants_available_arr = product.variants | map: 'available'
+                          assign variants_option1_arr = product.variants | map: 'option1'
+                          assign variants_option2_arr = product.variants | map: 'option2'
+                          assign variants_option3_arr = product.variants | map: 'option3'
+                        -%}
+                        {% for value in option.values %}
+                          {%- liquid
+                            assign option_disabled = true
+
+                            for option1_name in variants_option1_arr
+                              case option.position
+                                when 1
+                                  if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 2
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                                when 3
+                                  if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                    assign option_disabled = false
+                                  endif
+                              endcase
+                            endfor
+                          -%}
+                          <option
+                            value="{{ value | escape }}"
+                            {% if option.selected_value == value %}
+                              selected="selected"
+                            {% endif %}
+                          >
+                            {% if option_disabled -%}
+                              {{- 'products.product.value_unavailable' | t: option_value: value -}}
+                            {%- else -%}
+                              {{- value -}}
+                            {%- endif %}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      {% render 'icon-caret' %}
+                    </div>
+                  {%- endfor -%}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endif %}
+      </label>
+    {% endif %}
+  </div>
+
+  <script data-has-variants="{{ has_variants }}" type="application/json">
+    {{ product.variants | json }}
+  </script>
+</quantity-breaks>

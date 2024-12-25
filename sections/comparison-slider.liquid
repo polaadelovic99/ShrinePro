@@ -1,0 +1,390 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} content-for-grouping animate-section animate--hidden {{ section.settings.visibility }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="content-and-comparison-slider section-group__container__child-grid{% if section.settings.layout == 'slider_first' %} content-and-comparison-slider--slider-first{% endif %}{% if section.settings.title == blank and section.settings.text == blank %} content-and-comparison-slider--no-content{% endif %}">
+      {% assign content_index = 0 %}
+      <div class="content-container content-rte center animate-item animate-item--child index-0{% if section.settings.layout == 'slider_first' %} desktop-index-1{% endif %}">
+        {%- unless section.settings.title == blank -%}
+          {% assign content_index = 1 %}
+          <h2 class="{{ section.settings.heading_size }}">
+            {{ section.settings.title }}
+          </h2>
+        {%- endunless -%}
+        {%- unless section.settings.text == blank -%}
+          {% assign content_index = 1 %}
+          <div class='rte'>
+            {{ section.settings.text }}
+          </div>
+        {%- endunless -%}
+        {%- if section.settings.button_label != blank -%}
+          <a
+            {% if section.settings.link %}
+              href="{{ section.settings.link }}"
+            {% else %}
+              role="link" aria-disabled="true"
+            {% endif %}
+            class="button mb-1em {% if section.settings.button_style_secondary %}button--secondary{% else %}button--primary{% endif %}"
+          >
+            {{- section.settings.button_label | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.atc_button_label != blank -%}
+          {% if section.settings.atc_product == blank %}
+            <button
+              id="SectionAtcBtn-{{ section.id }}"
+              type="button"
+              class="button mb-1em main-product-atc button--has-spinner"
+              {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+                disabled
+              {% endif %}
+            >
+              {{ section.settings.atc_button_label | escape }}
+              <div class="loading-overlay__spinner">
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="spinner"
+                  viewBox="0 0 66 66"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                </svg>
+              </div>
+            </button>
+          {% else %}
+            {% assign product_form_id = 'section-product-form-'
+              | append: section.id
+            %}
+            {% render 'separate-atc-btn',
+              product: section.settings.atc_product,
+              product_form_id: product_form_id,
+              label: section.settings.atc_button_label
+            %}
+          {% endif %}
+        {%- endif -%}
+      </div>
+      <comparison-slider class="comparison-slider animate-item animate-item--child index-{{ content_index }}{% if section.settings.layout == 'slider_first' %} desktop-index-0{% endif %}">
+        {% unless section.settings.before_label == blank %}
+          <div class="comparison-slider__before-text color-{{ section.settings.labels_color_scheme }}">
+            <h3>{{ section.settings.before_label }}</h3>
+          </div>
+        {% endunless %}
+        {% unless section.settings.after_label == blank %}
+          <div class="comparison-slider__after-text color-{{ section.settings.labels_color_scheme }}">
+            <h3>{{ section.settings.after_label }}</h3>
+          </div>
+        {% endunless %}
+        <div class="comparison-slider__overlay{% if section.settings.before_image != blank %} color-{{ section.settings.color_scheme }}{% endif %}">
+          {%- if section.settings.before_image != blank -%}
+            {{ section.settings.before_image | image_url: width: 1000 | image_tag: loading: 'lazy', width: 450 }}
+          {%- endif -%}
+        </div>
+        <div class="comparison-slider__line comparison-slider__line--{{ section.settings.arrows_style }} color-{{ section.settings.line_color }}">
+          <div class="comparison-slider__arrow-left">&nbsp</div>
+          <div class="comparison-slider__arrow-right">&nbsp</div>
+        </div>
+        <input type="range" class="comparison-slider__input" min="0" max="100" value="50">
+        <div class="comparison-slider__underlay color-{{ section.settings.color_scheme }}">
+          {%- if section.settings.after_image != blank -%}
+            {{ section.settings.after_image | image_url: width: 1000 | image_tag: loading: 'lazy', width: 450 }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </comparison-slider>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Before & After slider",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Before & After slider",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Highlight key differences between before and after using your product.</p>",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.slideshow.blocks.slide.settings.button_label.label",
+      "info": "t:sections.slideshow.blocks.slide.settings.button_label.info"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.slideshow.blocks.slide.settings.link.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_style_secondary",
+      "label": "t:sections.slideshow.blocks.slide.settings.secondary_style.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "atc_button_label",
+      "label": "Add to Cart button label",
+      "info": "Leave the label blank to hide the Add to Cart button."
+    },
+    {
+      "type": "product",
+      "id": "atc_product",
+      "label": "ATC Custom product",
+      "info": "IMPORTANT: If empty, the button will add the main product FROM THE PRODUCT PAGE to cart (INCLUDING the selected variant/quantity, upsells etc.)"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "slider_first",
+          "label": "Slider first"
+        },
+        {
+          "value": "slider_second",
+          "label": "Slider second"
+        }
+      ],
+      "default": "slider_second",
+      "label": "Desktop slider placement"
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "Before label",
+      "default": "Before"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "After label",
+      "default": "After"
+    },
+    {
+      "type": "select",
+      "id": "labels_color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "accent-1",
+      "label": "Labels color scheme"
+    },
+    {
+      "type": "select",
+      "id": "line_color",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+        ],
+      "default": "background-1",
+      "label": "Separator line color"
+    },
+    {
+      "type": "select",
+      "id": "arrows_style",
+      "options": [
+        {
+          "value": "classic",
+          "label": "Classic"
+        },
+        {
+          "value": "circle",
+          "label": "Circle around"
+        }
+      ],
+      "default": "circle",
+      "label": "Arrows style"
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "Before image"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "After image"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Before & After slider"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

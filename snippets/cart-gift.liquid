@@ -1,0 +1,203 @@
+<div 
+  class='cart-drawer-gift-container accent-color-{{ block.settings.accent_color }}'
+  style="
+    --image-size: {{ block.settings.image_size }}rem;
+    --image-size-number: {{ block.settings.image_size }};
+    --image-border-radius: {{ block.settings.image_corner_radius | divided_by: 10.0 }}rem;
+    --title-font-size: {{ block.settings.title_size }}rem;
+    --desc-font-size: {{ block.settings.desc_size }}rem;
+    --price-font-size: {{ block.settings.price_size }}rem;
+    --border-radius: {{ block.settings.corner_radius | divided_by: 10.0 }}rem;
+    --regular-border-color: {{ block.settings.regular_border_color }};
+    --selected-border-color: {{ block.settings.selected_border_color }};
+    --border-width: {{ block.settings.border_width }}rem;
+    --regular-bg-color: {{ block.settings.regular_bg_color }};
+    --selected-bg-color: {{ block.settings.selected_bg_color }};
+    --margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;
+    --margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;
+  "
+  {{ block.shopify_attributes }}
+>
+  {% liquid
+    assign product = block.settings.product
+  %}
+  {% if product == blank %}
+    <h4 class='center'>Assign the gift product in block settings</h4>
+  {% else %}
+    {% liquid
+      assign requirement = block.settings.requirement | times: 100.0
+      if cart.items_subtotal_price >= requirement
+        assign unlocked = true
+        assign progress_message = block.settings.unlocked_progress_text
+      else 
+        assign unlocked = false
+        assign progress_message = block.settings.locked_progress_text
+      endif
+    %}
+    <style>
+      .cart-drawer .cart-item--product-{{ product.handle }} {
+        display: none;
+      }
+    </style>
+    <cart-drawer-gift
+      class='cart-drawer-gift upsell color-{{ block.settings.color_scheme }}{% if block.settings.show_custom_bg %} upsell--custom-bg{% endif %}{% if block.settings.show_box_shadow %} upsell--box-shadow{% endif %}{% if block.settings.show_border %} upsell--border{% endif %}{% if block.settings.toggle_element == 'container' %} upsell--container-btn{% endif %}'
+      data-selected="{{ unlocked }}"
+      data-handle="{{ product.handle }}"
+      data-id="{{ product.selected_or_first_available_variant.id }}"
+    >
+      {% if progress_message != blank %}
+        {% capture requirement_difference_money %}
+          <span>{{ requirement | minus: cart.items_subtotal_price | money_without_trailing_zeros }}</span>
+        {% endcapture %}
+        <h3 class='cart-drawer-gift__progress center custom-font-size' style='--mobile-text-size: {{ block.settings.progress_mobile_text_size | divided_by: 10.0 }}rem;--desktop-text-size: {{ block.settings.progress_desktop_text_size | divided_by: 10.0 }}rem;'>
+          {{ progress_message | replace: '[amount]', requirement_difference_money }}
+        </h3>
+      {% endif %}
+      <div class='upsell__container'>
+        {% if block.settings.show_image %}
+          {% liquid
+            if block.settings.product_image != blank
+              assign product_image = block.settings.product_image
+            else 
+              assign product_image = product.featured_image
+            endif
+          %}
+          {% if product_image != blank %}
+            <div class='upsell__image'>
+              <img
+                src="{{ product_image | image_url: width: 500 }}"
+                alt="{{ product_image.alt | escape }}"
+                class="upsell__image__img"
+                loading="lazy"
+                width="auto"
+                height="auto"
+              >
+              {% if block.settings.show_image_locked_overlay and unlocked == false %}
+                <div class='cart-drawer-gift__image__locked'>
+                  <span class="lock"></span>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endif %}
+        <div class='upsell__content{% if block.settings.hide_compare_price %} hide-compare-price{% endif %}'>
+          <div class='upsell__title'>
+            <h3>
+              {{ product.title }}
+            </h3>
+            {% if block.settings.price_position == 'next_to_title' %}
+              <div class='upsell__price'>
+                {% if product.first_available_variant.compare_at_price > product.first_available_variant.price %}
+                  <span class='compare-price'>{{ product.first_available_variant.compare_at_price | money }}</span>
+                {% endif %}
+                <span class='regular-price'>
+                  {% if block.settings.displayed_price == 'text' %}
+                    {{ block.settings.displayed_price_text }}
+                  {% else %}
+                    {{ product.first_available_variant.price | money }}
+                  {% endif %}
+                </span>
+              </div>
+            {% endif %}
+          </div>
+          {%- if block.settings.product_desc != blank -%}
+            <p class="upsell__desc">
+              {{ block.settings.product_desc }}
+            </p>
+          {%- endif -%}
+          {%- unless product.has_only_default_variant -%}
+            {% if block.settings.show_variant_picker %}
+              <div class='upsell__variant-picker'>
+                {%- for option in product.options_with_values -%}
+                  <div class="upsell__select select select--small no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+                    <select class="select__select variant-dropdown" name="options[{{ option.name | escape }}]">
+                      {%- liquid
+                        assign variants_available_arr = product.variants | map: 'available'
+                        assign variants_option1_arr = product.variants | map: 'option1'
+                        assign variants_option2_arr = product.variants | map: 'option2'
+                        assign variants_option3_arr = product.variants | map: 'option3'
+                      -%}
+                      {% for value in option.values %}
+                        {%- liquid
+                          assign option_disabled = true
+      
+                          for option1_name in variants_option1_arr
+                            case option.position
+                              when 1
+                                if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                  assign option_disabled = false
+                                endif
+                              when 2
+                                if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                  assign option_disabled = false
+                                endif
+                              when 3
+                                if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                  assign option_disabled = false
+                                endif
+                            endcase
+                          endfor
+                        -%}
+                        <option
+                          value="{{ value | escape }}"
+                        >
+                          {% if option_disabled -%}
+                            {{- 'products.product.value_unavailable' | t: option_value: value -}}
+                          {%- else -%}
+                            {{- value -}}
+                          {%- endif %}
+                        </option>
+                      {% endfor %}
+                    </select>
+                    {% render 'icon-caret' %}
+                  </div>
+                {%- endfor -%}
+      
+                <script type="application/json">
+                  {{ product.variants | json }}
+                </script>
+              </div>
+            {% endif %}
+          {% endunless %}
+          {% if block.settings.price_position == 'separate' %}
+            <div class='upsell__price upsell__price--separate'>
+              {% if product.first_available_variant.compare_at_price > product.first_available_variant.price %}
+                <span class='compare-price'>{{ product.first_available_variant.compare_at_price | money }}</span>
+              {% endif %}
+              <span class='regular-price'>
+                {% if block.settings.displayed_price == 'text' %}
+                  {{ block.settings.displayed_price_text }}
+                {% else %}
+                  {{ product.first_available_variant.price | money }}
+                {% endif %}
+              </span>
+            </div>
+          {% endif %}
+        </div>
+        {% assign product_form_id = 'cart-drawer-gift-' | append: block.id %}
+        <product-form data-is-cart-upsell='true'>
+          {%- form 'product',
+            product,
+            id: product_form_id,
+            class: 'form',
+            novalidate: 'novalidate',
+            data-type: 'add-to-cart-form'
+          -%}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <button
+              id="{{ product_form_id }}-submit"
+              type="submit"
+              name="add"
+              class="cart-primary-upsell__btn hidden"
+              {% if upsell_1_item.selected_or_first_available_variant.available == false %}
+                disabled
+              {% endif %}
+            >
+              buy now
+            </button>
+          {%- endform -%}
+        </product-form>
+      </div>
+    </cart-drawer-gift>
+  {% endif %}
+</div>

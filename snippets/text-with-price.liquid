@@ -1,0 +1,27 @@
+{% if quantity and text contains '[quantity]' %}
+  {% assign text = text | replace: '[quantity]', quantity %}
+{% endif %}
+{% if name and text contains '[name]' %}
+  {% assign text = text | replace: '[name]', name %}
+{% endif %}
+{% if text contains '[price]' and price %}
+  {% assign text = text | replace: '[price]', ' [price] ' %}
+  {{ text | split: '[price]' | first | remove_last: ' ' }}<span>{{ price | money_without_trailing_zeros }}</span>{{ text | split: '[price]' | last | remove_first: ' ' }}
+{% elsif text contains '[compare_price]' and compare_price %}
+  {% assign text = text | replace: '[compare_price]', ' [compare_price] ' %}
+  {{ text | split: '[compare_price]' | first | remove_last: ' ' }}<span>{{ compare_price | money_without_trailing_zeros }}</span>{{ text | split: '[compare_price]' | last | remove_first: ' ' }}
+{% elsif text contains '[amount_saved]' and amount_saved %}
+  {% assign text = text | replace: '[amount_saved]', ' [amount_saved] ' %}
+  {{ text | split: '[amount_saved]' | first | remove_last: ' ' }}<span>{{ amount_saved | money_without_trailing_zeros }}</span>{{ text | split: '[amount_saved]' | last | remove_first: ' ' }}
+{% elsif text contains '[amount_saved_rounded]' and amount_saved_rounded %}
+  {% assign text = text | replace: '[amount_saved_rounded]', ' [amount_saved_rounded] ' %}
+  {{ text | split: '[amount_saved_rounded]' | first | remove_last: ' ' }}<span>{{ amount_saved_rounded | money_without_trailing_zeros }}</span>{{ text | split: '[amount_saved_rounded]' | last | remove_first: ' ' }}
+{% elsif text contains '[price_each]' and price_each %}
+  {% assign text = text | replace: '[price_each]', ' [price_each] ' %}
+  {{ text | split: '[price_each]' | first | remove_last: ' ' }}<span>{{ price_each | money_without_trailing_zeros }}</span>{{ text | split: '[price_each]' | last | remove_first: ' ' }}
+{% elsif text contains '[compare_price_each]' and compare_price_each %}
+  {% assign text = text | replace: '[compare_price_each]', ' [compare_price_each] ' %}
+  {{ text | split: '[compare_price_each]' | first | remove_last: ' ' }}<span>{{ compare_price_each | money_without_trailing_zeros }}</span>{{ text | split: '[compare_price_each]' | last | remove_first: ' ' }}
+{% else %}
+  {{ text }}
+{% endif %}

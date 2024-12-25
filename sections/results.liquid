@@ -1,0 +1,422 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} content-for-grouping animate-section animate--hidden {{ section.settings.visibility }}">
+  {% if section.settings.display_id %}
+    <copy-button class='section-id-btn button' data-content="#shopify-section-{{ section.id }}" data-success="false">
+      <span class="copy-text">Click to copy section ID</span>
+      <span class="copy-success">ID copied successfully!</span>
+    </copy-button>
+  {% endif %}
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="content-and-results section-group__container__child-grid{% if section.settings.layout == 'results_first' %} content-and-results--results-first{% endif %}{% if section.settings.title == blank and section.settings.text == blank and section.settings.image == blank %} content-and-results--no-content{% endif %}">
+      {% assign content_index = 0 %}
+      <div class="content-container content-rte center animate-item animate-item--child index-0{% if section.settings.layout == 'results_first' %} desktop-index-1{% endif %}">
+        {%- unless section.settings.title == blank -%}
+          {% assign content_index = 1 %}
+          <h2 class="{{ section.settings.heading_size }}">
+            {{ section.settings.title }}
+          </h2>
+        {%- endunless -%}
+        {%- unless section.settings.text == blank -%}
+          {% assign content_index = 1 %}
+          <div class='rte'>
+            {{ section.settings.text }}
+          </div>
+        {%- endunless -%}
+        {%- if section.settings.video != blank -%}
+          <div class="content-and-results__image">
+            <internal-video data-autoplay='true'>
+              <video 
+                width="100%" 
+                height="auto" 
+                preload='metadata'
+                poster="{{ section.settings.video.preview_image | image_url }}"
+                loop muted playsinline autoplay disablepictureinpicture
+              >
+                {% for source in section.settings.video.sources %}
+                  <source 
+                    data-src="{{ source.url }}" 
+                    type="{{ source.mime_type }}"
+                  >
+                {% endfor %}
+              </video>
+            </internal-video>
+          </div>
+        {%- elsif section.settings.image != blank -%}
+          {%- capture sizes -%}
+            (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 50 | divided_by: 2 }}px,
+            (min-width: 900px) calc((100vw - 130px) / 2), (min-width: 700px) 600px, calc(100vw - 50px)
+          {%- endcapture -%}
+          <div class="content-and-results__image">
+            {{
+              section.settings.image
+              | image_url: width: 1500
+              | image_tag: loading: 'lazy', sizes: sizes, widths: '165, 360, 535, 750, 1070, 1500'
+            }}
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="results-container">
+        <div class="results animate-item animate-item--child index-{{ content_index }}{% if section.settings.layout == 'results_first' %} desktop-index-0{% endif %}">
+          {%- unless section.settings.results_headline == blank -%}
+            <h3 class="title {{ section.settings.results_headline_size }} {% if section.settings.results_headline_alignment == 'center' %} center{% endif %}">
+              {{ section.settings.results_headline | escape }}
+            </h3>
+          {%- endunless -%}
+          <div class="results__rows-container">
+            {%- for row in section.blocks -%}
+              <div class="results__row">
+                <div class="results__percentage" style="--percentage: {{ row.settings.percentage }}%">
+                  <p>{{ row.settings.percentage }}%</p>
+                </div>
+                <div class="results__text">
+                  {{ row.settings.row_text }}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+          {%- unless section.settings.caption == blank -%}
+            <div class="results__caption">
+              {{ section.settings.caption }}
+            </div>
+          {%- endunless -%}
+          {%- if section.settings.button_label != blank -%}
+            <a
+              {% if section.settings.link %}
+                href="{{ section.settings.link }}"
+              {% else %}
+                role="link" aria-disabled="true"
+              {% endif %}
+              class="button btn--mt-center {% if section.settings.button_style_secondary %}button--secondary{% else %}button--primary{% endif %}"
+            >
+              {{- section.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.atc_button_label != blank -%}
+            {% if section.settings.atc_product == blank %}
+              <button
+                id="SectionAtcBtn-{{ section.id }}"
+                type="button"
+                class="button btn--mt-center main-product-atc button--has-spinner"
+                {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+                  disabled
+                {% endif %}
+              >
+                {{ section.settings.atc_button_label | escape }}
+                <div class="loading-overlay__spinner">
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    class="spinner"
+                    viewBox="0 0 66 66"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                  </svg>
+                </div>
+              </button>
+            {% else %}
+              {% assign product_form_id = 'section-product-form-'
+                | append: section.id
+              %}
+              {% render 'separate-atc-btn',
+                product: section.settings.atc_product,
+                product_form_id: product_form_id,
+                label: section.settings.atc_button_label
+              %}
+            {% endif %}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Results",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_id",
+      "label": "Display section ID",
+      "info": "ID is used in the Sections group section to merge 2 sections. ID can also be put inside any button link and the button will scroll to this section.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "visibility",
+      "options": [
+        {
+          "value": "desktop-hidden",
+          "label": "Mobile only"
+        },
+        {
+          "value": "mobile-hidden",
+          "label": "Desktop only"
+        },
+        {
+          "value": "always-display",
+          "label": "All devices"
+        }
+      ],
+      "label": "Display on",
+      "default": "always-display"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Results",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Talk about results of your customers and how your product improved their life.</p>",
+      "label": "Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "paragraph",
+      "content": "Or"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "Use autoplay mp4 instead of GIFs & animated WEBPs."
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "t:sections.all.colors.accent_1.label"
+        },
+        {
+          "value": "accent-2",
+          "label": "t:sections.all.colors.accent_2.label"
+        },
+        {
+          "value": "background-1",
+          "label": "t:sections.all.colors.background_1.label"
+        },
+        {
+          "value": "background-2",
+          "label": "t:sections.all.colors.background_2.label"
+        },
+        {
+          "value": "inverse",
+          "label": "t:sections.all.colors.inverse.label"
+        }
+      ],
+      "default": "background-1",
+      "label": "t:sections.all.colors.label"
+    },
+    {
+      "type": "header",
+      "content": "Results"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "results_first",
+          "label": "Results first"
+        },
+        {
+          "value": "results_second",
+          "label": "Results second"
+        }
+      ],
+      "default": "results_second",
+      "label": "Desktop results placement"
+    },
+    {
+      "type": "text",
+      "id": "results_headline",
+      "default": "Results heading",
+      "label": "Results heading"
+    },
+    {
+      "type": "select",
+      "id": "results_headline_size",
+      "options": [
+        {
+          "value": "h3",
+          "label": "Small"
+        },
+        {
+          "value": "h2",
+          "label": "Medium"
+        },
+        {
+          "value": "h1",
+          "label": "Large"
+        }
+      ],
+      "default": "h2",
+      "label": "Results heading size"
+    },
+    {
+      "type": "select",
+      "id": "results_headline_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left",
+      "label": "Results heading alignment"
+    },
+    {
+      "type": "richtext",
+      "id": "caption",
+      "default": "<p>Caption about the results and/or link for their proof.</p>",
+      "label": "Caption"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.slideshow.blocks.slide.settings.button_label.label",
+      "info": "t:sections.slideshow.blocks.slide.settings.button_label.info"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.slideshow.blocks.slide.settings.link.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_style_secondary",
+      "label": "t:sections.slideshow.blocks.slide.settings.secondary_style.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "atc_button_label",
+      "label": "Add to Cart button label",
+      "info": "Leave the label blank to hide the Add to Cart button."
+    },
+    {
+      "type": "product",
+      "id": "atc_product",
+      "label": "ATC Custom product",
+      "info": "IMPORTANT: If empty, the button will add the main product FROM THE PRODUCT PAGE to cart (INCLUDING the selected variant/quantity, upsells etc.)"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Result row",
+      "settings": [
+        {
+          "type": "range",
+          "id": "percentage",
+          "min": 0,
+          "max": 100,
+          "default": 90,
+          "step": 1,
+          "label": "Percentage"
+        },
+        {
+          "type": "richtext",
+          "id": "row_text",
+          "default": "<p>Noticed that this product has significantly improved their life.</p>",
+          "label": "Result"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Results",
+      "blocks": [
+        {
+          "type": "row"
+        },
+        {
+          "type": "row"
+        },
+        {
+          "type": "row"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

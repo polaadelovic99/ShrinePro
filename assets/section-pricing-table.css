@@ -1,0 +1,283 @@
+.pricing-table--has-content {
+  margin-top: 3rem;
+}
+
+.pricing-table {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 5rem;
+}
+
+.plan-card {
+  width: 100%;
+  max-width: 32rem;
+  box-shadow: 0.3rem 0.3rem 1rem rgba(var(--color-base-text), 0.2);
+  position: relative;
+}
+
+.plan-card__badge {
+  position: absolute;
+  font-weight: 700;
+  font-size: 1.8rem;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0 0.5em;
+  border-radius: 0.2em;
+  z-index: 1;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.plan-card__icon {
+  --icon-size: 3rem;
+}
+.plan-card__icon--medium {
+  --icon-size: 4.5rem;
+}
+.plan-card__icon--large {
+  --icon-size: 6rem;
+}
+.plan-card__icon img {
+  width: var(--icon-size);
+}
+.plan-card__icon .material-icon {
+  font-size: var(--icon-size);
+}
+
+.plan-card__title {
+  margin: 0;
+  font-size: 2rem;
+}
+.plan-card__image {
+  margin-bottom: 1.5rem;
+}
+.plan-card__image img {
+  border-radius: 1rem 1rem 0 0;
+}
+.pricing-plan__desc,
+.pricing-plan__benefits {
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+}
+
+.pricing-plan__benefits {
+  padding-left: 2.25rem;
+}
+
+.pricing-plan__benefit-item {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.pricing-plan__benefit-item__icon {
+  margin-right: 0.5rem;
+  color: rgb(var(--color-background));
+  background: none;
+  flex-shrink: 0;
+  height: 2.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.pricing-plan__benefit-item__icon svg {
+  height: 1.5rem;
+  width: 1.5rem;
+  margin-right: 0.3rem;
+}
+
+.pricing-plan__benefit-item__text {
+  font-size: 1.5rem;
+  line-height: 2.1rem;
+  margin: 0;
+  text-align: left;
+}
+
+.plan-card-style-1 {
+  padding: 3rem 0 2rem;
+  border-radius: 1rem;
+}
+
+.plan-card__btn {
+  display: flex;
+  justify-content: center;
+  padding: 0 2rem;
+  background: none;
+}
+
+.plan-card-style-1 .plan-card__icon,
+.plan-card-style-2 .plan-card__icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.plan-card-style-1 .plan-card__title,
+.plan-card-style-2 .plan-card__title {
+  text-align: center;
+  margin: 0;
+  padding: 0 2rem;
+  margin-bottom: 1.25rem;
+}
+
+.plan-card-style-1 .plan-card__price-container {
+  padding: 1rem 2rem;
+  margin: 0 -0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2.5rem;
+  box-shadow: inset 0 1.1rem 1rem -1rem rgba(255, 255, 255, 0.75),
+    inset 0 -1.1rem 1rem -1rem rgba(0, 0, 0, 0.25),
+    0 1.2rem 1rem -1rem rgba(0, 0, 0, 0.25);
+}
+
+.plan-card__price {
+  color: rgb(var(--color-foreground));
+  font-size: 2.5rem;
+  font-weight: 700;
+  display: block;
+  text-align: center;
+  line-height: 1;
+}
+
+.plan-card__price-text {
+  color: rgb(var(--color-foreground));
+  font-size: 1.2rem;
+  display: block;
+  text-align: center;
+  line-height: 1;
+}
+
+.plan-card-style-2 {
+  padding-bottom: 2rem;
+  border-radius: 1rem;
+}
+
+.plan-card-style-2 .plan-card__top {
+  padding-top: 3rem;
+  border-radius: 1rem 1rem 0 0;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  margin: 0 -0.3rem;
+  background: none;
+}
+
+.plan-card-style-2 .plan-card__title {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+.plan-card-style-2 .plan-card__title::before {
+  content: "";
+  display: block;
+  --circle-size: 80rem;
+  width: var(--circle-size);
+  height: var(--circle-size);
+  border-radius: 50%;
+  position: absolute;
+  z-index: -1;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 1.1rem 1rem -0.75rem rgba(var(--color-base-text), 0.2);
+  background: rgb(var(--color-background));
+}
+
+.plan-card-style-2 .plan-card__price-container {
+  background: none;
+}
+
+.plan-card-style-2 .plan-card__price-container {
+  text-align: center;
+  padding: 0 2rem;
+  margin-bottom: 1.25rem;
+}
+
+.plan-card-style-2 .plan-card__price-container span,
+.plan-card-style-3 .plan-card__price-container span {
+  display: inline;
+}
+.plan-card-style-3 {
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+.plan-card-style-3 .plan-card__top {
+  padding: 2.5rem 2rem 4.5rem;
+  margin-bottom: -2.5rem;
+  border-radius: 1rem;
+  position: relative;
+  text-align: center;
+}
+.plan-card-style-3 .plan-card__title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.plan-card-style-3 .plan-card__image {
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+.plan-card-style-3 .plan-card__price {
+  font-size: 2rem;
+}
+.plan-card-style-3 .plan-card__bottom {
+  background: rgb(var(--color-background));
+  margin: 0 1rem;
+  padding-bottom: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0.5rem 0.5rem 1.5rem rgba(var(--color-base-text), 0.3);
+  padding-top: 3rem;
+  position: relative;
+}
+.plan-card-style-3 .plan-card__bottom--icon-small {
+  padding-top: 4rem;
+}
+.plan-card-style-3 .plan-card__bottom--icon-medium {
+  padding-top: 5rem;
+}
+.plan-card-style-3 .plan-card__bottom--icon-large {
+  padding-top: 7rem;
+}
+.plan-card-style-3 .plan-card__icon {
+  position: absolute;
+  left: 2.5rem;
+  top: calc(100% - 3.5rem);
+  z-index: 1;
+  box-shadow: 0.1rem 0.1rem 0.75rem rgba(var(--color-base-text), 0.3);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  padding: calc(var(--icon-size) * 0.1);
+}
+.plan-card-style-3 .plan-card__icon img {
+  font-size: calc(var(--icon-size) * 0.8);
+  height: calc(var(--icon-size) * 0.8);
+  object-fit: cover;
+  object-fit: contain;
+}
+.plan-card-style-3 .plan-card__icon .material-icon {
+  font-size: calc(var(--icon-size) * 0.8);
+}
+.plan-card-style-3 .plan-card__icon--small {
+  --icon-size: 3rem;
+}
+.plan-card-style-3 .plan-card__icon--medium {
+  --icon-size: 4.5rem;
+}
+.plan-card-style-3 .plan-card__icon--large {
+  --icon-size: 6rem;
+}
+.plan-card__btn .button {
+  --color-button: var(--color-background);
+  --color-button-text: var(--color-foreground);
+}
+.plan-card__btn .button--secondary {
+  --color-button-text: var(--color-background);
+  --color-button: var(--color-foreground);
+}
+.plan-card--has-image,
+.plan-card--has-image .plan-card__top {
+  padding-top: 0;
+}

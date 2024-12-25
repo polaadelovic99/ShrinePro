@@ -1,0 +1,121 @@
+{% style %}
+  :root {
+    --color-base-text: {{ section.settings.colors_text.red }}, {{ section.settings.colors_text.green }}, {{ section.settings.colors_text.blue }};
+    --color-shadow: {{ section.settings.colors_text.red }}, {{ section.settings.colors_text.green }}, {{ section.settings.colors_text.blue }};
+    --color-base-background-1: {{ section.settings.colors_background_1.red }}, {{ section.settings.colors_background_1.green }}, {{ section.settings.colors_background_1.blue }};
+    --color-base-background-2: {{ section.settings.colors_background_2.red }}, {{ section.settings.colors_background_2.green }}, {{ section.settings.colors_background_2.blue }};
+    --color-base-solid-button-labels: {{ section.settings.colors_solid_button_labels.red }}, {{ section.settings.colors_solid_button_labels.green }}, {{ section.settings.colors_solid_button_labels.blue }};
+    --color-base-outline-button-labels: {{ section.settings.colors_outline_button_labels.red }}, {{ section.settings.colors_outline_button_labels.green }}, {{ section.settings.colors_outline_button_labels.blue }};
+    --color-base-accent-1: {{ section.settings.colors_accent_1.red }}, {{ section.settings.colors_accent_1.green }}, {{ section.settings.colors_accent_1.blue }};
+    --color-base-accent-2: {{ section.settings.colors_accent_2.red }}, {{ section.settings.colors_accent_2.green }}, {{ section.settings.colors_accent_2.blue }};
+    --payment-terms-background-color: {{ section.settings.colors_background_1 }};
+  
+    --gradient-base-background-1: {% if section.settings.gradient_background_1 != blank %}{{ section.settings.gradient_background_1 }}{% else %}{{ section.settings.colors_background_1 }}{% endif %};
+    --gradient-base-background-2: {% if section.settings.gradient_background_2 != blank %}{{ section.settings.gradient_background_2 }}{% else %}{{ section.settings.colors_background_2 }}{% endif %};
+    --gradient-base-accent-1: {% if section.settings.gradient_accent_1 != blank %}{{ section.settings.gradient_accent_1 }}{% else %}{{ section.settings.colors_accent_1 }}{% endif %};
+    --gradient-base-accent-2: {% if section.settings.gradient_accent_2 != blank %}{{ section.settings.gradient_accent_2 }}{% else %}{{ section.settings.colors_accent_2 }}{% endif %}
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Store colors changer",
+  "limit": 1,
+  "disabled_on": {
+      "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This section is used to change your global store colors on THIS PAGE ONLY."
+    },
+    {
+      "type": "header",
+      "content": "IMPORTANT"
+    },
+    {
+      "type": "paragraph",
+      "content": "Place this section on top of the list of your added sections to avoid any delays in loading of the changed colors."
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.colors.settings.header__1.content"
+    },
+    {
+      "type": "color",
+      "id": "colors_solid_button_labels",
+      "default": "#FDFBF7",
+      "label": "t:settings_schema.colors.settings.colors_solid_button_labels.label",
+      "info": "t:settings_schema.colors.settings.colors_solid_button_labels.info"
+    },
+    {
+      "type": "color",
+      "id": "colors_accent_1",
+      "default": "#dd1d1d",
+      "label": "t:settings_schema.colors.settings.colors_accent_1.label",
+      "info": "t:settings_schema.colors.settings.colors_accent_1.info"
+    },
+    {
+      "id": "gradient_accent_1",
+      "type": "color_background",
+      "label": "t:settings_schema.colors.settings.gradient_accent_1.label"
+    },
+    {
+      "type": "color",
+      "id": "colors_accent_2",
+      "default": "#dd1d1d",
+      "label": "t:settings_schema.colors.settings.colors_accent_2.label"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_accent_2",
+      "label": "t:settings_schema.colors.settings.gradient_accent_2.label"
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.colors.settings.header__2.content"
+    },
+    {
+      "type": "color",
+      "id": "colors_text",
+      "default": "#2E2A39",
+      "label": "t:settings_schema.colors.settings.colors_text.label",
+      "info": "t:settings_schema.colors.settings.colors_text.info"
+    },
+    {
+      "type": "color",
+      "id": "colors_outline_button_labels",
+      "default": "#2E2A39",
+      "label": "t:settings_schema.colors.settings.colors_outline_button_labels.label",
+      "info": "t:settings_schema.colors.settings.colors_outline_button_labels.info"
+    },
+    {
+      "type": "color",
+      "id": "colors_background_1",
+      "default": "#FFFFFF",
+      "label": "t:settings_schema.colors.settings.colors_background_1.label"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_background_1",
+      "label": "t:settings_schema.colors.settings.gradient_background_1.label"
+    },
+    {
+      "type": "color",
+      "id": "colors_background_2",
+      "default": "#F3F3F3",
+      "label": "t:settings_schema.colors.settings.colors_background_2.label"
+    },
+    {
+      "type": "color_background",
+      "id": "gradient_background_2",
+      "label": "t:settings_schema.colors.settings.gradient_background_2.label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store colors changer"
+    }
+  ]
+}
+{% endschema %}
