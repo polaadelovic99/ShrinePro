@@ -15,7 +15,7 @@
         "template--21507361505575__cfca4268-6358-426c-98ab-d292aeef11e5-slide-1": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/241.jpg",
+            "image": "shopify://shop_images/WhatsApp_Image_2024-12-08_at_6.46.42_PM.jpg",
             "heading": "Pure Air",
             "heading_size": "h1",
             "subheading": "Breathe Clean, Live Healthy with Purilify™",
@@ -27,7 +27,7 @@
             "box_align": "bottom-left",
             "show_text_box": false,
             "text_alignment": "left",
-            "image_overlay_opacity": 0,
+            "image_overlay_opacity": 50,
             "color_scheme": "accent-2",
             "transparent_container_color": "white",
             "text_alignment_mobile": "left"
@@ -151,8 +151,8 @@
         "others_label": "Others",
         "others_label_size": 18,
         "checkmark_style": "regular",
-        "checkmark_color": "#4770DB",
-        "checkmark_bg_color": "#4770DB",
+        "checkmark_color": "#4770db",
+        "checkmark_bg_color": "#4770db",
         "x_style": "regular",
         "x_color": "#121212",
         "x_bg_color": "#dbdbdb",
@@ -283,7 +283,7 @@
             "uppercase_text": true,
             "display_price": true,
             "enable_custom_color": true,
-            "custom_color": "#4770DB",
+            "custom_color": "#4770db",
             "margin_top": 24,
             "margin_bottom": 24
           }
