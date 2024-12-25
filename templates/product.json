@@ -1,12 +1,12 @@
 /*
-* ------------------------------------------------------------
-* IMPORTANT: The contents of this file are auto-generated.
-*
-* This file may be updated by the Shopify admin theme editor
-* or related systems. Please exercise caution as any changes
-* made to this file may be overwritten.
-* ------------------------------------------------------------
-*/
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -22,21 +22,6 @@
             "margin_bottom": 0
           }
         },
-        "a6eb81db-40e4-43e0-972f-32db010a4a56": {
-          "type": "rating_stars",
-          "settings": {
-            "rating": 4.7,
-            "star_color": "#ffcc00",
-            "bg_stars_style": "full",
-            "bg_star_color": "#ececec",
-            "label": "تقييمات من 32,346+ مسافر",
-            "size": 16,
-            "alignment": "flex-start",
-            "scroll_id": "",
-            "margin_top": 0,
-            "margin_bottom": 9
-          }
-        },
         "price": {
           "type": "price",
           "disabled": true,
@@ -46,40 +31,6 @@
             "compare_price_color": "text",
             "hide_sale_badge": false,
             "margin_top": 9,
-            "margin_bottom": 15
-          }
-        },
-        "emoji_benefits_rcc9ex": {
-          "type": "emoji_benefits",
-          "settings": {
-            "benefits": "<p> ابدأ رحلة سفرك بدون تعب  💆‍♀️<br\/><br\/> وفر وقت و تكاليف تسجيل الأمتعة الباهظة 💰 <br\/><br\/> احزم ملابس تكفيك أكثر من 14 يوم  بكل سهولة وبدون تجاعيد 👚<br\/><br\/> مصنوعة من مادة متينة ومقاومة للماء 💦<br\/><br\/> معتمدة كحقيبة يد و خفيفة الوزن  ✈️<\/p>",
-            "margin_top": 15,
-            "margin_bottom": 15
-          }
-        },
-        "5fcc0428-e768-4cb7-bea3-eb0274198dd1": {
-          "type": "variant_picker",
-          "settings": {
-            "picker_types": "pills, pills, pills",
-            "custom_labels": "",
-            "swatches_size": "medium",
-            "swatches_custom_colors": "disabled",
-            "swatches_custom_colors_list": "#000000, #FFFFFF",
-            "full_width_dropdowns": false,
-            "breaks_style": "normal",
-            "breaks_headline": "BUNDLE & SAVE",
-            "breaks_color_scheme": "accent-1",
-            "breaks_badges": "[empty], Most popular, [empty]",
-            "breaks_displayed_images": "variant_images",
-            "breaks_custom_images": "",
-            "breaks_image_width": 70,
-            "breaks_space_images": true,
-            "breaks_labels": "[name], [name], [name]",
-            "breaks_benefits": "[empty], Free Shipping, Free Shipping",
-            "breaks_captions": "Variant 1 caption, Variant 2 caption, Variant 3 caption",
-            "breaks_price_texts": "[price], [price], [price]",
-            "breaks_compare_price_texts": "[compare_price], [compare_price], [compare_price]",
-            "margin_top": 15,
             "margin_bottom": 15
           }
         },
@@ -96,37 +47,25 @@
             "margin_bottom": 24
           }
         },
-        "image_AWpz99": {
-          "type": "image",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Trust.png",
-            "width": 100,
-            "Full_mobile_width": false,
-            "alignment": "center",
-            "border_radius": 0,
-            "margin_top": 15,
-            "margin_bottom": 15
-          }
-        },
         "e0a0b690-50df-4ca4-acfd-ce2980696cce": {
           "type": "shipping_checkpoints",
           "disabled": true,
           "settings": {
             "icon_1": "add_shopping_cart",
             "filled_icon_1": false,
-            "top_text_1": "<strong>[start_date] <\/strong>",
+            "top_text_1": "<strong>[start_date] </strong>",
             "bottom_text_1": "إتمام الطلب",
             "min_days_1": 0,
             "max_days_1": 0,
             "icon_2": "local_shipping",
             "filled_icon_2": false,
-            "top_text_2": "<strong>[start_date]<\/strong>",
+            "top_text_2": "<strong>[start_date]</strong>",
             "bottom_text_2": "تجهيز و شحن الحقيبة",
             "min_days_2": 1,
             "max_days_2": 1,
             "icon_3": "redeem",
             "filled_icon_3": false,
-            "top_text_3": "<strong>من [start_date] الى [end_date] <\/strong>",
+            "top_text_3": "<strong>من [start_date] الى [end_date] </strong>",
             "bottom_text_3": "إستلام الحقيبة",
             "min_days_3": 3,
             "max_days_3": 5,
@@ -138,23 +77,6 @@
             "days_labels": "الإثنين, الثلاثاء, الأربعاء, الخميس, الجمعة, السبت, الأحد",
             "months_labels": "يناير, فبراير, مارس, أبريل, مايو, يونيو, يوليو, أغسطس, سبتمبر, أكتوبر, نوفمبر, ديسمبر",
             "color_scheme": "inverse",
-            "margin_top": 24,
-            "margin_bottom": 24
-          }
-        },
-        "c43b9f54-e00a-4f9e-b42c-2914dde008a8": {
-          "type": "reviews",
-          "settings": {
-            "display_stars": true,
-            "star_color": "#ffcc00",
-            "avatar_alignment": "top",
-            "author_1": "<em>- تقييم من قبل : فيصل السيف <\/em>",
-            "text_1": "<p>أنا مره أحب هذي الشنطة! تعبت من إني أشيل كذا شنطة وأدفع زيادة عشان الأمتعة. هذي الشنطة تدخل تمام في درج الطيارة، والمواد قوية، يعني تتحمل كل مشاويري. أنصح فيها وبقوة!<\/p>",
-            "image_1": "shopify:\/\/shop_images\/Adc5d9f93300f4b9b8cd1c3c3350f4711S.webp",
-            "author_2": "",
-            "text_2": "",
-            "author_3": "",
-            "text_3": "",
             "margin_top": 24,
             "margin_bottom": 24
           }
@@ -188,16 +110,23 @@
             "mobile_transparent_bg": false
           }
         },
+        "description_Y8iKXt": {
+          "type": "description",
+          "settings": {
+            "margin_top": 24,
+            "margin_bottom": 24
+          }
+        },
         "collapsible_tab_DUitUb": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "عن حقيبة الرحالة",
+            "heading": "What makes Purilify™ unique?",
             "heading_size": "medium",
-            "icon": "luggage",
+            "icon": "air",
             "filled_icon": false,
             "collapse_icon": "carret",
             "display_top_border": true,
-            "content": "<p>سواء كنت مسافراً في رحلة عمل أو في عطلة نهاية الأسبوع، <strong>حقيبة الرحالة<\/strong> هي الخيار المثالي. سعتها الكبيرة تضمن لك القدرة على حمل كل ما تحتاجه، وتصميمها الأنيق يضيف لمسة من الرقي إلى مظهرك.<\/p><p>بحجمها المناسب لحملها في اليد، حقيبتنا مثالية لوضعها في حجرات الطائرات العلوية أو تحت المقعد، مما يضمن لك الاحتفاظ بأغراضك قريباً طوال رحلتك. وداعاً للأمتعة الضخمة ومرحباً بالسفر الأنيق والأنيق مع <strong>حقيبة الرحالة<\/strong>.<\/p>",
+            "content": "<p><strong>What makes Purilify™ unique?<br/></strong>Purilify™ combines advanced H13 HEPA filtration, real-time air quality monitoring, and aromatherapy integration to create a healthier and more relaxing home environment.</p><p><strong>Is it suitable for large rooms?</strong></p><p>Yes, Purilify™ effectively purifies spaces up to 1740 sq. ft.</p>",
             "page": "",
             "margin_top": 24,
             "margin_bottom": 0
@@ -206,13 +135,13 @@
         "collapsible_tab_DGztXg": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "الوزن و المقاسات",
+            "heading": "Weight and Size",
             "heading_size": "medium",
             "icon": "straighten",
             "filled_icon": false,
             "collapse_icon": "carret",
             "display_top_border": true,
-            "content": "<p><strong>الوزن:<\/strong><\/p><ul><li>1 كجم<\/li><\/ul><p><strong>الأبعاد:<br\/> <\/strong>(الطول × العرض × الارتفاع)<\/p><ul><li>20.5x10x12.5 بوصة <\/li><li>52.07 x 25.4 x 31.75 سم<\/li><\/ul>",
+            "content": "<p>The device is lightweight and easy to move, weighing approximately 4.5 kg (9.9 lbs).</p>",
             "page": "",
             "margin_top": 0,
             "margin_bottom": 0
@@ -221,13 +150,13 @@
         "collapsible_tab_WKGBaU": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "وقت التوصيل",
+            "heading": "Shipping Time",
             "heading_size": "medium",
             "icon": "local_shipping",
             "filled_icon": false,
             "collapse_icon": "carret",
             "display_top_border": true,
-            "content": "<ul><li><strong>المناطق القريبة<\/strong> ( رياض ، جدة ، دمام ) التوصيل في خلال 2-3 أيام .<\/li><li><strong>المناطق البعيدة <\/strong>( باقى مناطق المملكة )<strong> <\/strong>،التوصيل في خلال 4-5 أيام .<\/li><\/ul>",
+            "content": "<p>Standard shipping takes 5–7 business days, while express shipping delivers within 2–3 business days.</p>",
             "page": "",
             "margin_top": 0,
             "margin_bottom": 0
@@ -236,13 +165,13 @@
         "collapsible_tab_ihk4Rp": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "ضمان الاسترجاع",
+            "heading": "Refund Policy",
             "heading_size": "medium",
-            "icon": "favorite",
+            "icon": "undo",
             "filled_icon": false,
             "collapse_icon": "carret",
             "display_top_border": true,
-            "content": "<p>نضمن لك استرجاع كامل المبلغ فى حالة عدم رضاك.<\/p>",
+            "content": "<p>نضمن لك استرجاع كامل المبلغ فى حالة عدم رضاك.</p>",
             "page": "",
             "margin_top": 0,
             "margin_bottom": 0
@@ -251,30 +180,24 @@
         "custom_liquid_fJxhJf": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "<div id='ss-product-videos'><\/div>"
+            "custom_liquid": "<div id='ss-product-videos'></div>"
           }
         }
       },
       "block_order": [
         "title",
-        "a6eb81db-40e4-43e0-972f-32db010a4a56",
         "price",
-        "emoji_benefits_rcc9ex",
-        "5fcc0428-e768-4cb7-bea3-eb0274198dd1",
         "buy_buttons",
-        "image_AWpz99",
         "e0a0b690-50df-4ca4-acfd-ce2980696cce",
-        "c43b9f54-e00a-4f9e-b42c-2914dde008a8",
         "e7a28cbe-03cb-4c9d-a2c4-0e3e76ffb3e5",
+        "description_Y8iKXt",
         "collapsible_tab_DUitUb",
         "collapsible_tab_DGztXg",
         "collapsible_tab_WKGBaU",
         "collapsible_tab_ihk4Rp",
         "custom_liquid_fJxhJf"
       ],
-      "custom_css": [
-
-      ],
+      "custom_css": [],
       "settings": {
         "enable_sticky_info": true,
         "display_variant_image_first": false,
@@ -282,7 +205,7 @@
         "constrain_to_viewport": true,
         "media_fit": "contain",
         "gallery_layout": "thumbnail",
-        "media_position": "right",
+        "media_position": "left",
         "image_zoom": "none",
         "hide_variants": false,
         "enable_video_looping": false,
@@ -328,7 +251,6 @@
         "logo_rh4VA6": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Saudi-Arabian-Airlines-Logo.png",
             "link": "",
             "target_blank": false
           }
@@ -336,7 +258,6 @@
         "logo_YAajay": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Etihad-airways-logo_svg.png",
             "link": "",
             "target_blank": false
           }
@@ -344,7 +265,6 @@
         "logo_MmDfbg": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Flynas_Logo_svg.png",
             "link": "",
             "target_blank": false
           }
@@ -352,7 +272,6 @@
         "logo_wC9fLH": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/300x102.png",
             "link": "",
             "target_blank": false
           }
@@ -360,7 +279,6 @@
         "logo_fyyiHB": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/649e1c738c189557e58cf78e1ec21cfe.jpg",
             "link": "",
             "target_blank": false
           }
@@ -368,7 +286,6 @@
         "logo_9pfHer": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Qatar_Airways_Logo.png",
             "link": "",
             "target_blank": false
           }
@@ -376,7 +293,6 @@
         "logo_7zVBNx": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/kuwait-airways-new-logo-EEF8BE2BF0-seeklogo.com.png",
             "link": "",
             "target_blank": false
           }
@@ -384,7 +300,6 @@
         "logo_LPAWEc": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/1280px-Air_Arabia_Logo_svg.png",
             "link": "",
             "target_blank": false
           }
@@ -392,7 +307,6 @@
         "logo_irQrTE": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/egypt-air-logo-E6885F56B0-seeklogo.com.png",
             "link": "",
             "target_blank": false
           }
@@ -400,7 +314,6 @@
         "logo_9qg3KR": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Turkish_Airlines_logo.png",
             "link": "",
             "target_blank": false
           }
@@ -408,7 +321,6 @@
         "logo_GRX4C3": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/93a69e97166c4b96ae10ad4c7697ad1f.png",
             "link": "",
             "target_blank": false
           }
@@ -416,7 +328,6 @@
         "logo_jBBLDa": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Air-Canada-Logo.png",
             "link": "",
             "target_blank": false
           }
@@ -424,7 +335,6 @@
         "logo_hhAFVN": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/unnamed_1.png",
             "link": "",
             "target_blank": false
           }
@@ -432,7 +342,6 @@
         "logo_CmMWKg": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Lufthansa-Logo.png",
             "link": "",
             "target_blank": false
           }
@@ -440,7 +349,6 @@
         "logo_AAFG3G": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Air_France-Logo.wine.png",
             "link": "",
             "target_blank": false
           }
@@ -448,7 +356,6 @@
         "logo_b3EDtY": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/0cb6ef5d6c1a30b7b2b4e5118c3fe179.png",
             "link": "",
             "target_blank": false
           }
@@ -456,7 +363,6 @@
         "logo_NBgtnE": {
           "type": "logo",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Nile_air.png",
             "link": "",
             "target_blank": false
           }
@@ -530,7 +436,6 @@
       "settings": {
         "display_id": false,
         "visibility": "always-display",
-        "image": "shopify:\/\/shop_images\/reviews-img_9_1.webp",
         "height": "adapt",
         "content_layout": "no-overlap",
         "color_scheme": "background-1",
@@ -567,7 +472,7 @@
           "settings": {
             "column": "col_1",
             "visibility": "always-display",
-            "text": "<p>Use the flexible grid system to create any layout. Each block can be placed in any of the columns.<\/p>",
+            "text": "<p>Use the flexible grid system to create any layout. Each block can be placed in any of the columns.</p>",
             "text_style": "body",
             "alignment": "center",
             "mobile_alignment": "mobile-center",
@@ -588,7 +493,7 @@
             "icon_heading_size": "h3",
             "icon_text_alignment": "center",
             "title": "جلد مقاوم للماء",
-            "text": "<p>مصنوعة بتقنية مبتكرة، هذي المادة الحصرية تضمن حماية أغراضك في أي جو.<\/p>",
+            "text": "<p>مصنوعة بتقنية مبتكرة، هذي المادة الحصرية تضمن حماية أغراضك في أي جو.</p>",
             "margin_top": 20,
             "margin_bottom": 30
           }
@@ -606,7 +511,7 @@
             "icon_heading_size": "h3",
             "icon_text_alignment": "center",
             "title": "حزم بدون تعب",
-            "text": "<p>بتصميمها المبتكر ومساحتها الكبيرة، تنظيم أغراضك ما كان أسهل من كذا.<\/p>",
+            "text": "<p>بتصميمها المبتكر ومساحتها الكبيرة، تنظيم أغراضك ما كان أسهل من كذا.</p>",
             "margin_top": 20,
             "margin_bottom": 30
           }
@@ -616,7 +521,6 @@
           "settings": {
             "column": "col_3",
             "visibility": "always-display",
-            "image": "shopify:\/\/shop_images\/image32-Photoroom.webp",
             "width": 100,
             "alignment": "center",
             "mobile_alignment": "center",
@@ -638,7 +542,7 @@
             "icon_heading_size": "h3",
             "icon_text_alignment": "center",
             "title": "سعة لملابس تكفي حتى 14 يوم",
-            "text": "<p>قل وداعًا للملابس المتجعدة واحفظ ملابسك في حالة مثالية وانت مسافر.<\/p>",
+            "text": "<p>قل وداعًا للملابس المتجعدة واحفظ ملابسك في حالة مثالية وانت مسافر.</p>",
             "margin_top": 20,
             "margin_bottom": 30
           }
@@ -656,7 +560,7 @@
             "icon_heading_size": "h3",
             "icon_text_alignment": "center",
             "title": "معتمدة كحقيبة يد",
-            "text": "<p>حقيبة يد لأكثر من 150+ شركة طيران<\/p>",
+            "text": "<p>حقيبة يد لأكثر من 150+ شركة طيران</p>",
             "margin_top": 20,
             "margin_bottom": 30
           }
@@ -710,16 +614,52 @@
         "video_slide_MENgxx": {
           "type": "video_slide",
           "settings": {
+            "loop": true,
+            "muted_autoplay": true,
+            "display_play_btn": true,
+            "btn_animation": false,
+            "btn_color_scheme": "accent-1",
+            "display_sound_btn": false,
+            "sound_btn_color_scheme": "inverse",
+            "display_timeline": false,
+            "timeline_color": "accent-1",
+            "description": "",
+            "desc_alignment": "center",
+            "desc_color_scheme": "background-2"
           }
         },
         "video_slide_W76F9P": {
           "type": "video_slide",
           "settings": {
+            "loop": true,
+            "muted_autoplay": true,
+            "display_play_btn": true,
+            "btn_animation": false,
+            "btn_color_scheme": "accent-1",
+            "display_sound_btn": false,
+            "sound_btn_color_scheme": "inverse",
+            "display_timeline": false,
+            "timeline_color": "accent-1",
+            "description": "",
+            "desc_alignment": "center",
+            "desc_color_scheme": "background-2"
           }
         },
         "video_slide_4kLqae": {
           "type": "video_slide",
           "settings": {
+            "loop": true,
+            "muted_autoplay": true,
+            "display_play_btn": true,
+            "btn_animation": false,
+            "btn_color_scheme": "accent-1",
+            "display_sound_btn": false,
+            "sound_btn_color_scheme": "inverse",
+            "display_timeline": false,
+            "timeline_color": "accent-1",
+            "description": "",
+            "desc_alignment": "center",
+            "desc_color_scheme": "background-2"
           }
         }
       },
@@ -831,7 +771,7 @@
         "visibility": "always-display",
         "title": "أيهما أفضل؟",
         "heading_size": "h1",
-        "text": "<p>مقارنة بين الحقائب العادية و حقيبة الرحالة<\/p>",
+        "text": "<p>مقارنة بين الحقائب العادية و حقيبة الرحالة</p>",
         "button_label": "",
         "link": "",
         "button_style_secondary": false,
@@ -840,7 +780,6 @@
         "color_scheme": "background-1",
         "layout": "table_first",
         "style": "centered",
-        "logo": "shopify:\/\/shop_images\/image_1.png",
         "logo_width": 120,
         "mobile_logo_width": 60,
         "us_label": "[shop_name]",
@@ -924,55 +863,49 @@
         "column_gf4eaG": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/A798a1efee13845049dea3a7d3d66eacay_jpg.webp",
             "title": "",
-            "text": "<p>حقيبة ممتازة! المواد جداً متينة ومقاومة للماء، سفرتي الأخيرة كانت بدون مشاكل وملابسي وصلت سليمة.<\/p>",
-            "author": "<em><strong>نورة القحطاني<\/strong><\/em>"
+            "text": "<p>حقيبة ممتازة! المواد جداً متينة ومقاومة للماء، سفرتي الأخيرة كانت بدون مشاكل وملابسي وصلت سليمة.</p>",
+            "author": "<em><strong>نورة القحطاني</strong></em>"
           }
         },
         "column_8wQEXP": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/KQbjniMPWN.webp",
             "title": "",
-            "text": "<p>حقيبة الرحالة وفرت علي وقت كثير في السفر، ما أحتاج أنتظر الشنط بالمطار وأخذها معي بكل سهولة.<\/p>",
-            "author": "<em><strong>محمد العتيبي<\/strong><\/em>"
+            "text": "<p>حقيبة الرحالة وفرت علي وقت كثير في السفر، ما أحتاج أنتظر الشنط بالمطار وأخذها معي بكل سهولة.</p>",
+            "author": "<em><strong>محمد العتيبي</strong></em>"
           }
         },
         "column_ccAEGY": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Abe871a8b70ff4b04a17b0f065c8dec8el_jpg.webp",
             "title": "",
-            "text": "<p>أحب حقيبة الرحالة، ساعدتني في توفير رسوم الأمتعة الزائدة وصارت رحلاتي أسهل.<\/p>",
-            "author": "<em><strong>سعود الغامدي<\/strong><\/em>"
+            "text": "<p>أحب حقيبة الرحالة، ساعدتني في توفير رسوم الأمتعة الزائدة وصارت رحلاتي أسهل.</p>",
+            "author": "<em><strong>سعود الغامدي</strong></em>"
           }
         },
         "column_xHJzW6": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/A4b117c2e2f084f219f947fabe60eeaebl_jpg.webp",
             "title": "",
-            "text": "<p>التنظيم داخل الحقيبة مثالي، قدرت أحط كل أغراضي بشكل مرتب وسهل عليّ الوصول لكل شي بسرعة.<\/p>",
-            "author": "<em><strong>ريم الشمري<\/strong><\/em>"
+            "text": "<p>التنظيم داخل الحقيبة مثالي، قدرت أحط كل أغراضي بشكل مرتب وسهل عليّ الوصول لكل شي بسرعة.</p>",
+            "author": "<em><strong>ريم الشمري</strong></em>"
           }
         },
         "column_EbnxNm": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/A17ff2a10b2094adda97dd75097376878t_jpg.webp",
             "title": "",
-            "text": "<p>الراحة في الحمل شيء مميز، الحزام المبطن يخلي حملها سهل ومريح حتى لو كانت مليانة.<\/p>",
-            "author": "<em><strong>عبدالله الحربي<\/strong><\/em>"
+            "text": "<p>الراحة في الحمل شيء مميز، الحزام المبطن يخلي حملها سهل ومريح حتى لو كانت مليانة.</p>",
+            "author": "<em><strong>عبدالله الحربي</strong></em>"
           }
         },
         "column_N7AGHJ": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/A8f550180c29142ec95fd7d25867ed190S_jpg.webp",
             "title": "",
-            "text": "<p>أفضل استثمار سويته للسفر، الحقيبة خفيفة وقوية وسهل تخزينها، ماعدت أحتاج لشنط كثيرة.<\/p>",
-            "author": "<em><strong>فاطمة الزهراني<\/strong><\/em>"
+            "text": "<p>أفضل استثمار سويته للسفر، الحقيبة خفيفة وقوية وسهل تخزينها، ماعدت أحتاج لشنط كثيرة.</p>",
+            "author": "<em><strong>فاطمة الزهراني</strong></em>"
           }
         }
       },
@@ -1034,7 +967,7 @@
             "heading": "هل يمكن استخدامها كحقيبة يد؟",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>نعم! صممنا الحقيبة خصيصًا لتكون مناسبة كحقيبة يد على جميع شركات الطيران<\/p>",
+            "row_content": "<p>نعم! صممنا الحقيبة خصيصًا لتكون مناسبة كحقيبة يد على جميع شركات الطيران</p>",
             "page": ""
           }
         },
@@ -1044,7 +977,7 @@
             "heading": "هل تتسع لكل ملابسي؟",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>بعد التحدث مع عملائنا، وجدنا أن حقيبة <strong>رحالة<\/strong> تتسع لحوالي ضعف كمية الملابس التي تستوعبها حقيبة بنفس الحجم<\/p>",
+            "row_content": "<p>بعد التحدث مع عملائنا، وجدنا أن حقيبة <strong>رحالة</strong> تتسع لحوالي ضعف كمية الملابس التي تستوعبها حقيبة بنفس الحجم</p>",
             "page": ""
           }
         },
@@ -1054,7 +987,7 @@
             "heading": "هل يمكن لهذه الحقيبة توفير المال؟",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>حسب CNBC، متوسط تكلفة حقيبة تسجيل للأمتعة للرحلة ذهابًا وإيابًا تتراوح بين 85-125 دولار في 2024. يعني ذلك أنك باستخدام حقيبة <strong>رحالة <\/strong>(المصنفة كحقيبة يد)، تحصل عليها مجانًا في أول رحلة تستخدمها فيها! الحقيبة مصممة لتدوم من 15-20 سنة، فإذا قمت برحلتين سنويًا بمتوسط تكلفة 100 دولار للأمتعة المسجلة، فإنك توفر بين 3000 إلى 4000 دولار!<\/p>",
+            "row_content": "<p>حسب CNBC، متوسط تكلفة حقيبة تسجيل للأمتعة للرحلة ذهابًا وإيابًا تتراوح بين 85-125 دولار في 2024. يعني ذلك أنك باستخدام حقيبة <strong>رحالة </strong>(المصنفة كحقيبة يد)، تحصل عليها مجانًا في أول رحلة تستخدمها فيها! الحقيبة مصممة لتدوم من 15-20 سنة، فإذا قمت برحلتين سنويًا بمتوسط تكلفة 100 دولار للأمتعة المسجلة، فإنك توفر بين 3000 إلى 4000 دولار!</p>",
             "page": ""
           }
         },
@@ -1064,7 +997,7 @@
             "heading": "هل سيتآكل سطح الحقيبة؟",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>بالطبع لا! اخترنا الجلد الصناعي PU عالي الجودة والمتين بدلًا من البدائل الأرخص. حقائبنا مصممة لتتحمل سنوات من السفر، ومقاومة للتآكل الناتج عن التعامل المتكرر، خاصة أثناء النقل بالطائرة أو الأمتعة<\/p>",
+            "row_content": "<p>بالطبع لا! اخترنا الجلد الصناعي PU عالي الجودة والمتين بدلًا من البدائل الأرخص. حقائبنا مصممة لتتحمل سنوات من السفر، ومقاومة للتآكل الناتج عن التعامل المتكرر، خاصة أثناء النقل بالطائرة أو الأمتعة</p>",
             "page": ""
           }
         },
@@ -1074,7 +1007,7 @@
             "heading": "كمية الملابس التي يمكنني حزمها فيها؟",
             "icon": "help",
             "filled_icon": false,
-            "row_content": "<p>يمكنك بكل راحة حزم ما يصل إلى 14 يوم من الملابس اليومية، بالإضافة إلى 2 إلى 3 فساتين خالية من التجاعيد، مما يضمن أنك مستعد للإقامات الطويلة أو المناسبات المختلفة<\/p>",
+            "row_content": "<p>يمكنك بكل راحة حزم ما يصل إلى 14 يوم من الملابس اليومية، بالإضافة إلى 2 إلى 3 فساتين خالية من التجاعيد، مما يضمن أنك مستعد للإقامات الطويلة أو المناسبات المختلفة</p>",
             "page": ""
           }
         }
@@ -1124,41 +1057,41 @@
         "video_39wR9C": {
           "type": "video",
           "settings": {
-            "video_url": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
-            "modal_heading": "<h4>Modal Heading<\/h4>",
-            "modal_text": "<p>Modal Text<\/p>"
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "modal_heading": "<h4>Modal Heading</h4>",
+            "modal_text": "<p>Modal Text</p>"
           }
         },
         "video_fTff76": {
           "type": "video",
           "settings": {
-            "video_url": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
-            "modal_heading": "<h4>Modal Heading<\/h4>",
-            "modal_text": "<p>Modal Text<\/p>"
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "modal_heading": "<h4>Modal Heading</h4>",
+            "modal_text": "<p>Modal Text</p>"
           }
         },
         "video_AFtmjn": {
           "type": "video",
           "settings": {
-            "video_url": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
-            "modal_heading": "<h4>Modal Heading<\/h4>",
-            "modal_text": "<p>Modal Text<\/p>"
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "modal_heading": "<h4>Modal Heading</h4>",
+            "modal_text": "<p>Modal Text</p>"
           }
         },
         "video_EBpiAJ": {
           "type": "video",
           "settings": {
-            "video_url": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
-            "modal_heading": "<h4>Modal Heading<\/h4>",
-            "modal_text": "<p>Modal Text<\/p>"
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "modal_heading": "<h4>Modal Heading</h4>",
+            "modal_text": "<p>Modal Text</p>"
           }
         },
         "video_mYXF4M": {
           "type": "video",
           "settings": {
-            "video_url": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
-            "modal_heading": "<h4>Modal Heading<\/h4>",
-            "modal_text": "<p>Modal Text<\/p>"
+            "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+            "modal_heading": "<h4>Modal Heading</h4>",
+            "modal_text": "<p>Modal Text</p>"
           }
         }
       },
@@ -1172,7 +1105,7 @@
       "settings": {
         "videos_position": "below_buy",
         "use_metafield": false,
-        "heading": "<h2>WHAT OUR FELLOWS SAY<\/h2>",
+        "heading": "<h2>WHAT OUR FELLOWS SAY</h2>",
         "heading_custom": false,
         "heading_font": "josefin_sans_n4",
         "heading_size": 18,
@@ -1241,34 +1174,34 @@
         "modal_text_align": "center",
         "modal_text_align_mobile": "center",
         "modal_text_mt": 16,
-        "card_bg_color": "#FFFFFF",
+        "card_bg_color": "#ffffff",
         "card_border_color": "#000000",
         "card_shadow_color": "#000000",
         "video_overlay_color": "#000000",
         "icon_bg_color": "#000000",
-        "icon_border_color": "#FFFFFF",
-        "icon_color": "#FFFFFF",
-        "arrow_bg_color": "#FFFFFF",
-        "arrow_bg_hover_color": "#FFFFFF",
+        "icon_border_color": "#ffffff",
+        "icon_color": "#ffffff",
+        "arrow_bg_color": "#ffffff",
+        "arrow_bg_hover_color": "#ffffff",
         "arrow_border_color": "#000000",
         "arrow_border_hover_color": "#000000",
         "arrow_icon_color": "#1c1c1c",
         "arrow_icon_hover_color": "#1c1c1c",
-        "modal_bg_color": "#FFFFFF",
+        "modal_bg_color": "#ffffff",
         "modal_border_color": "#000000",
-        "close_bg_color": "#FFFFFF",
+        "close_bg_color": "#ffffff",
         "close_border_color": "#000000",
-        "close_icon_color": "#FFFFFF",
-        "buttons_bg_color": "#FFFFFF",
+        "close_icon_color": "#ffffff",
+        "buttons_bg_color": "#ffffff",
         "buttons_border_color": "#000000",
-        "buttons_icon_color": "#FFFFFF",
+        "buttons_icon_color": "#ffffff",
         "modal_video_border_color": "#000000",
-        "modal_content_bg_color": "#FFFFFF",
+        "modal_content_bg_color": "#ffffff",
         "modal_content_border_color": "#000000",
         "modal_heading_color": "#000000",
         "modal_text_color": "#000000",
         "heading_color": "#000000",
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "background_gradient": "",
         "border_color": "#000000",
         "margin_top": 0,
