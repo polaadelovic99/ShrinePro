@@ -156,7 +156,7 @@
             "filled_icon": false,
             "collapse_icon": "carret",
             "display_top_border": true,
-            "content": "<p><strong>Shipping Policy</strong></p><p>\t•\t<strong>Standard Shipping</strong>: 5–7 business days.</p><p>\t•\t<strong>Express Shipping</strong>: 2–3 business days.</p><p><strong>Important</strong>: Ensure billing and shipping addresses are accurate to avoid delays. Use clear English characters only. Track your order under “Your Orders.”</p><p><strong>International Shipping</strong>: Available with location-based fees.</p>",
+            "content": "<p><strong>Billing and Shipping Guidelines</strong></p><p>\t•\tEnsure accurate billing and shipping addresses to avoid delays.</p><p>\t•\tBilling address must match your credit card or bank statement.</p><p><strong>Required Information</strong>:</p><p>\t•\t<strong>Country</strong>: Set to United Arab Emirates.</p><p>\t•\t<strong>Full Name, Mobile Number</strong>: Valid number without prefixes or symbols, used for delivery scheduling.</p><p>\t•\t<strong>Street Address</strong>: Include building, floor, apartment/villa details.</p><p>\t•\t<strong>City/Area</strong>: Select from the provided list.</p><p>\t•\t<strong>Nearest Landmark</strong>: Specify a well-known location near your address.</p><p>\t•\tUse only English characters; Arabic or special characters may delay orders.</p><p><strong>Order Tracking and Delivery</strong>:</p><p>\t•\tTrack orders in “Your Orders.” Contact support for detailed tracking help.</p><p>\t•\tDrivers will call before delivery. Three attempts will be made; after that, the package is returned, and refunds are issued for prepaid orders.</p>",
             "page": "",
             "margin_top": 0,
             "margin_bottom": 0
