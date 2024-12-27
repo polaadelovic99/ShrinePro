@@ -373,7 +373,7 @@
         "show_stars": true,
         "stars_color": "#ffd700",
         "show_quotes": true,
-        "quotes_color_scheme": "accent-1",
+        "quotes_color_scheme": "accent-2",
         "cards_color_scheme": "bg-overlay",
         "type": "slide",
         "autoplay": false,
