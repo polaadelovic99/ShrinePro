@@ -87,7 +87,7 @@
             "function": "scroll_#ProductInfo-id",
             "display_when": "after_scroll",
             "button_label": "Order Now",
-            "color_scheme": "background-1",
+            "color_scheme": "accent-2",
             "star_color": "#ffcc00",
             "stars_label": "32,346+ Reviews From Our Clients",
             "desktop_show_image": true,
