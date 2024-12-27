@@ -41,6 +41,9 @@
         "subtotal",
         "buttons"
       ],
+      "custom_css": [
+        ".button:after, .customer button:after, .shopify-challenge__button:after, .shopify-payment-button__button--unbranded:after {background-color: red;}"
+      ],
       "settings": {}
     },
     "featured-collection": {

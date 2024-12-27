@@ -159,7 +159,7 @@
     "cart_type": "drawer",
     "cart_icon": "bag_2",
     "show_vendor": false,
-    "show_cart_note": false,
+    "show_cart_note": true,
     "cart_drawer_collection": "",
     "checkout_accent_color": "#dd1d1d",
     "checkout_button_color": "#dd1d1d",
