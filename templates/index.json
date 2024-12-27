@@ -635,6 +635,9 @@
         "row_CDHyVg",
         "row_Q97CFR"
       ],
+      "custom_css": [
+        "video {border-radius: 20px; height: 90vh;}"
+      ],
       "settings": {
         "display_id": false,
         "visibility": "always-display",
