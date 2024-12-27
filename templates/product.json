@@ -510,7 +510,7 @@
         "video_39wR9C": {
           "type": "video",
           "settings": {
-            "video": "shopify://files/videos/Download.mp4",
+            "video": "shopify://files/videos/1.mp4",
             "video_url": "",
             "modal_heading": "<h4>Modal Heading</h4>",
             "modal_text": "<p>Modal Text</p>"
