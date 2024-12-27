@@ -258,7 +258,7 @@
               "timer_text": "<strong>Cart reserved for [timer]</strong>",
               "timer_duration": 300,
               "font_size": "1.4",
-              "color_scheme": "inverse",
+              "color_scheme": "accent-2",
               "margin_top": 0,
               "margin_bottom": 15
             }
@@ -404,10 +404,13 @@
           "0935e47c-9604-4faa-b47a-d61ca49c0c16",
           "68fdc0a0-cd7c-40b9-97b3-a76eb7917a47"
         ],
+        "custom_css": [
+          ".button:after,.customer button:after,.shopify-challenge__button:after,.shopify-payment-button__button--unbranded:after {background-color: #4770db;}"
+        ],
         "settings": {
-          "test_mode": false,
+          "test_mode": true,
           "heading_text": "Cart • [count] items",
-          "heading_alignment": "flex-start",
+          "heading_alignment": "center",
           "desktop_width": "normal",
           "mobile_width": "full",
           "enable_header_bg": false,
