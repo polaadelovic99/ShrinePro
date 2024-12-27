@@ -134,6 +134,7 @@
         },
         "collapsible_tab_DGztXg": {
           "type": "collapsible_tab",
+          "disabled": true,
           "settings": {
             "heading": "Weight and Size",
             "heading_size": "medium",
@@ -263,7 +264,7 @@
         "text_7DQVCF": {
           "type": "text",
           "settings": {
-            "title": "🚚 Free Shipping"
+            "title": "🚚 Fast Shipping"
           }
         },
         "text_C4TadJ": {
