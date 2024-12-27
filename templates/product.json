@@ -156,7 +156,7 @@
             "filled_icon": false,
             "collapse_icon": "carret",
             "display_top_border": true,
-            "content": "<p><strong>How long does shipping take?</strong></p><p>Standard shipping takes 5–7 business days, while express shipping delivers within 2–3 business days.</p><p><strong>Do you ship internationally?</strong></p><p>Yes, we offer worldwide shipping with applicable fees based on location.</p>",
+            "content": "<p><strong>Shipping Policy</strong></p><p>\t•\t<strong>Standard Shipping</strong>: 5–7 business days.</p><p>\t•\t<strong>Express Shipping</strong>: 2–3 business days.</p><p><strong>Important</strong>: Ensure billing and shipping addresses are accurate to avoid delays. Use clear English characters only. Track your order under “Your Orders.”</p><p><strong>International Shipping</strong>: Available with location-based fees.</p>",
             "page": "",
             "margin_top": 0,
             "margin_bottom": 0
