@@ -284,7 +284,7 @@
         "speed": 1.5,
         "mobile_spacing": 60,
         "desktop_spacing": 100,
-        "color_scheme": "accent-1",
+        "color_scheme": "accent-2",
         "mobile_text_size": 16,
         "desktop_text_size": 18,
         "italic_text": false,
