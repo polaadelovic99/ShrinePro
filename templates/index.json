@@ -15,6 +15,27 @@
         "template--21507361505575__cfca4268-6358-426c-98ab-d292aeef11e5-slide-1": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/5a89d795-6591-4edc-a1b3-203a2e4481df.__CR0_0_1464_600_PT0_SX1464_V1.jpg",
+            "heading": "Pure Air",
+            "heading_size": "h1",
+            "subheading": "Breathe Clean, Live Healthy with Purifily™",
+            "button_label": "Shop Now",
+            "link": "shopify://products/pet-air-purifier-2024-electric-co-mini-home-smart-hair-circulating-allergies-with-pet-air-purifier",
+            "button_style_secondary": true,
+            "atc_button_label": "",
+            "atc_product": "",
+            "box_align": "bottom-left",
+            "show_text_box": false,
+            "text_alignment": "left",
+            "image_overlay_opacity": 50,
+            "color_scheme": "accent-2",
+            "transparent_container_color": "white",
+            "text_alignment_mobile": "left"
+          }
+        },
+        "slide_hqFmCR": {
+          "type": "slide",
+          "settings": {
             "image": "shopify://shop_images/WhatsApp_Image_2024-12-08_at_6.46.42_PM.jpg",
             "heading": "Pure Air",
             "heading_size": "h1",
@@ -35,7 +56,8 @@
         }
       },
       "block_order": [
-        "template--21507361505575__cfca4268-6358-426c-98ab-d292aeef11e5-slide-1"
+        "template--21507361505575__cfca4268-6358-426c-98ab-d292aeef11e5-slide-1",
+        "slide_hqFmCR"
       ],
       "settings": {
         "visibility": "always-display",
@@ -672,6 +694,86 @@
         "padding_top": 0,
         "padding_bottom": 0
       }
+    },
+    "image_slider_txUbpL": {
+      "type": "image-slider",
+      "blocks": {
+        "image_slide_gXDmha": {
+          "type": "image_slide",
+          "settings": {
+            "description": "",
+            "desc_alignment": "center",
+            "desc_color_scheme": "background-2"
+          }
+        },
+        "image_slide_FtggyM": {
+          "type": "image_slide",
+          "settings": {
+            "description": "",
+            "desc_alignment": "center",
+            "desc_color_scheme": "background-2"
+          }
+        },
+        "image_slide_B7q7TL": {
+          "type": "image_slide",
+          "settings": {
+            "description": "",
+            "desc_alignment": "center",
+            "desc_color_scheme": "background-2"
+          }
+        },
+        "image_slide_qeNYrB": {
+          "type": "image_slide",
+          "settings": {
+            "description": "",
+            "desc_alignment": "center",
+            "desc_color_scheme": "background-2"
+          }
+        }
+      },
+      "block_order": [
+        "image_slide_gXDmha",
+        "image_slide_FtggyM",
+        "image_slide_B7q7TL",
+        "image_slide_qeNYrB"
+      ],
+      "settings": {
+        "display_id": false,
+        "visibility": "always-display",
+        "title": "Image/Video Slider",
+        "heading_size": "h1",
+        "color_scheme": "background-1",
+        "type": "slide",
+        "drag": "enabled",
+        "autoplay": false,
+        "autoplay_speed": 5,
+        "center_mode": false,
+        "arrows_color_scheme": "inverse",
+        "transparent_arrows": false,
+        "dots_color_scheme": "inverse",
+        "desktop_full_page": false,
+        "desktop_border_radius": 0,
+        "slides_desktop": 3,
+        "per_move_desktop": 1,
+        "desktop_spacing": 28,
+        "desktop_side_padding": 0,
+        "desktop_padding_calc": true,
+        "desktop_adaptive_height": false,
+        "desktop_dots_position": "under",
+        "desktop_arrows_position": "sides",
+        "mobile_full_page": false,
+        "mobile_border_radius": 0,
+        "slides_mobile": 2,
+        "per_move_mobile": 1,
+        "mobile_spacing": 12,
+        "mobile_side_padding": 0,
+        "mobile_padding_calc": true,
+        "mobile_adaptive_height": false,
+        "mobile_dots_position": "under",
+        "mobile_arrows_position": "sides",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
     }
   },
   "order": [
@@ -682,6 +784,7 @@
     "content_tabs_KRW4FA",
     "custom_columns_zd88KV",
     "results_TMTaeV",
-    "section_divider_mYWrzi"
+    "section_divider_mYWrzi",
+    "image_slider_txUbpL"
   ]
 }
