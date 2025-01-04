@@ -710,6 +710,7 @@
         "image_slide_FtggyM": {
           "type": "image_slide",
           "settings": {
+            "image": "shopify://shop_images/0aae07cc-a235-4df9-b63a-c2b2eb6ef0ef.__CR0_0_362_453_PT0_SX362_V1.png",
             "description": "",
             "desc_alignment": "center",
             "desc_color_scheme": "background-2"
@@ -769,7 +770,7 @@
         "mobile_spacing": 12,
         "mobile_side_padding": 0,
         "mobile_padding_calc": true,
-        "mobile_adaptive_height": false,
+        "mobile_adaptive_height": true,
         "mobile_dots_position": "under",
         "mobile_arrows_position": "sides",
         "padding_top": 36,
