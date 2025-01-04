@@ -408,7 +408,7 @@
           ".button:after,.customer button:after,.shopify-challenge__button:after,.shopify-payment-button__button--unbranded:after {background-color: #4770db;}"
         ],
         "settings": {
-          "test_mode": true,
+          "test_mode": false,
           "heading_text": "Cart • [count] items",
           "heading_alignment": "center",
           "desktop_width": "normal",
