@@ -65,7 +65,7 @@
         "slide_height": "medium",
         "slider_visual": "dots",
         "desktop_pagination_position": "over",
-        "auto_rotate": false,
+        "auto_rotate": true,
         "change_slides_speed": 5,
         "show_text_below": false,
         "mobile_pagination_position": "over",
