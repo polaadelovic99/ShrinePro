@@ -269,6 +269,7 @@
         },
         "text_C4TadJ": {
           "type": "text",
+          "disabled": true,
           "settings": {
             "title": "⚡ Fast Delivery in Saudi Arabia"
           }
